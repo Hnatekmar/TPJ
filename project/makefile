@@ -9,6 +9,3 @@ obj:
 
 clean:
 	-rm *.o
-	-rm src/*.o
-	-rm bin/*
-
