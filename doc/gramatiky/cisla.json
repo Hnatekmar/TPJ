@@ -1,0 +1,12 @@
+{
+	"nonterminals" : ["S", "A", "B", "C"],
+	"sigma" : ["-", "d", "."],
+	"rules" : {
+			"S" : ["-A", "dA", "d", "dC"],
+			"A" : ["dA", "d", "dC"],
+			"B" : ["dB", "d"],
+			"C" : [".B"]
+		  },
+	"startingSymbol" : "S",
+	"name" : "cisla"
+}

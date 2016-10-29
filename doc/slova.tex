@@ -1,0 +1,12 @@
+$L_slova$(SABC, ab, \{
+$$S \rightarrow A|B$$$$A \rightarrow aB|AS|b$$$$B \rightarrow AB|bA|\epsilon$$$$C \rightarrow AS|b$$\},
+S)
+
+\subsubsection{Nalezení symbolů, které nejsou zbytečné}$$\uptau_0 = \{a,b\}$$$$\uptau_1 = \{A,B,C,a,b\}$$$$\uptau_2 = \{A,B,C,S,a,b\}$$\subsubsection{Hledání dostupných symbolů}$$D_0 = \{S\}$$$$D_1 = \{A,B,S\}$$$$D_2 = \{A,B,S,\epsilon,a,b\}$$\subsubsection{Upravená gramatika}
+Po úpravách dostaváme gramatiku
+$L_slova$(['S', 'A', 'B'], ['a', 'b'], \{
+$$S \rightarrow A|B$$$$A \rightarrow aB|AS|b$$$$B \rightarrow AB|bA|\epsilon$$\},
+S)
+
+\subsubsection{Generování automatu}
+Stavy automatu \{$Q_{S}$,$Q_{A}$,$Q_{B}$,$Q_{F}$\}

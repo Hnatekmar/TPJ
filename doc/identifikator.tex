@@ -1,0 +1,12 @@
+$L_identifikatory$(['S', "S'"], ['z', 'm'], \{
+$$S \rightarrow zS|z|S'$$$$S' \rightarrow mS'|m$$\},
+S)
+
+\subsubsection{Nalezení symbolů, které nejsou zbytečné}$$\uptau_0 = \{m,z\}$$$$\uptau_1 = \{S,S',m,z\}$$\subsubsection{Hledání dostupných symbolů}$$D_0 = \{S\}$$$$D_1 = \{S,S',z\}$$$$D_2 = \{S,S',m,z\}$$\subsubsection{Upravená gramatika}
+Po úpravách dostaváme gramatiku
+$L_identifikatory$(['S', "S'"], ['z', 'm'], \{
+$$S \rightarrow zS|z|S'$$$$S' \rightarrow mS'|m$$\},
+S)
+
+\subsubsection{Generování automatu}
+Stavy automatu \{$Q_{S}$,$Q_{S'}$,$Q_{F}$\}

@@ -1,0 +1,22 @@
+G(['S', "S'"], ['z', 'm'], \{
+$$S \rightarrow zS|z|S'$$$$S' \rightarrow mS'|m$$\},
+S)
+
+\subsubsection{Nalezení symbolů, které nejsou zbytečné}$$\uptau_0 = \{m,z\}$$$$\uptau_1 = \{S,S',m,z\}$$\subsubsection{Hledání dostupných symbolů}$$D_0 = \{S\}$$$$D_1 = \{S,S',z\}$$$$D_2 = \{S,S',m,z\}$$\subsubsection{Upravená gramatika}
+Po úpravách dostaváme gramatiku
+G(['S', "S'"], ['z', 'm'], \{
+$$S \rightarrow zS|z|S'$$$$S' \rightarrow mS'|m$$\},
+S)
+
+\subsubsection{Generování automatu}
+Stavy automatu \{$Q_S$,$Q_S'$,$Q_F$\}
+$$\delta(Q_{S}, z) = $$\delta(Q_{S'}, z) = \paragraph{Tabulka stavového automatu}%s
+\begin{table}
+\caption{Tabulka automatu}
+\begin{tabular}{c c c }
+&z&m\\
+\hline
+$Q_z$&$$Q_S$$&$$Q_F$$\\
+$Q_m$&$$Q_S'$$&$$Q_F$$\\
+\end{tabular}
+\end{table}

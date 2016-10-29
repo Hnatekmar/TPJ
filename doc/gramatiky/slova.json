@@ -1,0 +1,12 @@
+{
+	"nonterminals" : "SABC",
+	"sigma" : "ab",
+	"rules" : {
+			"S" : ["A", "B"],
+			"A" : ["aB", "AS", "b"],
+			"B" : ["AB", "bA", ["\\epsilon"]],
+			"C" : ["AS", "b"]
+		  },
+	"startingSymbol" : "S",
+	"name" : "slova"
+}

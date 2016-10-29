@@ -1,0 +1,10 @@
+{
+	"nonterminals" : ["S", "S'"],
+	"sigma" : ["z", "m"],
+	"rules" : {
+			"S" : [["z", "S"], ["z"], ["S'"]],
+			"S'" : [["m", "S'"], ["m"]]
+		  },
+	"startingSymbol" : "S",
+	"name" : "identifikatory"
+}

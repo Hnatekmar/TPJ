@@ -1,0 +1,12 @@
+$L_cisla$(['S', 'A', 'B', 'C'], ['-', 'd', '.'], \{
+$$S \rightarrow -A|dA|d|dC$$$$A \rightarrow dA|d|dC$$$$B \rightarrow dB|d$$$$C \rightarrow .B$$\},
+S)
+
+\subsubsection{Nalezení symbolů, které nejsou zbytečné}$$\uptau_0 = \{-,.,d\}$$$$\uptau_1 = \{-,.,A,B,C,S,d\}$$\subsubsection{Hledání dostupných symbolů}$$D_0 = \{S\}$$$$D_1 = \{-,A,C,S,d\}$$$$D_2 = \{-,.,A,B,C,S,d\}$$\subsubsection{Upravená gramatika}
+Po úpravách dostaváme gramatiku
+$L_cisla$(['S', 'A', 'B', 'C'], ['-', 'd', '.'], \{
+$$S \rightarrow -A|dA|d|dC$$$$A \rightarrow dA|d|dC$$$$B \rightarrow dB|d$$$$C \rightarrow .B$$\},
+S)
+
+\subsubsection{Generování automatu}
+Stavy automatu \{$Q_{S}$,$Q_{A}$,$Q_{B}$,$Q_{C}$,$Q_{F}$\}

@@ -1,0 +1,42 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{upgreek}
+\usepackage{amsmath}
+\usepackage[]{algorithm2e}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\title{Programovací jazyk SVGER}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+
+\newpage
+\section{Gramatiky a lexikální analyzátor}
+Programovací jazyk se skládá z následujících gramatik:
+$Q_{f}$
+\subsection{Identifikátory}
+Identifikátor začíná na kterýkoliv znak z množiny $z = \{a..z,A..Z,+,-/,*,<,>,[,]\}$
+a pokračuje v kterémkoliv ze znaků z množiny $m = z \bigcup \{0..9\}$ 
+\linebreak
+
+Z tohoto popisu nám vyplyne následující gramatika \input{identifikator.tex}
+
+\subsection{Čísla}
+Jazyk obsauje pouze přirozená čísla. Validním číslem je tedy jakákoliv sekvence znaků, které se nachází v množině $d = {0..9}$
+
+Ná základě tohoto můžeme vytvořit následující gramatiku \input{cisla.tex}
+
+\subsection{Slova}
+\input{slova.tex}
+
+\subsection{Konečný automat}
+\input{automat.tex}
+
+\end{document}
