@@ -1,0 +1,10 @@
+{
+	"nonterminals" : ["S", "H"],
+	"sigma" : ["(", ")"],
+	"rules" : {
+			"S" : ["(L"],
+			"L" : ["HL", ")"]
+		  },
+	"startingSymbol" : "S",
+	"name" : "cisla"
+}

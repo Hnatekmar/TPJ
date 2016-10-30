@@ -21,8 +21,9 @@ class Grammar:
 
         for k,v in g.getRenamedRules().items():
             rules[k] = v
-        rules["S"] = [self.startingSymbol + "_%s" % self.name, g.startingSymbol + "_%s" % g.startingSymbol]
-        return Grammar(nonterminals, sigma, rules, "S", self.name)
+        
+        rules["S"] = [self.startingSymbol + "_\{%s\}" % self.name, g.startingSymbol + "_\{%s\}" % g.startingSymbol]
+        return Grammar(nonterminals, sigma, rules, "S", self.name + g.name)
 
 
     def getRenamedRules(self):
@@ -36,14 +37,20 @@ class Grammar:
         return rules
 
     def getHeader(self):
-        header = "$L_%s$(" % self.name + str(self.nonterminals) + ", " + str(self.sigma) + ", "
+        header = "$L_\{%s\}$(" % self.name + str(self.nonterminals) + ", " + str(self.sigma) + ", "
         header += "\{\n"
         for nonterminal in self.nonterminals:
-            header += "$$" + nonterminal + " \\rightarrow " + "|".join(["".join(rewrite) for rewrite in self.rules[nonterminal]])  + "$$"
+            try:
+                header += "$$" + nonterminal + " \\rightarrow " + "|".join(["".join(rewrite) for rewrite in self.rules[nonterminal]])  + "$$"
+            except:
+                pass
 
         header += "\},\n"
         header += self.startingSymbol + ")\n"
         return header
+
+    def removeSimpleRules(self):
+        pass
 
     def getUsefulVars(self):
         tau = set(self.startingSymbol)
@@ -64,6 +71,7 @@ class Grammar:
             tau = tau.union(tau_new)
             if len(tau_new) == 0:
                 self.sigma = [s for s in self.sigma if s in tau]
+
                 self.nonterminals = [n for n in self.nonterminals if n in tau]
                 r = {n : self.rules[n] for n in self.nonterminals}
                 self.rules = r

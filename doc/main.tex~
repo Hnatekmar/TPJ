@@ -4,36 +4,212 @@
 \usepackage{lmodern}
 \usepackage{upgreek}
 \usepackage{amsmath}
+\usepackage{mathabx}
+\usepackage{MnSymbol}
+\usepackage{wasysym}
+\usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage[]{algorithm2e}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usetikzlibrary{automata,positioning}
 
 \title{Programovací jazyk SVGER}
 
 \begin{document}
 
 \maketitle
+
 \newpage
 \tableofcontents
 
 \newpage
-\section{Gramatiky a lexikální analyzátor}
-Programovací jazyk se skládá z následujících gramatik:
-$Q_{f}$
+\section{Gramatiky}
+V této sekci se nachází popis jednotlivých gramatik, které jsou zpracovány lexikálním analyzátorem.
+
 \subsection{Identifikátory}
-Identifikátor začíná na kterýkoliv znak z množiny $z = \{a..z,A..Z,+,-/,*,<,>,[,]\}$
+Identifikátor začíná na kterýkoliv znak z množiny $z = \{a..z, A..Z, +, -, /, *, <\}$
 a pokračuje v kterémkoliv ze znaků z množiny $m = z \bigcup \{0..9\}$ 
 \linebreak
 
-Z tohoto popisu nám vyplyne následující gramatika \input{identifikator.tex}
+Z tohoto popisu nám vyplyne následující gramatika $G_{identifikatory}$(\{S, A, B\}, \{z, m\}, P, S)
+$$S \rightarrow zA | z$$
+$$A \rightarrow mA | m$$
 
 \subsection{Čísla}
-Jazyk obsauje pouze přirozená čísla. Validním číslem je tedy jakákoliv sekvence znaků, které se nachází v množině $d = {0..9}$
+Validním číslem je jakákoliv sekvence znaků, které se nachází v množině $d = {0..9}$. Které jsou
 
-Ná základě tohoto můžeme vytvořit následující gramatiku \input{cisla.tex}
+Ná základě tohoto můžeme vytvořit následující gramatiku
+$G_{cisla}$(\{S, B, C\}, \{d, .\}, P, S)
+$$S \rightarrow dB | d$$
+$$B \rightarrow dB | d | d.C$$
+$$C \rightarrow dC | d$$
 
-\subsection{Slova}
-\input{slova.tex}
+\subsection{Řetězce}
+Řetězce začínají a končí na znak ". V samotném řetězci se pak může nacházet jakýkoliv znak kterému   předchází $\backslash$ nebo cokoliv v množině $\blacksquare$
+ , která reprezentuje všechny tisknutelné znaky, které nejsou $\backslash$ ".
+Toto lze reprezentovat následující gramatikou $G_{retezce}$(\{S, D, E\}, \{$\backslash, ", \blacksquare$\}, P, S)
+$$S \rightarrow "D$$
+$$D \rightarrow " | \backslash E | \blacksquare E$$
+$$E \rightarrow "D | \backslash D | \blacksquare D$$
+
+\subsection{Závorky}
+Závorky jsou důležitou součástí programovacího jazyků, které patří do rodiny lispu. Z důvodu přehlednosti jsem se rozhodl, že programovací jazyk bude podporovat nejen \textquotedblleft kulaté \textquotedblright  závorky tedy ( a ) ale i [] a \{\}. Popisuje je následující gramatika $G_{zavorky}$(\{S\}, \{(, ), [, ], \{, \}\}, P, S)
+
+$$S \rightarrow (|)|[|]|\{|\}$$
+
+\subsection{Gramatika bílých znaků}
+Je gramatika popisující všechny bílé znaky $G_{bileznaky}$(\{S\}, \{$\dlsh | \mapsto | \sqcup$\}, P, S)
+$$S \rightarrow  \dlsh | \mapsto | \sqcup$$
+
+\subsection{Komentáře}
+Jazyk má jednoduché komentáře začínající na ; a končící novým řádkem $G_{komentare}$(\{S, G\}, \{$\dlsh$, ;, $\Square$\}, P, S)
+
+$$S \rightarrow ;G$$
+$$F \rightarrow \Square G | \dlsh$$
+
+\section{Lekální analyzátor}
+Nyní je třeba z předem definované gramatiky spojit a převést na automat. Pokud tento automat nebude deterministický je třeba jej determinizovat.
+
+Samotný jazyk se skládá z jazyku oddělováčů (komentáře, bílé znaky) $L_{od} = G_{komentare} \bigcup G_{bileznaky}$ a jazyku významových tokenů 
+
+$$L_{vt} = G_{identifikatory} \bigcup G_{cisla} \bigcup G_{retezce} \bigcup G_{zavorky}$$
+Celý jazyk pak lze zapsat tímto způsobem 
+$$L = (L^{*}_{od}.L_{vt})^{*}.L^{*}_{od}$$
+Po spojení nám vzniká gramatika
+ 
+%%% Gramatika
+$G_{vt}$(\{S, $S_{identifikatory}$, $S_{cisla}$, $S_{retezce}$, $S_{zavorky}$, A, B, C, D, E, F, G\}, \{d, z, m, (, ), \{, \}, [, ], $\backslash$ \}, P, S), která reprezentuje významové tokeny 
+
+$$S \rightarrow S_{identifikatory} | S_{cisla} | S_{retezce} | S_{zavorky} | S_{od}$$
+
+kde $S_{od}$ je definované v gramatice oddělovačů $G_{od}$(\{$S_{od}$\}, \{$; | \dlsh | \mapsto | \sqcup | \Square | \dlsh$\}, P, S)
+
+$$S \rightarrow \dlsh | \mapsto | \sqcup | ;A | \Square$$
+$$A \rightarrow \Square A | ;A | \dlsh $$
+
+Po odstranění jednoduchých symbolů dostaneme následující gramatiku 
+
+$$S \rightarrow zA | z | dB | d | "D | ;G | \dlsh | \mapsto | \sqcup | ( | ) | [ | ] | \{ | \}$$
+$$A \rightarrow mA | m$$
+$$B \rightarrow dB | d | d.C$$
+$$C \rightarrow dC | d$$
+$$D \rightarrow " | \backslash E | \blacksquare E$$
+$$E \rightarrow "D | \backslash D | \blacksquare D$$
+$$F \rightarrow \Square G | \dlsh$$
+\newpage
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|l|l|l|l|l|l|l|l|l|}
+\hline
+ & d & z & m & ( & ) & \{ & \} & [ & ] & \multicolumn{1}{c|}{$\blacksquare$} & \multicolumn{1}{c|}{$\Square$} & $\backslash$ & ; & . & " & $\dlsh$ & $\mapsto$ & $\sqcup$ \\ \hline
+$Q_{S}$ & $\{Q_{B}, Q_{\hat{F}}\}$ & $\{Q_{A}, Q_{\hat{F}}\}$ & $\emptyset$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & \multicolumn{1}{c|}{$\emptyset$} & \multicolumn{1}{c|}{$\emptyset$} & $\emptyset$ & $Q_{F}$ & $\emptyset$ & $Q_{D}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ \\ \hline
+$Q_{A}$ & $\emptyset$ & $\emptyset$ & $\{Q_{A}, Q_{\hat{F}}\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & \multicolumn{1}{c|}{$\emptyset$} & \multicolumn{1}{c|}{$\emptyset$} & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{B}$ & $\{Q_{C}, Q_{\hat{F}}, Q_{B}\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & \multicolumn{1}{c|}{$\emptyset$} & \multicolumn{1}{c|}{$\emptyset$} & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{C}$ & $\{Q_{C}, Q_{\hat{F}}\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{D}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $Q_{E}$ & $\emptyset$ & $Q_{E}$ & $\emptyset$ & $\emptyset$ & $\{Q_{\hat{F}}\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{E}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $Q_{D}$ & $\emptyset$ & $Q_{D}$ & $\emptyset$ & $\emptyset$ & $Q_{D}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{F}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $Q_{F}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $Q_{\hat{F}}$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{\hat{F}}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+
+
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{graphicx}
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllllllllllllllllll@{}}
+\toprule
+Q               & d               & z              & m              & (             & )             & \{            & \}            & [             & ]             & $\blacksquare$ & $\Square$   & $\backslash$ & ;           & 0           & "             & $\dlsh$       & $\mapsto$     & $\sqcup$      \\ \midrule
+$Q_{S}$         & $Q_{B\hat{F}}$  & $Q_{A\hat{F}}$ & $\emptyset$    & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $\emptyset$    & $\emptyset$ & $\emptyset$  & $Q_{F}$     & $\emptyset$ & $Q_{D}$       & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ \\
+$Q_{A}$         & $\emptyset$     & $\emptyset$    & $Q_{A\hat{F}}$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{B}$         & $Q_{C\hat{F}B}$ & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{C}$         & $Q_{C\hat{F}B}$ & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{D}$         & $\emptyset$     & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $Q_{E}$        & $\emptyset$ & $Q_{E}$      & $\emptyset$ & $\emptyset$ & $Q_{\hat{F}}$ & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{E}$         & $\emptyset$     & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $Q_{D}$        & $\emptyset$ & $Q_{D}$      & $\emptyset$ & $\emptyset$ & $Q_{D}$       & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{F}$         & $\emptyset$     & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $Q_{F}$     & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $Q_{\hat{F}}$ & $\emptyset$   & $\emptyset$   \\
+$Q_{\hat{F}}$   & $\emptyset$     & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{B\hat{F}}$  & $Q_{C\hat{F}B}$ & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{A\hat{F}}$  & $\emptyset$     & $\emptyset$    & $Q_{A\hat{F}}$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{C\hat{F}B}$ & $Q_{C\hat{F}B}$ & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{A\hat{F}}$  & $\emptyset$     & $\emptyset$    & $Q_{A\hat{F}}$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.2]
+\tikzstyle{every node}+=[inner sep=0pt]
+\draw [black] (6.6,-22.9) circle (3);
+\draw (6.6,-22.9) node {$Q_{S}$};
+\draw [black] (11.9,-10.1) circle (3);
+\draw (11.9,-10.1) node {$Q_{B\hat{F}}$};
+\draw [black] (55.7,-8.4) circle (3);
+\draw (55.7,-8.4) node {$Q_{A\hat{F}}$};
+\draw [black] (55.7,-8.4) circle (2.4);
+\draw [black] (55.7,-28.5) circle (3);
+\draw (55.7,-28.5) node {$Q_{\hat{F}}$};
+\draw [black] (55.7,-28.5) circle (2.4);
+\draw [black] (28.2,-10.1) circle (3);
+\draw (28.2,-10.1) node {$Q_{C\hat{F}B}$};
+\draw [black] (28.2,-10.1) circle (2.4);
+\draw [black] (29.4,-46.6) circle (3);
+\draw (29.4,-46.6) node {$Q_{D}$};
+\draw [black] (58.9,-15.8) circle (3);
+\draw (58.9,-15.8) node {$Q_{F}$};
+\draw [black] (66.7,-47.7) circle (3);
+\draw (66.7,-47.7) node {$Q_{E}$};
+\draw [black] (7.75,-20.13) -- (10.75,-12.87);
+\fill [black] (10.75,-12.87) -- (9.98,-13.42) -- (10.91,-13.8);
+\draw (9.99,-17.42) node [right] {$d$};
+\draw [black] (9.48,-22.05) -- (52.82,-9.25);
+\fill [black] (52.82,-9.25) -- (51.91,-9) -- (52.2,-9.96);
+\draw (32.02,-16.2) node [below] {$z$};
+\draw [black] (9.58,-23.24) -- (52.72,-28.16);
+\fill [black] (52.72,-28.16) -- (51.98,-27.57) -- (51.87,-28.57);
+\draw (27.26,-27.62) node [below] {$(,),\{,\},[,],\dlsh,\mapsto,\sqcup$};
+\draw [black] (56.59,-5.547) arc (190.39718:-97.60282:2.25);
+\draw (61.82,-3.03) node [above] {$m$};
+\fill [black] (58.51,-7.37) -- (59.38,-7.72) -- (59.2,-6.74);
+\draw [black] (14.9,-10.1) -- (25.2,-10.1);
+\fill [black] (25.2,-10.1) -- (24.4,-9.6) -- (24.4,-10.6);
+\draw (20.05,-10.6) node [below] {$d$};
+\draw [black] (26.877,-7.42) arc (234:-54:2.25);
+\draw (28.2,-2.85) node [above] {$d$};
+\fill [black] (29.52,-7.42) -- (30.4,-7.07) -- (29.59,-6.48);
+\draw [black] (8.68,-25.06) -- (27.32,-44.44);
+\fill [black] (27.32,-44.44) -- (27.13,-43.51) -- (26.41,-44.21);
+\draw (17.47,-36.22) node [left] {$"$};
+\draw [black] (9.57,-22.5) -- (55.93,-16.2);
+\fill [black] (55.93,-16.2) -- (55.07,-15.82) -- (55.2,-16.81);
+\draw (33.02,-19.93) node [below] {$;$};
+\draw [black] (63.722,-48.063) arc (-83.80057:-99.57782:114.335);
+\fill [black] (63.72,-48.06) -- (62.87,-47.65) -- (62.98,-48.65);
+\draw (47.78,-49.55) node [below] {$\blacksquare,\backslash$};
+\draw [black] (31.87,-44.9) -- (53.23,-30.2);
+\fill [black] (53.23,-30.2) -- (52.29,-30.24) -- (52.85,-31.07);
+\draw (43.5,-38.05) node [below] {$"$};
+\draw [black] (32.364,-46.134) arc (98.00661:78.61499:93.278);
+\fill [black] (32.36,-46.13) -- (33.23,-46.52) -- (33.09,-45.53);
+\draw (48.35,-44.38) node [above] {$\blacksquare,\backslash,"$};
+\draw [black] (60.645,-13.374) arc (172.01431:-115.98569:2.25);
+\draw (65.54,-11.47) node [right] {$\Square$};
+\fill [black] (61.89,-15.71) -- (62.61,-16.32) -- (62.75,-15.32);
+\draw [black] (58.17,-18.71) -- (56.43,-25.59);
+\fill [black] (56.43,-25.59) -- (57.11,-24.94) -- (56.14,-24.69);
+\draw (56.54,-21.69) node [left] {$\dlsh$};
+\end{tikzpicture}
+\end{center}
 
 \end{document}

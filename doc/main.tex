@@ -4,39 +4,145 @@
 \usepackage{lmodern}
 \usepackage{upgreek}
 \usepackage{amsmath}
+\usepackage{mathabx}
+\usepackage{MnSymbol}
+\usepackage{wasysym}
+\usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage[]{algorithm2e}
 \usepackage{hyperref}
 \usepackage{tikz}
-\usetikzlibrary{automata,positioning}
 
 \title{Programovací jazyk SVGER}
 
 \begin{document}
 
 \maketitle
+
 \newpage
 \tableofcontents
 
 \newpage
-\section{Gramatiky a lexikální analyzátor}
-Programovací jazyk se skládá z následujících gramatik:
-$Q_{f}$
+\section{Gramatiky}
+V této sekci se nachází popis jednotlivých gramatik, které jsou zpracovány lexikálním analyzátorem.
+
 \subsection{Identifikátory}
-Identifikátor začíná na kterýkoliv znak z množiny $z = \{a..z,A..Z,+,-/,*,<,>,[,]\}$
+Identifikátor začíná na kterýkoliv znak z množiny $z = \{a..z, A..Z, +, -, /, *, <\}$
 a pokračuje v kterémkoliv ze znaků z množiny $m = z \bigcup \{0..9\}$ 
 \linebreak
 
-Z tohoto popisu nám vyplyne následující gramatika \input{identifikator.tex}
+Z tohoto popisu nám vyplyne následující gramatika $G_{identifikatory}$(\{S, A, B\}, \{z, m\}, P, S)
+$$S \rightarrow zA | z$$
+$$A \rightarrow mA | m$$
 
 \subsection{Čísla}
-Jazyk obsauje pouze přirozená čísla. Validním číslem je tedy jakákoliv sekvence znaků, které se nachází v množině $d = {0..9}$
+Validním číslem je jakákoliv sekvence znaků, které se nachází v množině $d = {0..9}$. Které jsou
 
-Ná základě tohoto můžeme vytvořit následující gramatiku \input{cisla.tex}
+Ná základě tohoto můžeme vytvořit následující gramatiku
+$G_{cisla}$(\{S, B, C\}, \{d, .\}, P, S)
+$$S \rightarrow dB | d$$
+$$B \rightarrow dB | d | d.C$$
+$$C \rightarrow dC | d$$
 
-\subsection{Slova}
-\input{slova.tex}
+\subsection{Řetězce}
+Řetězce začínají a končí na znak ". V samotném řetězci se pak může nacházet jakýkoliv znak kterému   předchází $\backslash$ nebo cokoliv v množině $\blacksquare$
+ , která reprezentuje všechny tisknutelné znaky, které nejsou $\backslash$ ".
+Toto lze reprezentovat následující gramatikou $G_{retezce}$(\{S, D, E\}, \{$\backslash, ", \blacksquare$\}, P, S)
+$$S \rightarrow "D$$
+$$D \rightarrow " | \backslash E | \blacksquare E$$
+$$E \rightarrow "D | \backslash D | \blacksquare D$$
 
-\subsection{Konečný automat}
+\subsection{Závorky}
+Závorky jsou důležitou součástí programovacího jazyků, které patří do rodiny lispu. Z důvodu přehlednosti jsem se rozhodl, že programovací jazyk bude podporovat nejen \textquotedblleft kulaté \textquotedblright  závorky tedy ( a ) ale i [] a \{\}. Popisuje je následující gramatika $G_{zavorky}$(\{S\}, \{(, ), [, ], \{, \}\}, P, S)
+
+$$S \rightarrow (|)|[|]|\{|\}$$
+
+\subsection{Gramatika bílých znaků}
+Je gramatika popisující všechny bílé znaky $G_{bileznaky}$(\{S\}, \{$\dlsh | \mapsto | \sqcup$\}, P, S)
+$$S \rightarrow  \dlsh | \mapsto | \sqcup$$
+
+\subsection{Komentáře}
+Jazyk má jednoduché komentáře začínající na ; a končící novým řádkem $G_{komentare}$(\{S, F\}, \{$\dlsh$, ;, $\Square$\}, P, S)
+
+$$S \rightarrow ;F$$
+$$F \rightarrow \Square F | \dlsh S$$
+
+\section{Lekální analyzátor}
+Nyní je třeba z předem definované gramatiky spojit a převést na automat. Pokud tento automat nebude deterministický je třeba jej determinizovat.
+
+Samotný jazyk se skládá z jazyku oddělováčů (komentáře, bílé znaky) $L_{od} = G_{komentare} \bigcup G_{bileznaky}$ a jazyku významových tokenů 
+
+$$L_{vt} = G_{identifikatory} \bigcup G_{cisla} \bigcup G_{retezce} \bigcup G_{zavorky}$$
+Celý jazyk pak lze zapsat tímto způsobem 
+$$L = (L^{*}_{od}.L_{vt})^{*}.L^{*}_{od}$$
+Po spojení nám vzniká gramatika
+ 
+%%% Gramatika
+$G_{vt}$(\{S, $S_{identifikatory}$, $S_{cisla}$, $S_{retezce}$, $S_{zavorky}$, A, B, C, D, E, F, G\}, \{d, z, m, (, ), \{, \}, [, ], $\backslash$ \}, P, S), která reprezentuje významové tokeny 
+
+$$S \rightarrow S_{identifikatory} | S_{cisla} | S_{retezce} | S_{zavorky} | S_{od}$$
+
+kde $S_{od}$ je definované v gramatice oddělovačů $G_{od}$(\{$S_{od}$\}, \{$; | \dlsh | \mapsto | \sqcup | \Square | \dlsh$\}, P, S)
+
+$$S \rightarrow \dlsh | \mapsto | \sqcup | ;A | \Square$$
+$$A \rightarrow \Square A | ;A | \dlsh $$
+
+Po odstranění jednoduchých symbolů dostaneme následující gramatiku 
+
+$$S \rightarrow zA | z | dB | d | "D | ;G | \dlsh | \mapsto | \sqcup | ( | ) | [ | ] | \{ | \}$$
+$$A \rightarrow mA | m$$
+$$B \rightarrow dB | d | d.C$$
+$$C \rightarrow dC | d$$
+$$D \rightarrow " | \backslash E | \blacksquare E$$
+$$E \rightarrow "D | \backslash D | \blacksquare D$$
+$$F \rightarrow \Square F | \dlsh S$$
+\newpage
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|l|l|l|l|l|l|l|l|l|}
+\hline
+ & d & z & m & ( & ) & \{ & \} & [ & ] & \multicolumn{1}{c|}{$\blacksquare$} & \multicolumn{1}{c|}{$\Square$} & $\backslash$ & ; & . & " & $\dlsh$ & $\mapsto$ & $\sqcup$ \\ \hline
+$Q_{S}$ & $\{Q_{B}, Q_{\hat{F}}\}$ & $\{Q_{A}, Q_{\hat{F}}\}$ & $\emptyset$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & \multicolumn{1}{c|}{$\emptyset$} & \multicolumn{1}{c|}{$\emptyset$} & $\emptyset$ & $Q_{F}$ & $\emptyset$ & $Q_{D}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ \\ \hline
+$Q_{A}$ & $\emptyset$ & $\emptyset$ & $\{Q_{A}, Q_{\hat{F}}\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & \multicolumn{1}{c|}{$\emptyset$} & \multicolumn{1}{c|}{$\emptyset$} & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{B}$ & $\{Q_{C}, Q_{\hat{F}}, Q_{B}\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & \multicolumn{1}{c|}{$\emptyset$} & \multicolumn{1}{c|}{$\emptyset$} & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{C}$ & $\{Q_{C}, Q_{\hat{F}}\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{D}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $Q_{E}$ & $\emptyset$ & $Q_{E}$ & $\emptyset$ & $\emptyset$ & $\{Q_{\hat{F}}\}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{E}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $Q_{D}$ & $\emptyset$ & $Q_{D}$ & $\emptyset$ & $\emptyset$ & $Q_{D}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{F}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $Q_{F}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $Q_{\hat{F}}$ & $\emptyset$ & $\emptyset$ \\ \hline
+$Q_{\hat{F}}$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{graphicx}
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllllllllllllllllll@{}}
+\toprule
+Q               & d               & z              & m              & (             & )             & \{            & \}            & [             & ]             & $\blacksquare$ & $\Square$   & $\backslash$ & ;           & 0           & "             & $\dlsh$       & $\mapsto$     & $\sqcup$      \\ \midrule
+$Q_{S}$         & $Q_{B\hat{F}}$  & $Q_{A\hat{F}}$ & $\emptyset$    & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $\emptyset$    & $\emptyset$ & $\emptyset$  & $Q_{F}$     & $\emptyset$ & $Q_{D}$       & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ \\
+$Q_{A}$         & $\emptyset$     & $\emptyset$    & $Q_{A\hat{F}}$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{B}$         & $Q_{C\hat{F}B}$ & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{C}$         & $Q_{C\hat{F}B}$ & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{D}$         & $\emptyset$     & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $Q_{E}$        & $\emptyset$ & $Q_{E}$      & $\emptyset$ & $\emptyset$ & $Q_{\hat{F}}$ & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{E}$         & $\emptyset$     & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $Q_{D}$        & $\emptyset$ & $Q_{D}$      & $\emptyset$ & $\emptyset$ & $Q_{D}$       & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{F}$         & $\emptyset$     & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $Q_{F}$     & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $Q_{\hat{F}}$ & $\emptyset$   & $\emptyset$   \\
+$Q_{\hat{F}}$   & $\emptyset$     & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{B\hat{F}}$  & $Q_{C\hat{F}B}$ & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{A\hat{F}}$  & $\emptyset$     & $\emptyset$    & $Q_{A\hat{F}}$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{C\hat{F}B}$ & $Q_{C\hat{F}B}$ & $\emptyset$    & $\emptyset$    & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\
+$Q_{A\hat{F}}$  & $\emptyset$     & $\emptyset$    & $Q_{A\hat{F}}$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$    & $\emptyset$ & $\emptyset$  & $\emptyset$ & $\emptyset$ & $\emptyset$   & $\emptyset$   & $\emptyset$   & $\emptyset$   \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
 \input{automat.tex}
 
 \end{document}
