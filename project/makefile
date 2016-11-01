@@ -1,4 +1,4 @@
-compiler=g++
+compiler=clang++
 flags=-std=c++11 -Wall -Werror -pedantic
 
 default: clean obj

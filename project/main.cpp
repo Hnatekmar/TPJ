@@ -4,7 +4,10 @@
 int main()
 {
 	Lexer lexer(std::cin);
-	while(true) std::cout << lexer.nextToken().value << std::endl;
+	while(true)
+	{
+		std::cout << lexer.nextToken().value << std::endl;
+	}
 	return 0;
 }
 

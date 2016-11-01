@@ -3,14 +3,26 @@
 
 #include <iostream>
 #include "Token.h"
+#include <exception>
 #include <assert.h>
 #include <cctype>
 
 class Lexer
 {
+	enum class State
+	{
+		q_s,
+		q_a,
+		q_b,
+		q_c,
+		q_d,
+		q_e,
+		q_f,
+		q_final
+	};
 	std::istream& m_input;
-	int m_char;
-	bool m_stopped;
+	char m_char;
+	bool m_eof;
 
 	/**
 	 * Načte další znak do m_char pokud není lexer zastavený

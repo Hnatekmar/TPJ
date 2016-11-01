@@ -2,42 +2,61 @@
 
 Lexer::Lexer(std::istream& input):	m_input(input),
 					m_char(' '),
-					m_stopped(true)
+					m_eof(false)
 {
 }
 
 void Lexer::next()
 {
-	if(!m_stopped)
-	{
-		m_char = m_input.get();
-	}
+	m_input >> std::noskipws >> m_char;
+	m_eof = m_input.eof();
 }
 
 Token Lexer::nextToken()
 {
-	next();
-	if(m_char == EOF)
+	State state = State::q_s;
+	Token token;
+	while(state != State::q_final)
 	{
-		return {TokenType::END_OF_PROGRAM, ""};
+		if(m_eof)
+		{
+			if(state != State::q_s)
+			{
+				std::cerr << "EOF v průběhu lexikální analýzi";
+			}
+		}
+		
+		next();
+		if(state == State::q_s)
+		{
+			if(m_char == '\n' || m_char == '\t' || m_char == ' ')
+			{
+				continue;
+			}
+			if(m_char == ';')
+			{
+				state = State::q_f;
+				continue;
+			}
+			if(isdigit(m_char))
+			{
+				token.value = m_char;
+			}
+		}
+
+		if(state == State::q_f)
+		{
+			if(m_char == '\n')
+			{
+				state = State::q_s;
+			}
+			continue;
+		}
+		std::cerr << "Neočekávaný znak " << m_char;
+		std::exit(9001);
+		//throw std::runtime_error("Neočekávaný znak " + m_char);
 	}
-	if(m_char == '(')
-	{
-		return {TokenType::L_PAREN, "("};
-	}
-	if(m_char == ')')
-	{
-		return {TokenType::R_PAREN, "("};
-	}
-	if(isdigit(m_char))
-	{
-		return {TokenType::NUMBER, readNumber()};
-	}
-	if(m_char == '"')
-	{
-		return {TokenType::STRING, readString()};
-	}
-	return {TokenType::INVALID_TOKEN, ""};
+	return token;
 }
 
 std::string Lexer::readNumber()
