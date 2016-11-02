@@ -9,9 +9,7 @@ enum class TokenType
 	R_PAREN, // )
 	IDENTIFIER, // [a-zA-Z_\-@!?@#$%*+-/]+
 	NUMBER, // [0-9]+
-	STRING, // ""
-	INVALID_TOKEN,
-	END_OF_PROGRAM
+	STRING // "[^\|\.*]*"
 };
 
 struct Token
