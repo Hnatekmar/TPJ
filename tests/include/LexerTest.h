@@ -27,33 +27,6 @@ TEST_CASE("Validní vstup", "[lexer]")
 		REQUIRE(token.type == TokenType::R_PAREN);
 		REQUIRE(token.value == ")");
 	}
-
-	SECTION("Pokud již na vstupu nic není lexer vrátí token END_OF_PROGRAM")
-	{
-		auto token = lexer.nextToken();
-		REQUIRE(token.type == TokenType::END_OF_PROGRAM);
-		REQUIRE(token.value == "");
-	}
-
-	SECTION("Nezávisle na tom, kolikrát se metoda nextToken zavolá")
-	{
-		auto token = lexer.nextToken();
-		REQUIRE(token.type == TokenType::END_OF_PROGRAM);
-		REQUIRE(token.value == "");
-	}
-}
-
-TEST_CASE("Nevalidní vstup", "[lexer]")
-{
-	std::stringstream ss;
-	ss << "["; // Není číslo, identifikátor, řetězec nebo závorka
-	Lexer lexer(ss);
-	SECTION("V případě nevalidního vstupu bude Lexer vracet token typu INVALID_TOKEN s hodnotou nevalidního vstupu")
-	{
-		auto token = lexer.nextToken();
-		REQUIRE(token.type == TokenType::INVALID_TOKEN);
-		REQUIRE(token.value == "[");
-	}
 }
 
 #endif /* end of include guard: LEXERTEST_H */
