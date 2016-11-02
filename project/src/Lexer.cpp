@@ -132,7 +132,7 @@ Token Lexer::nextToken()
 
 		if(state == State::q_af)
 		{
-			if((isalpha(m_char) || isdigit(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(')
+			if((isalpha(m_char) || isdigit(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char))
 			{
 				token.value += m_char;
 				continue;
@@ -183,37 +183,4 @@ Token Lexer::nextToken()
 		//throw std::runtime_error("Neočekávaný znak " + m_char);
 	}
 	return token;
-}
-
-std::string Lexer::readNumber()
-{
-	std::string number;
-	while(isdigit(m_char))
-	{
-		number += m_char;
-		next();
-	}
-	return number;
-}
-
-std::string Lexer::readString()
-{
-	std::string string;
-	assert(m_char == '"'); // String musí začínat na "
-	next();
-	bool escape = false;
-	while(m_char != '"' || escape)
-	{
-		string += m_char;
-		next();
-		// TODO: ERROR reporting
-	}
-	assert(m_char == '"'); // String musí končit na "
-	return string;
-}
-
-std::string Lexer::readIdentifier()
-{
-	std::string identifier;
-	return identifier;
 }

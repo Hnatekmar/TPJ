@@ -30,9 +30,6 @@ class Lexer
 	 */
 	void next();
 
-	std::string readNumber();
-	std::string readString();
-	std::string readIdentifier();
 	public:
 		Lexer(std::istream& input);
 
