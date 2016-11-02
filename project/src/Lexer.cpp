@@ -103,6 +103,7 @@ Token Lexer::nextToken()
 			}
 			else
 			{
+				m_input.putback(m_char);
 				break; // Q_BF je finální stav automatu, takže můžeme zastavit zde
 			}
 		}
@@ -126,6 +127,7 @@ Token Lexer::nextToken()
 			}
 			else
 			{
+				m_input.putback(m_char);
 				break; // Q_CF je finální stav automatu, takže můžeme zastavit zde
 			}
 		}
