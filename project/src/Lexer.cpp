@@ -60,7 +60,7 @@ Token Lexer::nextToken()
 				continue;
 			}
 
-			if((isalpha(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char))
+			if((isalpha(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char) && m_char != '"')
 			{
 				token.value += m_char;
 				token.type = TokenType::IDENTIFIER;
@@ -139,7 +139,7 @@ Token Lexer::nextToken()
 
 		if(state == State::q_af)
 		{
-			if((isalpha(m_char) || isdigit(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char))
+			if((isalpha(m_char) || isdigit(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char) && m_char != '"')
 			{
 				token.value += m_char;
 				continue;
