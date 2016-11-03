@@ -10,6 +10,7 @@ int main()
 	translator[TokenType::IDENTIFIER] = "identifikator";
 	translator[TokenType::NUMBER] = "číslo";
 	translator[TokenType::STRING] = "řetězec";
+	translator[TokenType::END_OF_PROGRAM] = "Konec programu";
 	Lexer lexer(std::cin);
 	while(!lexer.eof())
 	{

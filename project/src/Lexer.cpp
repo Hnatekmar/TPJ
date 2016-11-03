@@ -26,13 +26,17 @@ Token Lexer::nextToken()
 		next();
 		if(m_eof)
 		{
-			if(state != State::q_s || state != State::q_af || state != State::q_bf 
-				 || state != State::q_cf || state != State::q_final)
+			if(state != State::q_s && state != State::q_af && state != State::q_bf 
+				 && state != State::q_cf && state != State::q_final && state != State::q_f)
 			{
 				std::cerr << "EOF v průběhu lexikální analýzy";
 				std::exit(9001);
 			}
-			break;
+			else
+			{
+				token.type = TokenType::END_OF_PROGRAM;
+				return token;
+			}
 		}
 		
 		if(state == State::q_s) // Startovní stav
