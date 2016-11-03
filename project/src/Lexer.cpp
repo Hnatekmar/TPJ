@@ -55,7 +55,8 @@ Token Lexer::nextToken()
 				state = State::q_bf;
 				continue;
 			}
-			if(isalpha(m_char))
+
+			if((isalpha(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char))
 			{
 				token.value += m_char;
 				token.type = TokenType::IDENTIFIER;

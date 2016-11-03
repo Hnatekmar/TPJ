@@ -28,32 +28,30 @@ V této sekci se nachází popis jednotlivých gramatik, které jsou zpracovány
 
 \subsection{Identifikátory}
 Identifikátor začíná na kterýkoliv znak z množiny $z = \{a..z, A..Z, +, -, /, *, <\}$
-a pokračuje v kterémkoliv ze znaků z množiny $m = z \bigcup \{0..9\}$ 
+a pokračuje v libovonlném znaku z množiny $m = z \bigcup \{0..9\}$ 
 \linebreak
 
-Z tohoto popisu nám vyplyne následující gramatika $G_{identifikatory}$(\{S, A, B\}, \{z, m\}, P, S)
+$G_{identifikatory}$(\{S, A, B\}, \{z, m\}, P, S)
 $$S \rightarrow zA | z$$
 $$A \rightarrow mA | m$$
 
 \subsection{Čísla}
-Validním číslem je jakákoliv sekvence znaků, které se nachází v množině $d = {0..9}$. Které jsou
-
-Ná základě tohoto můžeme vytvořit následující gramatiku
 $G_{cisla}$(\{S, B, C\}, \{d, .\}, P, S)
 $$S \rightarrow dB | d$$
 $$B \rightarrow dB | d | .C$$
 $$C \rightarrow dC | d$$
 
 \subsection{Řetězce}
-Řetězce začínají a končí na znak ". V samotném řetězci se pak může nacházet jakýkoliv znak kterému   předchází $\backslash$ nebo cokoliv v množině $\blacksquare$
- , která reprezentuje všechny tisknutelné znaky, které nejsou $\backslash$ ".
-Toto lze reprezentovat následující gramatikou $G_{retezce}$(\{S, D, E\}, \{$\backslash, ", \blacksquare$\}, P, S)
+Řetězce začínají a končí na znak ". V samotném řetězci se pak může nacházet jakýkýkoliv znak před kterým se nachází $\backslash$ nebo cokoliv v množině $\blacksquare$, která reprezentuje všechny tisknutelné znaky, které nejsou $\backslash$ nebo ".
+
+$G_{retezce}$(\{S, D, E\}, \{$\backslash, ", \blacksquare$\}, P, S)
 $$S \rightarrow "D$$
 $$D \rightarrow " | \backslash E | \blacksquare E$$
 $$E \rightarrow "D | \backslash D | \blacksquare D$$
 
 \subsection{Závorky}
-Závorky jsou důležitou součástí programovacího jazyků, které patří do rodiny lispu. Rozhodl jsem se, že jazyk bude podporovat \textquotedblleft kulaté \textquotedblright  závorky tedy ( a ). Popisuje je následující gramatika $G_{zavorky}$(\{S\}, \{(, )\}, P, S)
+Závorky hrají v lispu důležitou roli. Rozhodl jsem se, že pro jednoduchost bude jazyk podporovat jen \textquotedblleft kulaté \textquotedblright závorky
+$G_{zavorky}$(\{S\}, \{(, )\}, P, S)
 
 $$S \rightarrow (|)$$
 
@@ -70,9 +68,9 @@ $$F \rightarrow \Square F | \dlsh S$$
 \section{Stavový automat}
 Nyní je třeba z předem definované gramatiky spojit a převést na automat. Pokud tento automat nebude deterministický je třeba jej determinizovat.
 
-Samotný jazyk se skládá z jazyku oddělováčů (komentáře, bílé znaky) $L_{od} = G_{komentare} \bigcup G_{bileznaky}$ a jazyku významových tokenů 
+Samotný jazyk se skládá z jazyku oddělovačů (komentáře, bílé znaky) $L_{od} = G_{komentare} \bigcup G_{bileznaky}$ a jazyku významových tokenů. 
 
-$$L_{vt} = G_{identifikatory} \bigcup G_{cisla} \bigcup G_{retezce} \bigcup G_{zavorky}$$
+$$L_{vt} = L_{identifikatory} \bigcup L_{cisla} \bigcup L_{retezce} \bigcup L_{zavorky}$$
 Celý jazyk pak lze zapsat tímto způsobem 
 $$L = (L^{*}_{od}.L_{vt})^{*}.L^{*}_{od}$$
 Po spojení nám vzniká gramatika
