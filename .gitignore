@@ -1,5 +1,5 @@
 *.o
-project/bin
+project/bin/*
 tests/bin
 *~
 *.pdf
