@@ -2,7 +2,8 @@
 
 Lexer::Lexer(std::istream& input):	m_input(input),
 					m_char(' '),
-					m_eof(false)
+					m_eof(false),
+					m_currenToken({TokenType::IDENTIFIER, ""})
 {
 }
 
@@ -21,6 +22,7 @@ Token Lexer::nextToken()
 {
 	State state = State::q_s;
 	Token token;
+	std::string value;
 	while(state != State::q_final)
 	{
 		next();
@@ -35,6 +37,8 @@ Token Lexer::nextToken()
 			else
 			{
 				token.type = TokenType::END_OF_PROGRAM;
+				value = "EOF";
+				m_currenToken = token;
 				return token;
 			}
 		}
@@ -54,7 +58,7 @@ Token Lexer::nextToken()
 
 			if(isdigit(m_char))
 			{
-				token.value += m_char;
+				value += m_char;
 				token.type = TokenType::NUMBER;
 				state = State::q_bf;
 				continue;
@@ -62,7 +66,7 @@ Token Lexer::nextToken()
 
 			if((isalpha(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char) && m_char != '"')
 			{
-				token.value += m_char;
+				value += m_char;
 				token.type = TokenType::IDENTIFIER;
 				state = State::q_af;
 				continue;
@@ -70,15 +74,17 @@ Token Lexer::nextToken()
 
 			if(m_char == ')')
 			{
-				token.value = m_char;
+				value = m_char;
 				token.type = TokenType::R_PAREN;
+				token.value = value;
 				break;
 			}
 
 			if(m_char == '(')
 			{
-				token.value = m_char;
+				value = m_char;
 				token.type = TokenType::L_PAREN;
+				token.value = value;
 				break;
 			}
 
@@ -86,6 +92,7 @@ Token Lexer::nextToken()
 			{
 				state = State::q_d;
 				token.type = TokenType::STRING;
+				token.value = value;
 				continue;
 			}
 		}
@@ -97,18 +104,19 @@ Token Lexer::nextToken()
 		{
 			if(isdigit(m_char))
 			{
-				token.value += m_char;
+				value += m_char;
 				continue;
 			}
 			else if(m_char == '.')
 			{
-				token.value += m_char;
+				value += m_char;
 				state = State::q_c;
 				continue;
 			}
 			else
 			{
 				m_input.putback(m_char);
+				token.value = std::stoi(value);
 				break; // Q_BF je finální stav automatu, takže můžeme zastavit zde
 			}
 		}
@@ -117,7 +125,7 @@ Token Lexer::nextToken()
 		{
 			if(isdigit(m_char))
 			{
-				token.value += m_char;
+				value += m_char;
 				state = State::q_cf;
 				continue;
 			}
@@ -127,12 +135,13 @@ Token Lexer::nextToken()
 		{
 			if(isdigit(m_char))
 			{
-				token.value += m_char;
+				value += m_char;
 				continue;
 			}
 			else
 			{
 				m_input.putback(m_char);
+				token.value = std::stold(value);
 				break; // Q_CF je finální stav automatu, takže můžeme zastavit zde
 			}
 		}
@@ -141,12 +150,13 @@ Token Lexer::nextToken()
 		{
 			if((isalpha(m_char) || isdigit(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char) && m_char != '"')
 			{
-				token.value += m_char;
+				value += m_char;
 				continue;
 			}
 			else
 			{
 				m_input.putback(m_char);
+				token.value = value;
 				break;
 			}
 		}
@@ -164,6 +174,7 @@ Token Lexer::nextToken()
 		{
 			if(m_char == '"')
 			{
+				token.value = value;
 				break;
 			}
 			else if(m_char == '\\')
@@ -173,14 +184,14 @@ Token Lexer::nextToken()
 			}
 			else
 			{
-				token.value += m_char;
+				value += m_char;
 				continue;
 			}
 		}
 
 		if(state == State::q_e)
 		{
-			token.value += m_char;
+			value += m_char;
 			state = State::q_d;
 			continue;
 		}
@@ -189,5 +200,11 @@ Token Lexer::nextToken()
 		std::exit(9001);
 		//throw std::runtime_error("Neočekávaný znak " + m_char);
 	}
+	m_currenToken = token;
 	return token;
+}
+
+Token Lexer::getCurrentToken()
+{
+	return m_currenToken;
 }

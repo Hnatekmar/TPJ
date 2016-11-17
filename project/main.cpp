@@ -1,21 +1,19 @@
 #include <iostream>
 #include <map>
 #include "include/Lexer.h"
+#include "include/Parser.h"
 
 int main()
 {
-	std::map<TokenType, std::string> translator;
-	translator[TokenType::L_PAREN] = "levá závorka";
-	translator[TokenType::R_PAREN] = "pravá závorka";
-	translator[TokenType::IDENTIFIER] = "identifikator";
-	translator[TokenType::NUMBER] = "číslo";
-	translator[TokenType::STRING] = "řetězec";
-	translator[TokenType::END_OF_PROGRAM] = "Konec programu";
-	Lexer lexer(std::cin);
-	while(!lexer.eof())
+	try
 	{
-		auto token = lexer.nextToken();
-		std::cout << token.value << " Typ: " << translator[token.type] << std::endl;
+		Lexer lexer(std::cin);
+		Parser parser(lexer);
+		parser.parse();
+	}
+	catch(CompilerException c)
+	{
+		std::cout << "V průběhu kompilace nastala chyba " << c.what() << std::endl;
 	}
 	return 0;
 }

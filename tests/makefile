@@ -1,7 +1,9 @@
-compiler=g++
+compiler=clang++
+flags=-std=c++11 -Wall -Werror -pedantic -Wno-c++98-compat -Weffc++
 
 default: clean
-	$(compiler) -o bin/tests main.cpp ../project/*.o
+	make -C ../project
+	$(compiler) $(flags) -o bin/tests main.cpp ../project/*.o
 	./bin/tests
 
 clean:

@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include <string>
+#include "Type.h"
 
 enum class TokenType
 {
@@ -16,7 +16,7 @@ enum class TokenType
 struct Token
 {
 	TokenType type;
-	std::string value;
+	MirageType value;
 };
 
 #endif /* end of include guard: TOKEN_H */
