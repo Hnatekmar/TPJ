@@ -6,9 +6,9 @@
 
 class CompilerException
 {
-	const std::string& m_errorMessage;
+	const std::string m_errorMessage;
 	public:
-		CompilerException(const std::string& errorMessage);
+		CompilerException(const std::string errorMessage);
 		std::string what() const;
 };
 

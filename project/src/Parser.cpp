@@ -1,43 +1,106 @@
 #include "../include/Parser.h"
-#include <stack>
+#include <cassert>
 
 Parser::Parser(Lexer& lexer) : m_lexer(lexer)
 {
+}
+
+void Parser::sCall(std::queue<Token>& semanticStack)
+{
+	/**
+	* SCall(semanticStack) -> { // Sémantická akce volání
+	*	assert(semanticStack.peek() == '(');
+	*	semanticStack.pop();
+	*	identifier = semanticStack.peek();
+	*	if(id == '(') // Pokud je id volání
+	*	{
+	*		SCall(semanticStack);
+	*	}
+	*	else
+	*	{
+	*		m_functions.at(id)(semanticStack); // Volání
+	*	}
+	* }
+	*/
+	Token currToken = semanticStack.front();
+	assert(currToken.type == TokenType::L_PAREN);
+	semanticStack.pop();
+	currToken = semanticStack.front();
+	if(currToken.type == TokenType::L_PAREN)
+	{
+		sCall(semanticStack);
+	}
+	else if(currToken.type == TokenType::IDENTIFIER)
+	{
+		auto functionIdentifier = boost::get<std::string>(currToken.value);
+		semanticStack.pop();
+		if(m_functions.find(functionIdentifier) != m_functions.end())
+		{
+			m_functions.at(functionIdentifier)(semanticStack);
+		}
+		else
+		{
+			throw CompilerException("Neznámá funkce " + functionIdentifier);
+		}
+	}
+	else
+	{
+		throw CompilerException(" není identifikátor nebo volání");
+	}
 }
 
 void Parser::parse()
 {
 	std::stack<Rule> stack;
 	stack.push(Rule::Start);
-	auto token = m_lexer.nextToken();
-	bool call = false;
+	Token token = m_lexer.nextToken();
+	auto rule = stack.top();
+	std::queue<Token> semanticStack;
 	while(!stack.empty())
 	{
-		auto rule = stack.top();
+		rule = stack.top();
 		stack.pop();
-		if(isTerminal(rule) || rule == Rule::epsilon)
+		if(rule == Rule::SCall)
+		{
+			sCall(semanticStack);
+			if(!semanticStack.empty())
+			{
+				std::cout << "Hodnota výrazu: " << semanticStack.front().value << std::endl;
+				semanticStack.pop();
+			}
+		}
+		else if(isTerminal(rule) || rule == Rule::epsilon)
 		{
 			if(rule == Rule::L_PAREN && token.type == TokenType::L_PAREN)
 			{
-				std::cout << "Sémantická akce VOLÁNÍ:" << std::endl;
+				semanticStack.push(token);
 				token = m_lexer.nextToken();
 			}
 			else if(rule == Rule::R_PAREN && token.type == TokenType::R_PAREN)
 			{
+				semanticStack.push(token);
 				token = m_lexer.nextToken();
 			}
 			else if(rule == Rule::epsilon)
 			{
-				stack.pop();
+				semanticStack.push(token);
 				token = m_lexer.nextToken();
+				stack.pop();
 			}
-			else if(isAtom(token))
+			else if(rule == Rule::END_OF_PROGRAM && token.type == TokenType::END_OF_PROGRAM)
 			{
+				assert(stack.empty());
+				assert(semanticStack.empty());
+				break;
+			}
+			else if(rule == Rule::atom && isAtom(token))
+			{
+				semanticStack.push(token);
 				token = m_lexer.nextToken();
 			}
 			else
 			{
-				throw CompilerException("Neočekávaný token");
+				throw CompilerException("Neočekavany token");
 			}
 		}
 		else if(hasRule(rule, token.type))
@@ -54,6 +117,6 @@ void Parser::parse()
 	}
 	if(!m_lexer.eof())
 	{
-		throw CompilerException("Chyba v kompilátoru neočekávaný konec parsování");
+		throw CompilerException("Neočekávaný konec parsování");
 	}
 }

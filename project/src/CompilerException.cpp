@@ -1,7 +1,7 @@
 #include "../include/CompilerException.h"
 
 
-CompilerException::CompilerException(const std::string& errorMessage) : m_errorMessage(errorMessage)
+CompilerException::CompilerException(const std::string errorMessage) : m_errorMessage(errorMessage)
 {
 }
 

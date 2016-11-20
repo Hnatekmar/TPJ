@@ -1,5 +1,5 @@
 compiler=clang++
-flags=-std=c++11 -Wall -Werror -pedantic -Wno-c++98-compat -Weffc++
+flags=-std=c++14 -Wall -Werror -pedantic -Wno-c++98-compat -Weffc++
 
 default: clean obj
 	$(compiler) $(flags) -o bin/interpreter main.cpp *.o

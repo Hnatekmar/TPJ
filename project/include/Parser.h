@@ -6,11 +6,28 @@
 #include "AST.h"
 #include "CompilerException.h"
 #include <list>
+#include <functional>
+#include <queue>
+#include <stack>
 
 /**
- * S -> Expression
- * Expression -> atom
+ * SCall(semanticStack) -> { // Sémantická akce volání
+ *	assert(semanticStack.pop() == '(');
+ *	identifier = semanticStack.peek();
+ *	if(id == '(') // Pokud je id volání
+ *	{
+ *		SCall(semanticStack);
+ *	}
+ *	else
+ *	{
+ *		m_functions.at(id)(semanticStack); // Volání
+ *	}
+ * }
+ *
+ * S -> Expression SCall S
+ * S -> epsilon
  * Expression -> ( EArgs )
+ * EArgs -> atom EArgs
  * EArgs -> Expression EArgs
  * EArgs -> epsilon
  */
@@ -24,36 +41,137 @@ class Parser
 		L_PAREN,
 		R_PAREN,
 		atom,
-		epsilon
+		epsilon,
+		SCall,
+		END_OF_PROGRAM
 	};
-	
+
+	std::map<Rule, std::string> m_ruleToString = {
+		{ Rule::Start, "Start" },
+		{ Rule::Expression, "Expression" },
+		{ Rule::EArgs, "EArgs" },
+		{ Rule::L_PAREN, "L_PAREN" },
+		{ Rule::R_PAREN, "R_PAREN" },
+		{ Rule::atom, "atom" },
+		{ Rule::epsilon, "epsilon" },
+		{ Rule::SCall, "SCall" },
+		{ Rule::END_OF_PROGRAM, "END_OF_PROGRAM" }
+	};
+	std::map<std::string, Token> m_constants;
+	std::map<std::string, std::function<void (std::queue<Token>&)> > m_functions = 
+	{
+		{
+			"definuj",
+			[&](std::queue<Token>& tokens)
+			{
+				if(tokens.empty())
+				{
+					throw CompilerException("Žádne argumenty pro definuj");
+				}
+				auto constantName = tokens.front();
+				if(constantName.type != TokenType::IDENTIFIER)
+				{
+					throw CompilerException("Neplatný argument pro definuj. Očekával jsem identifikátor");
+				}
+				tokens.pop();
+				if(tokens.empty())
+				{
+					throw CompilerException("Nemám co přiřadit do " + boost::get<std::string>(constantName.value));
+				}
+				if(tokens.front().type == TokenType::L_PAREN)
+				{
+					sCall(tokens);
+				}
+				m_constants[boost::get<std::string>(constantName.value)] = tokens.front();
+				tokens.pop();
+				tokens.pop();
+			}
+		},
+		{
+			"*",
+			[&](std::queue<Token>& tokens) {
+				double product = 1.0;
+				if(tokens.empty())
+				{
+					throw CompilerException("Žádne argumenty pro *");
+				}
+				while(!tokens.empty())
+				{
+					auto token = tokens.front();
+					if(token.type == TokenType::L_PAREN)
+					{
+						sCall(tokens);
+						continue;
+					}
+					else if(token.type == TokenType::R_PAREN)
+					{
+						tokens.pop();
+						break;
+					}
+					else if(token.type == TokenType::IDENTIFIER)
+					{
+						if(m_constants.find(boost::get<std::string>(token.value)) != m_constants.end())
+						{
+							auto newToken = m_constants.at(boost::get<std::string>(token.value));
+
+							std::cout << "Našel jsem identifikator " << token.value << std::endl;
+							tokens.pop();
+							tokens.push(newToken);
+							continue;
+						}
+					}
+					product *= boost::get<double>(token.value);
+					tokens.pop();
+				}
+				tokens.push({TokenType::NUMBER, product});
+			}
+		},
+		{
+			"+",
+			[&](std::queue<Token>& tokens) {
+				double product = 0.0;
+				if(tokens.empty())
+				{
+					throw CompilerException("Žádne argumenty pro +");
+				}
+				while(!tokens.empty())
+				{
+					auto token = tokens.front();
+					if(token.type == TokenType::L_PAREN)
+					{
+						sCall(tokens);
+						continue;
+					}
+					else if(token.type == TokenType::R_PAREN)
+					{
+						tokens.pop();
+						break;
+					}
+					product += boost::get<double>(token.value);
+					tokens.pop();
+				}
+				tokens.push({TokenType::NUMBER, product});
+			}
+		}
+	};
+
 	std::map<Rule, std::map<TokenType, std::list<Rule> > > m_parsingTable = { 
 		{
 			{
 				Rule::Start,
 				{
 					{
-						TokenType::IDENTIFIER,
-						{
-							Rule::Expression
-						}
-					},
-					{
-						TokenType::NUMBER,
-						{
-							Rule::Expression
-						}
-					},
-					{
-						TokenType::STRING,
-						{
-							Rule::Expression
-						}
-					},
-					{ 
 						TokenType::L_PAREN,
 						{
-							Rule::Expression
+							Rule::Expression,
+							Rule::SCall,
+							Rule::Start
+						},
+					},
+					{
+						TokenType::END_OF_PROGRAM,
+						{
+							Rule::END_OF_PROGRAM
 						}
 					}
 				}
@@ -61,24 +179,6 @@ class Parser
 			{
 				Rule::Expression,
 				{
-					{
-						TokenType::STRING,
-						{
-							Rule::atom
-						}
-					},
-					{
-						TokenType::IDENTIFIER,
-						{
-							Rule::atom
-						}
-					},
-					{
-						TokenType::NUMBER,
-						{
-							Rule::atom
-						}
-					},
 					{
 						TokenType::L_PAREN,
 						{
@@ -95,21 +195,21 @@ class Parser
 					{
 						TokenType::NUMBER,
 						{
-							Rule::Expression,
+							Rule::atom,
 							Rule::EArgs
 						}
 					},
 					{
 						TokenType::IDENTIFIER,
 						{
-							Rule::Expression,
+							Rule::atom,
 							Rule::EArgs
 						}
 					},
 					{
 						TokenType::STRING,
 						{
-							Rule::Expression,
+							Rule::atom,
 							Rule::EArgs
 						}
 					},
@@ -131,9 +231,11 @@ class Parser
 		}
 	};
 
+	void sCall(std::queue<Token>& semanticStack);
+
 	bool isTerminal(const Rule& rule)
 	{
-		return rule != Rule::Start && rule != Rule::EArgs && rule != Rule::Expression;
+		return rule != Rule::SCall && rule != Rule::Start && rule != Rule::EArgs && rule != Rule::Expression;
 	}
 
 	/**

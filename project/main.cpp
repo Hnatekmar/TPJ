@@ -13,7 +13,7 @@ int main()
 	}
 	catch(CompilerException c)
 	{
-		std::cout << "V průběhu kompilace nastala chyba " << c.what() << std::endl;
+		std::cout << "V průběhu kompilace nastala chyba: " << c.what() << std::endl;
 	}
 	return 0;
 }
