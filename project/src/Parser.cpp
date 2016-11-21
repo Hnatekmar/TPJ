@@ -1,42 +1,43 @@
 #include "../include/Parser.h"
 #include <cassert>
+#include <stack>
 
 Parser::Parser(Lexer& lexer) : m_lexer(lexer)
 {
 }
 
-void Parser::sCall(std::queue<Token>& semanticStack)
+void Parser::sCall(std::deque<Token>& semanticDeque)
 {
 	/**
-	* SCall(semanticStack) -> { // Sémantická akce volání
-	*	assert(semanticStack.peek() == '(');
-	*	semanticStack.pop();
-	*	identifier = semanticStack.peek();
+	* SCall(semanticDeque) -> { // Sémantická akce volání
+	*	assert(semanticDeque.peek() == '(');
+	*	semanticDeque.pop();
+	*	identifier = semanticDeque.peek();
 	*	if(id == '(') // Pokud je id volání
 	*	{
-	*		SCall(semanticStack);
+	*		SCall(semanticDeque);
 	*	}
 	*	else
 	*	{
-	*		m_functions.at(id)(semanticStack); // Volání
+	*		m_functions.at(id)(semanticDeque); // Volání
 	*	}
 	* }
 	*/
-	Token currToken = semanticStack.front();
+	Token currToken = semanticDeque.front();
 	assert(currToken.type == TokenType::L_PAREN);
-	semanticStack.pop();
-	currToken = semanticStack.front();
+	semanticDeque.pop_front();
+	currToken = semanticDeque.front();
 	if(currToken.type == TokenType::L_PAREN)
 	{
-		sCall(semanticStack);
+		sCall(semanticDeque);
 	}
 	else if(currToken.type == TokenType::IDENTIFIER)
 	{
 		auto functionIdentifier = boost::get<std::string>(currToken.value);
-		semanticStack.pop();
+		semanticDeque.pop_front();
 		if(m_functions.find(functionIdentifier) != m_functions.end())
 		{
-			m_functions.at(functionIdentifier)(semanticStack);
+			m_functions.at(functionIdentifier)(semanticDeque);
 		}
 		else
 		{
@@ -55,47 +56,46 @@ void Parser::parse()
 	stack.push(Rule::Start);
 	Token token = m_lexer.nextToken();
 	auto rule = stack.top();
-	std::queue<Token> semanticStack;
+	std::deque<Token> semanticDeque;
 	while(!stack.empty())
 	{
 		rule = stack.top();
 		stack.pop();
 		if(rule == Rule::SCall)
 		{
-			sCall(semanticStack);
-			if(!semanticStack.empty())
+			sCall(semanticDeque);
+			if(!semanticDeque.empty())
 			{
-				std::cout << "Hodnota výrazu: " << semanticStack.front().value << std::endl;
-				semanticStack.pop();
+				semanticDeque.pop_front();
 			}
 		}
 		else if(isTerminal(rule) || rule == Rule::epsilon)
 		{
 			if(rule == Rule::L_PAREN && token.type == TokenType::L_PAREN)
 			{
-				semanticStack.push(token);
+				semanticDeque.push_back(token);
 				token = m_lexer.nextToken();
 			}
 			else if(rule == Rule::R_PAREN && token.type == TokenType::R_PAREN)
 			{
-				semanticStack.push(token);
+				semanticDeque.push_back(token);
 				token = m_lexer.nextToken();
 			}
 			else if(rule == Rule::epsilon)
 			{
-				semanticStack.push(token);
+				semanticDeque.push_back(token);
 				token = m_lexer.nextToken();
 				stack.pop();
 			}
 			else if(rule == Rule::END_OF_PROGRAM && token.type == TokenType::END_OF_PROGRAM)
 			{
 				assert(stack.empty());
-				assert(semanticStack.empty());
+				assert(semanticDeque.empty());
 				break;
 			}
 			else if(rule == Rule::atom && isAtom(token))
 			{
-				semanticStack.push(token);
+				semanticDeque.push_back(token);
 				token = m_lexer.nextToken();
 			}
 			else

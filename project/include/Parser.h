@@ -7,20 +7,19 @@
 #include "CompilerException.h"
 #include <list>
 #include <functional>
-#include <queue>
-#include <stack>
+#include <deque>
 
 /**
- * SCall(semanticStack) -> { // Sémantická akce volání
- *	assert(semanticStack.pop() == '(');
- *	identifier = semanticStack.peek();
+ * SCall(semanticDeque) -> { // Sémantická akce volání
+ *	assert(semanticDeque.pop() == '(');
+ *	identifier = semanticDeque.peek();
  *	if(id == '(') // Pokud je id volání
  *	{
- *		SCall(semanticStack);
+ *		SCall(semanticDeque);
  *	}
  *	else
  *	{
- *		m_functions.at(id)(semanticStack); // Volání
+ *		m_functions.at(id)(semanticDeque); // Volání
  *	}
  * }
  *
@@ -58,11 +57,51 @@ class Parser
 		{ Rule::END_OF_PROGRAM, "END_OF_PROGRAM" }
 	};
 	std::map<std::string, Token> m_constants;
-	std::map<std::string, std::function<void (std::queue<Token>&)> > m_functions = 
+	std::map<std::string, std::function<void (std::deque<Token>&)> > m_functions = 
 	{
 		{
+			"tiskni", // Pro debugovací účely z finální verze je třeba ji odstranit
+			{
+				[&](std::deque<Token>& tokens)
+				{
+					while(!tokens.empty())
+					{
+						auto token = tokens.front();
+						if(token.type == TokenType::L_PAREN)
+						{
+							sCall(tokens);
+							continue;
+						}
+						else if(token.type == TokenType::IDENTIFIER)
+						{
+							if(m_constants.find(boost::get<std::string>(token.value)) != m_constants.end())
+							{
+								auto newToken = m_constants.at(boost::get<std::string>(token.value));
+
+								tokens.pop_front();
+								tokens.push_front(newToken);
+								continue;
+							}
+							else
+							{
+								throw CompilerException("Neplatný identifikátor");
+							}
+						}
+						else if(token.type == TokenType::R_PAREN)
+						{
+							tokens.pop_front();
+							break;
+						}
+						std::cout << token.value << " ";
+						tokens.pop_front();
+					}
+					std::cout << std::endl;
+				}
+			}
+		},
+		{
 			"definuj",
-			[&](std::queue<Token>& tokens)
+			[&](std::deque<Token>& tokens)
 			{
 				if(tokens.empty())
 				{
@@ -73,7 +112,7 @@ class Parser
 				{
 					throw CompilerException("Neplatný argument pro definuj. Očekával jsem identifikátor");
 				}
-				tokens.pop();
+				tokens.pop_front();
 				if(tokens.empty())
 				{
 					throw CompilerException("Nemám co přiřadit do " + boost::get<std::string>(constantName.value));
@@ -83,13 +122,12 @@ class Parser
 					sCall(tokens);
 				}
 				m_constants[boost::get<std::string>(constantName.value)] = tokens.front();
-				tokens.pop();
-				tokens.pop();
+				tokens.pop_front();
 			}
 		},
 		{
 			"*",
-			[&](std::queue<Token>& tokens) {
+			[&](std::deque<Token>& tokens) {
 				double product = 1.0;
 				if(tokens.empty())
 				{
@@ -105,7 +143,7 @@ class Parser
 					}
 					else if(token.type == TokenType::R_PAREN)
 					{
-						tokens.pop();
+						tokens.pop_front();
 						break;
 					}
 					else if(token.type == TokenType::IDENTIFIER)
@@ -114,43 +152,19 @@ class Parser
 						{
 							auto newToken = m_constants.at(boost::get<std::string>(token.value));
 
-							std::cout << "Našel jsem identifikator " << token.value << std::endl;
-							tokens.pop();
-							tokens.push(newToken);
+							tokens.pop_front();
+							tokens.push_front(newToken);
 							continue;
+						}
+						else
+						{
+							throw CompilerException("Neplatný identifikátor");
 						}
 					}
 					product *= boost::get<double>(token.value);
-					tokens.pop();
+					tokens.pop_front();
 				}
-				tokens.push({TokenType::NUMBER, product});
-			}
-		},
-		{
-			"+",
-			[&](std::queue<Token>& tokens) {
-				double product = 0.0;
-				if(tokens.empty())
-				{
-					throw CompilerException("Žádne argumenty pro +");
-				}
-				while(!tokens.empty())
-				{
-					auto token = tokens.front();
-					if(token.type == TokenType::L_PAREN)
-					{
-						sCall(tokens);
-						continue;
-					}
-					else if(token.type == TokenType::R_PAREN)
-					{
-						tokens.pop();
-						break;
-					}
-					product += boost::get<double>(token.value);
-					tokens.pop();
-				}
-				tokens.push({TokenType::NUMBER, product});
+				tokens.push_front({TokenType::NUMBER, product});
 			}
 		}
 	};
@@ -231,7 +245,7 @@ class Parser
 		}
 	};
 
-	void sCall(std::queue<Token>& semanticStack);
+	void sCall(std::deque<Token>& semanticDeque);
 
 	bool isTerminal(const Rule& rule)
 	{
