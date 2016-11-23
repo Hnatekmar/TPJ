@@ -3,11 +3,11 @@
 
 #include <iostream>
 #include "Lexer.h"
-#include "AST.h"
 #include "CompilerException.h"
 #include <list>
 #include <functional>
 #include <deque>
+#include <map>
 
 /**
  * SCall(semanticDeque) -> { // Sémantická akce volání
@@ -44,7 +44,7 @@ class Parser
 		SCall,
 		END_OF_PROGRAM
 	};
-
+	Lexer& m_lexer;
 	std::map<Rule, std::string> m_ruleToString = {
 		{ Rule::Start, "Start" },
 		{ Rule::Expression, "Expression" },
@@ -59,46 +59,6 @@ class Parser
 	std::map<std::string, Token> m_constants;
 	std::map<std::string, std::function<void (std::deque<Token>&)> > m_functions = 
 	{
-		{
-			"tiskni", // Pro debugovací účely z finální verze je třeba ji odstranit
-			{
-				[&](std::deque<Token>& tokens)
-				{
-					while(!tokens.empty())
-					{
-						auto token = tokens.front();
-						if(token.type == TokenType::L_PAREN)
-						{
-							sCall(tokens);
-							continue;
-						}
-						else if(token.type == TokenType::IDENTIFIER)
-						{
-							if(m_constants.find(boost::get<std::string>(token.value)) != m_constants.end())
-							{
-								auto newToken = m_constants.at(boost::get<std::string>(token.value));
-
-								tokens.pop_front();
-								tokens.push_front(newToken);
-								continue;
-							}
-							else
-							{
-								throw CompilerException("Neplatný identifikátor");
-							}
-						}
-						else if(token.type == TokenType::R_PAREN)
-						{
-							tokens.pop_front();
-							break;
-						}
-						std::cout << token.value << " ";
-						tokens.pop_front();
-					}
-					std::cout << std::endl;
-				}
-			}
-		},
 		{
 			"definuj",
 			[&](std::deque<Token>& tokens)
@@ -128,7 +88,7 @@ class Parser
 		{
 			"*",
 			[&](std::deque<Token>& tokens) {
-				double product = 1.0;
+				float product = 1.0f;
 				if(tokens.empty())
 				{
 					throw CompilerException("Žádne argumenty pro *");
@@ -161,7 +121,7 @@ class Parser
 							throw CompilerException("Neplatný identifikátor");
 						}
 					}
-					product *= boost::get<double>(token.value);
+					product *= boost::get<float>(token.value);
 					tokens.pop_front();
 				}
 				tokens.push_front({TokenType::NUMBER, product});
@@ -277,7 +237,6 @@ class Parser
 		       token.type == TokenType::IDENTIFIER;
 	}
 
-	Lexer& m_lexer;
 
 	void except(TokenType type);
 	public:

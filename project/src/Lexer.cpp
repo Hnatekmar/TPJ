@@ -117,7 +117,7 @@ Token Lexer::nextToken()
 			else
 			{
 				m_input.putback(m_char);
-				token.value = std::stoi(value);
+				token.value = std::stof(value);
 				break; // Q_BF je finální stav automatu, takže můžeme zastavit zde
 			}
 		}
@@ -142,7 +142,7 @@ Token Lexer::nextToken()
 			else
 			{
 				m_input.putback(m_char);
-				token.value = std::stold(value);
+				token.value = std::stof(value);
 				break; // Q_CF je finální stav automatu, takže můžeme zastavit zde
 			}
 		}

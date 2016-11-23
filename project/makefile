@@ -1,5 +1,5 @@
-CCXX=clang++
-CCXXFLAGS=-std=c++14 -Wall -Werror -pedantic -Wno-c++98-compat -Weffc++
+CCXX=g++
+CCXXFLAGS=-std=c++14 -Wall -Werror -pedantic -Weffc++
 
 default: setup clean obj
 	$(CCXX) $(CCXXFLAGS) -o bin/interpreter main.cpp *.o
@@ -8,10 +8,10 @@ debug: debugObj
 	$(CCXX) $(CCXXFLAGS) -g -o bin/dInterpreter main.cpp *.o
 
 debugObj:
-	$(compiler) $(flags) -c -g src/*.cpp
+	$(CCXX) $(CCXXFLAGS) -c -g src/*.cpp
 
 obj:
-	$(compiler) $(flags) -c src/*.cpp
+	$(CCXX) $(CCXXFLAGS) -c src/*.cpp
 
 clean:
 	-rm *.o

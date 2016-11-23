@@ -2,7 +2,8 @@
 #include <cassert>
 #include <stack>
 
-Parser::Parser(Lexer& lexer) : m_lexer(lexer)
+Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
+				m_constants()
 {
 }
 

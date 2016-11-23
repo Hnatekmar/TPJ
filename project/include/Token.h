@@ -10,13 +10,14 @@ enum class TokenType
 	IDENTIFIER, // [a-zA-Z_\-@!?@#$%*+-/]+
 	NUMBER, // [0-9]+
 	STRING, // "[^\|\.*]*"
+	BOOL,
 	END_OF_PROGRAM
 };
 
 struct Token
 {
-	TokenType type;
-	MirageType value;
+	TokenType type = TokenType::NUMBER;
+	MirageType value = 0.0f;
 };
 
 #endif /* end of include guard: TOKEN_H */
