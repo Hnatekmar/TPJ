@@ -4,3 +4,7 @@ tests/bin
 *~
 *.pdf
 *.swp
+*.aux
+*.log
+*.toc
+*.out
