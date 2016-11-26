@@ -1,8 +1,9 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include <iostream>
 #include "Token.h"
+#include "FilePos.h"
+#include <iostream>
 #include <exception>
 #include <assert.h>
 #include <cctype>
@@ -22,9 +23,11 @@ class Lexer
 		q_final // Konečný stav automatu
 	};
 	std::istream& m_input;
+
 	char m_char;
 	bool m_eof;
 	Token m_currenToken;
+	FilePos m_filePos;
 
 	/**
 	 * Načte další znak do m_char pokud není lexer zastavený

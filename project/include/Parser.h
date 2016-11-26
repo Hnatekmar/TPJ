@@ -65,17 +65,17 @@ class Parser
 			{
 				if(tokens.empty())
 				{
-					throw CompilerException("Žádne argumenty pro definuj");
+					throw CompilerException("Žádne argumenty pro definuj", {});
 				}
 				auto constantName = tokens.front();
 				if(constantName.type != TokenType::IDENTIFIER)
 				{
-					throw CompilerException("Neplatný argument pro definuj. Očekával jsem identifikátor");
+					throw CompilerException("Neplatný argument pro definuj. Očekával jsem identifikátor", constantName);
 				}
 				tokens.pop_front();
 				if(tokens.empty())
 				{
-					throw CompilerException("Nemám co přiřadit do " + boost::get<std::string>(constantName.value));
+					throw CompilerException("Nemám co přiřadit do " + boost::get<std::string>(constantName.value), constantName);
 				}
 				if(tokens.front().type == TokenType::L_PAREN)
 				{
@@ -91,7 +91,7 @@ class Parser
 				float product = 1.0f;
 				if(tokens.empty())
 				{
-					throw CompilerException("Žádne argumenty pro *");
+					throw CompilerException("Žádne argumenty pro *", {});
 				}
 				while(!tokens.empty())
 				{
@@ -118,7 +118,7 @@ class Parser
 						}
 						else
 						{
-							throw CompilerException("Neplatný identifikátor");
+							throw CompilerException("Neplatný identifikátor", token);
 						}
 					}
 					product *= boost::get<float>(token.value);

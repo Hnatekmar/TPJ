@@ -42,12 +42,12 @@ void Parser::sCall(std::deque<Token>& semanticDeque)
 		}
 		else
 		{
-			throw CompilerException("Neznámá funkce " + functionIdentifier);
+			throw CompilerException("Neznámá funkce " + functionIdentifier, currToken);
 		}
 	}
 	else
 	{
-		throw CompilerException(" není identifikátor nebo volání");
+		throw CompilerException("Token není identifikátor nebo volání", currToken);
 	}
 }
 
@@ -101,7 +101,7 @@ void Parser::parse()
 			}
 			else
 			{
-				throw CompilerException("Neočekavany token");
+				throw CompilerException("Neočekavany token", token);
 			}
 		}
 		else if(hasRule(rule, token.type))
@@ -113,11 +113,11 @@ void Parser::parse()
 		}
 		else
 		{
-			throw CompilerException("Přepisovací pravidlo nenalezeno");
+			throw CompilerException("Přepisovací pravidlo nenalezeno", token);
 		}
 	}
 	if(!m_lexer.eof())
 	{
-		throw CompilerException("Neočekávaný konec parsování");
+		throw CompilerException("Neočekávaný konec parsování", token);
 	}
 }

@@ -3,7 +3,6 @@
 Function::Function(std::deque<Token>& semanticDeque) :	m_code(),
 							m_arguments()
 {
-
 	if(semanticDeque.front().type != TokenType::L_PAREN)
 	{
 		// CHYBA: funkce nemá argumenty

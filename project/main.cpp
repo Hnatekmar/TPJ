@@ -11,7 +11,7 @@ int main()
 		Parser parser(lexer);
 		parser.parse();
 	}
-	catch(CompilerException c)
+	catch(CompilerException& c)
 	{
 		std::cout << "V průběhu kompilace nastala chyba: " << c.what() << std::endl;
 	}

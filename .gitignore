@@ -8,3 +8,7 @@ tests/bin
 *.log
 *.toc
 *.out
+*.cproject
+*.project
+*.xmi
+.settings/

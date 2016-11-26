@@ -3,13 +3,15 @@
 Lexer::Lexer(std::istream& input):	m_input(input),
 					m_char(' '),
 					m_eof(false),
-					m_currenToken({TokenType::IDENTIFIER, ""})
+					m_currenToken({TokenType::IDENTIFIER, ""}),
+					m_filePos()
 {
 }
 
 void Lexer::next()
 {
 	m_input >> std::noskipws >> m_char;
+	m_filePos.accept(m_char);
 	m_eof = m_input.eof();
 }
 
@@ -197,11 +199,12 @@ Token Lexer::nextToken()
 			continue;
 		}
 
-		std::cerr << "Neočekávaný znak " << m_char << std::endl;
+		std::cerr << '<' << m_filePos.line << ":" << m_filePos.pos << "> Neočekávaný znak " << m_char << std::endl;
 		std::exit(9001);
 		//throw std::runtime_error("Neočekávaný znak " + m_char);
 	}
 	m_currenToken = token;
+	token.filePos = m_filePos;
 	return token;
 }
 
