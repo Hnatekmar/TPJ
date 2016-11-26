@@ -13,6 +13,7 @@ enum class TokenType
 	NUMBER, // [0-9]+
 	STRING, // "[^\|\.*]*"
 	BOOL,
+	FUNCTION,
 	END_OF_PROGRAM
 };
 

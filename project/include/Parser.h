@@ -4,10 +4,13 @@
 #include <iostream>
 #include "Lexer.h"
 #include "CompilerException.h"
+#include "AST.h"
 #include <list>
 #include <functional>
 #include <deque>
 #include <map>
+
+typedef std::map<std::string, Token> Context;
 
 /**
  * SCall(semanticDeque) -> { // Sémantická akce volání
@@ -57,77 +60,6 @@ class Parser
 		{ Rule::END_OF_PROGRAM, "END_OF_PROGRAM" }
 	};
 	std::map<std::string, Token> m_constants;
-	std::map<std::string, std::function<void (std::deque<Token>&)> > m_functions = 
-	{
-		{
-			"definuj",
-			[&](std::deque<Token>& tokens)
-			{
-				if(tokens.empty())
-				{
-					throw CompilerException("Žádne argumenty pro definuj", {});
-				}
-				auto constantName = tokens.front();
-				if(constantName.type != TokenType::IDENTIFIER)
-				{
-					throw CompilerException("Neplatný argument pro definuj. Očekával jsem identifikátor", constantName);
-				}
-				tokens.pop_front();
-				if(tokens.empty())
-				{
-					throw CompilerException("Nemám co přiřadit do " + boost::get<std::string>(constantName.value), constantName);
-				}
-				if(tokens.front().type == TokenType::L_PAREN)
-				{
-					sCall(tokens);
-				}
-				m_constants[boost::get<std::string>(constantName.value)] = tokens.front();
-				tokens.pop_front();
-			}
-		},
-		{
-			"*",
-			[&](std::deque<Token>& tokens) {
-				float product = 1.0f;
-				if(tokens.empty())
-				{
-					throw CompilerException("Žádne argumenty pro *", {});
-				}
-				while(!tokens.empty())
-				{
-					auto token = tokens.front();
-					if(token.type == TokenType::L_PAREN)
-					{
-						sCall(tokens);
-						continue;
-					}
-					else if(token.type == TokenType::R_PAREN)
-					{
-						tokens.pop_front();
-						break;
-					}
-					else if(token.type == TokenType::IDENTIFIER)
-					{
-						if(m_constants.find(boost::get<std::string>(token.value)) != m_constants.end())
-						{
-							auto newToken = m_constants.at(boost::get<std::string>(token.value));
-
-							tokens.pop_front();
-							tokens.push_front(newToken);
-							continue;
-						}
-						else
-						{
-							throw CompilerException("Neplatný identifikátor", token);
-						}
-					}
-					product *= boost::get<float>(token.value);
-					tokens.pop_front();
-				}
-				tokens.push_front({TokenType::NUMBER, product});
-			}
-		}
-	};
 
 	std::map<Rule, std::map<TokenType, std::list<Rule> > > m_parsingTable = { 
 		{
@@ -205,7 +137,10 @@ class Parser
 		}
 	};
 
-	void sCall(std::deque<Token>& semanticDeque);
+	Token getValue(Token token, Context& context);
+
+	// Pokusí se zavolat funkci
+	Token sCall(std::shared_ptr<AST>& ast);
 
 	bool isTerminal(const Rule& rule)
 	{
