@@ -14,6 +14,7 @@ enum class TokenType
 	STRING, // "[^\|\.*]*"
 	BOOL,
 	FUNCTION,
+	LIST,
 	END_OF_PROGRAM
 };
 

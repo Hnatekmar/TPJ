@@ -39,7 +39,7 @@ Token Lexer::nextToken()
 			else
 			{
 				token.type = TokenType::END_OF_PROGRAM;
-				value = "EOF";
+				value = "END_OF_PROGRAM";
 				m_currenToken = token;
 				token.value = value;
 				return token;

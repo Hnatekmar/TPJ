@@ -11,9 +11,10 @@ struct Token;
 struct AST;
 
 typedef boost::make_recursive_variant<std::function<Token(
-		std::map<std::string, Token>,
+		std::map<std::string, Token>&,
 		std::list<std::shared_ptr<AST>>&)>,
 		float,
+		std::list<Token>,
 		std::string,
 		bool>::type MirageType;
 

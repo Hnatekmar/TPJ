@@ -13,19 +13,6 @@
 typedef std::map<std::string, Token> Context;
 
 /**
- * SCall(semanticDeque) -> { // Sémantická akce volání
- *	assert(semanticDeque.pop() == '(');
- *	identifier = semanticDeque.peek();
- *	if(id == '(') // Pokud je id volání
- *	{
- *		SCall(semanticDeque);
- *	}
- *	else
- *	{
- *		m_functions.at(id)(semanticDeque); // Volání
- *	}
- * }
- *
  * S -> Expression SCall S
  * S -> epsilon
  * Expression -> ( EArgs )
@@ -77,7 +64,7 @@ class Parser
 					{
 						TokenType::END_OF_PROGRAM,
 						{
-							Rule::END_OF_PROGRAM
+							Rule::epsilon
 						}
 					}
 				}
@@ -137,10 +124,12 @@ class Parser
 		}
 	};
 
+	Token evaluate(std::shared_ptr<AST>& ast, Context& context);
+
 	Token getValue(Token token, Context& context);
 
 	// Pokusí se zavolat funkci
-	Token sCall(std::shared_ptr<AST>& ast);
+	Token sCall(std::shared_ptr<AST>& ast, Context& context);
 
 	bool isTerminal(const Rule& rule)
 	{
@@ -155,6 +144,24 @@ class Parser
 		if(m_parsingTable.find(rule) != m_parsingTable.end())
 		{
 			if(m_parsingTable.at(rule).find(type) != m_parsingTable.at(rule).end())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool isFunction(Token token, Context& context)
+	{
+		if(token.type != TokenType::IDENTIFIER)
+		{
+			return false;
+		}
+		std::string id = boost::get<std::string>(token.value);
+		if(context.find(id) != context.end())
+		{
+			Token value = context[id];
+			if(value.type == TokenType::FUNCTION)
 			{
 				return true;
 			}

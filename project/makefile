@@ -2,7 +2,7 @@ CCXX=g++
 CCXXFLAGS=-std=c++14 -Wall -Werror -pedantic -Weffc++
 
 default: setup clean obj
-	$(CCXX) $(CCXXFLAGS) -o bin/interpreter main.cpp *.o
+	$(CCXX) $(CCXXFLAGS) -O3 -o bin/interpreter main.cpp *.o
 
 debug: debugObj
 	$(CCXX) $(CCXXFLAGS) -g -o bin/dInterpreter main.cpp *.o
