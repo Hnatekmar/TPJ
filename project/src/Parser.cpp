@@ -98,7 +98,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				{
 					throw CompilerException("Hodnota není číslo", value);
 				}
-				product *= boost::get<float>(node->value.value);
+				product *= boost::get<float>(value.value);
 				if(product == 0.0f)
 				{
 					break;
