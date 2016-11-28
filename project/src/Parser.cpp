@@ -111,7 +111,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 
 Token Parser::evaluate(std::shared_ptr<AST>& ast, Context& context)
 {
-	if(isFunction(ast->value, context) || ast->value.type == TokenType::L_PAREN) // je funkce
+	if(ast->call || ast->value.type == TokenType::L_PAREN) // je funkce
 	{
 		return sCall(ast, context);
 	}
@@ -206,6 +206,7 @@ void Parser::parse()
 				token = m_lexer.nextToken();
 				std::shared_ptr<AST> newAST(new AST(token, ast));
 				newAST->value.type = TokenType::END_OF_PROGRAM;
+				newAST->call = true;
 				if(token.type == TokenType::R_PAREN)
 				{
 					newAST->value.value = std::string("list");
