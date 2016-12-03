@@ -1,17 +1,23 @@
 #ifndef AST_H
 #define AST_H
 
-#include <list>
+#include <vector>
 #include <memory>
-#include "../include/Token.h"
+#include "Token.h"
 
 struct AST
 {
-	std::list<std::shared_ptr<AST>> children;
-	Token value;
+	bool call;
 	std::shared_ptr<AST> root;
-	bool call = false;
-	AST(Token token, std::shared_ptr<AST>& parent);
+	Token value;
+	std::vector<std::shared_ptr<AST>> children; // (1 2) => first := 1, rest := (2)
+	AST(Token token, std::shared_ptr<AST>& parent, bool isCall);
+
+	/**
+	 * @brief Vyhodnotí strom s ohledem na kontext.
+	 * @returns Hodnota výrazu
+	 */
+	MirageType evaluate(Context& context);
 };
 
 #endif

@@ -10,7 +10,6 @@
 #include <deque>
 #include <map>
 
-typedef std::map<std::string, Token> Context;
 
 /**
  * S -> Expression SCall S
@@ -144,24 +143,6 @@ class Parser
 		if(m_parsingTable.find(rule) != m_parsingTable.end())
 		{
 			if(m_parsingTable.at(rule).find(type) != m_parsingTable.at(rule).end())
-			{
-				return true;
-			}
-		}
-		return false;
-	}
-
-	bool isFunction(Token token, Context& context)
-	{
-		if(token.type != TokenType::IDENTIFIER)
-		{
-			return false;
-		}
-		std::string id = boost::get<std::string>(token.value);
-		if(context.find(id) != context.end())
-		{
-			Token value = context[id];
-			if(value.type == TokenType::FUNCTION)
 			{
 				return true;
 			}

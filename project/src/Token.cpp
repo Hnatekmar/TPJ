@@ -2,6 +2,7 @@
 
 std::ostream& operator<<(std::ostream& stream, const Token& token)
 {
+	/*
 	if(token.type == TokenType::L_PAREN)
 	{
 		stream << '(';
@@ -40,5 +41,6 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 	{
 		stream << "EOF";
 	}
+	*/
 	return stream;
 }

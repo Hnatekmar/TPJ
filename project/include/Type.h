@@ -4,18 +4,18 @@
 #include <boost/variant.hpp>
 #include <list>
 #include <map>
-#include <memory>
 #include <functional>
+#include <vector>
 
-struct Token;
-struct AST;
+class AST;
 
-typedef boost::make_recursive_variant<std::function<Token(
-		std::map<std::string, Token>&,
-		std::list<std::shared_ptr<AST>>&)>,
+typedef boost::make_recursive_variant<std::function<boost::recursive_variant_(std::vector<AST>&, 
+		std::map<std::string, boost::recursive_variant_>&)>,
 		float,
-		std::list<Token>,
+		std::list<boost::recursive_variant_>,
 		std::string,
 		bool>::type MirageType;
+
+typedef std::map<std::string, MirageType> Context;
 
 #endif
