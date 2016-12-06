@@ -22,6 +22,10 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 	{
 		stream << boost::get<std::string>(token.value);
 	}
+	if(token.type == TokenType::FUNCTION)
+	{
+		stream << "<funkce>";
+	}
 	if(token.type == TokenType::BOOL)
 	{
 		stream << boost::get<bool>(token.value);

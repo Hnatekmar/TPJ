@@ -151,6 +151,26 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				}
 				return Token{TokenType::NUMBER, static_cast<float>(sum), representation.at(0)->value.filePos};
 			MIRAGE_FN_FOOTER;
+
+	m_constants["pokud"] = MIRAGE_FN_HEAD
+				if(representation.size() != 4)
+				{
+						throw CompilerException("pokud bere 3 argumenty", representation.at(0)->value);
+				}
+				auto assertion = representation.at(1)->evaluate(context);
+				if(assertion.type != TokenType::BOOL)
+				{
+					throw CompilerException("První argument musí být logická hodnota", assertion);
+				}
+				if(boost::get<bool>(assertion.value))
+				{
+					return representation.at(2)->evaluate(context);
+				}
+				else
+				{
+					return representation.at(3)->evaluate(context);
+				}
+			MIRAGE_FN_FOOTER;
 }
 
 void Parser::parse()

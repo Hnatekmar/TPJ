@@ -86,7 +86,7 @@ Token Lexer::nextToken()
 			if(m_char == '(')
 			{
 				value = m_char;
-				token.type = TokenType::L_PAREN;
+			token.type = TokenType::L_PAREN;
 				token.value = value;
 				break;
 			}
@@ -205,6 +205,20 @@ Token Lexer::nextToken()
 	}
 	m_currenToken = token;
 	token.filePos = m_filePos;
+	if(token.type == TokenType::IDENTIFIER)
+	{
+		std::string value = boost::get<std::string>(token.value);
+		if(value == "PRAVDA")
+		{
+			token.value = true;
+			token.type = TokenType::BOOL;
+		}
+		if(value == "NEPRAVDA")
+		{
+			token.value = false;
+			token.type = TokenType::BOOL;
+		}
+	}
 	return token;
 }
 

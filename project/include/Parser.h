@@ -106,6 +106,13 @@ class Parser
 						}
 					},
 					{
+						TokenType::BOOL,
+						{
+							Rule::atom,
+							Rule::EArgs
+						}
+					},
+					{
 						TokenType::L_PAREN,
 						{
 							Rule::Expression,
@@ -157,7 +164,8 @@ class Parser
 	{
 		return token.type == TokenType::STRING ||
 		       token.type == TokenType::NUMBER ||
-		       token.type == TokenType::IDENTIFIER;
+		       token.type == TokenType::IDENTIFIER ||
+		       token.type == TokenType::BOOL;
 	}
 
 
