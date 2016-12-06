@@ -32,6 +32,16 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 						return context[boost::get<std::string>(what.value)];
 					MIRAGE_FN_FOOTER;
 
+
+	m_constants["neguj"] = MIRAGE_FN_HEAD
+				if(representation.size() != 2)
+				{
+					throw CompilerException("Neguj bere jednu logickou hodnotu!", representation.at(1)->value);
+				}
+				auto value = representation.at(1)->evaluate(context);
+				return Token{TokenType::BOOL, static_cast<bool>(!boost::get<bool>(value.value)), representation.at(0)->value.filePos};
+				MIRAGE_FN_FOOTER;
+
 	m_constants["*"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
@@ -115,6 +125,78 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					}
 				}
 				return Token{TokenType::NUMBER, static_cast<float>(product), representation.at(0)->value.filePos};
+			MIRAGE_FN_FOOTER;
+
+	m_constants[">"] = MIRAGE_FN_HEAD
+				if(representation.size() != 3)
+				{
+					throw CompilerException("> bere přesně 2 argumenty!", representation.at(0)->value);
+				}
+				auto a = representation.at(1)->evaluate(context);
+				auto b = representation.at(2)->evaluate(context);
+				if(a.type != TokenType::NUMBER)
+				{
+					throw CompilerException("První argument není číslo", a);
+				}
+				if(b.type != TokenType::NUMBER)
+				{
+					throw CompilerException("První argument není číslo", b);
+				}
+				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) > boost::get<float>(b.value)), representation.at(0)->value.filePos};
+			MIRAGE_FN_FOOTER;
+
+	m_constants["<"] = MIRAGE_FN_HEAD
+				if(representation.size() != 3)
+				{
+					throw CompilerException("> bere přesně 2 argumenty!", representation.at(0)->value);
+				}
+				auto a = representation.at(1)->evaluate(context);
+				auto b = representation.at(2)->evaluate(context);
+				if(a.type != TokenType::NUMBER)
+				{
+					throw CompilerException("První argument není číslo", a);
+				}
+				if(b.type != TokenType::NUMBER)
+				{
+					throw CompilerException("První argument není číslo", b);
+				}
+				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) < boost::get<float>(b.value)), representation.at(0)->value.filePos};
+			MIRAGE_FN_FOOTER;
+
+	m_constants[">="] = MIRAGE_FN_HEAD
+				if(representation.size() != 3)
+				{
+					throw CompilerException("> bere přesně 2 argumenty!", representation.at(0)->value);
+				}
+				auto a = representation.at(1)->evaluate(context);
+				auto b = representation.at(2)->evaluate(context);
+				if(a.type != TokenType::NUMBER)
+				{
+					throw CompilerException("První argument není číslo", a);
+				}
+				if(b.type != TokenType::NUMBER)
+				{
+					throw CompilerException("První argument není číslo", b);
+				}
+				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) >= boost::get<float>(b.value)), representation.at(0)->value.filePos};
+			MIRAGE_FN_FOOTER;
+
+	m_constants["<="] = MIRAGE_FN_HEAD
+				if(representation.size() != 3)
+				{
+					throw CompilerException("> bere přesně 2 argumenty!", representation.at(0)->value);
+				}
+				auto a = representation.at(1)->evaluate(context);
+				auto b = representation.at(2)->evaluate(context);
+				if(a.type != TokenType::NUMBER)
+				{
+					throw CompilerException("První argument není číslo", a);
+				}
+				if(b.type != TokenType::NUMBER)
+				{
+					throw CompilerException("První argument není číslo", b);
+				}
+				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) <= boost::get<float>(b.value)), representation.at(0)->value.filePos};
 			MIRAGE_FN_FOOTER;
 
 	m_constants["+"] = MIRAGE_FN_HEAD

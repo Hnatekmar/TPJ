@@ -28,7 +28,7 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 	}
 	if(token.type == TokenType::BOOL)
 	{
-		stream << boost::get<bool>(token.value);
+		stream << (boost::get<bool>(token.value) ? "PRAVDA" : "NEPRAVDA");
 	}
 	if(token.type == TokenType::END_OF_PROGRAM)
 	{
