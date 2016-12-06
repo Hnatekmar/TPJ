@@ -139,8 +139,13 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				{
 					throw CompilerException("- bere alespoň jeden argument!", representation.at(0)->value);
 				}
-				float sum = 0.0f;
-				for(size_t i = 1; i < representation.size(); i++)
+				auto value = representation.at(1)->evaluate(context);
+				float sum = boost::get<float>(value.value);
+				if(representation.size() == 2)
+				{
+					sum = -sum;
+				}
+				for(size_t i = 2; i < representation.size(); i++)
 				{
 					auto value = representation.at(i)->evaluate(context);
 					if(value.type != TokenType::NUMBER)
@@ -170,6 +175,36 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				{
 					return representation.at(3)->evaluate(context);
 				}
+			MIRAGE_FN_FOOTER;
+	
+	m_constants["="] = MIRAGE_FN_HEAD
+			if(representation.size() != 3)
+			{
+				throw CompilerException("= bere 2 argumenty, které porovná", representation.at(0)->evaluate(context));
+			}
+			auto a = representation.at(1)->evaluate(context);
+			auto b = representation.at(2)->evaluate(context);
+			if(a.type != b.type)
+			{
+				throw CompilerException("Nelze porovnávat argumenty rozdílných typů", b);
+			}
+			if(a.type == TokenType::STRING)
+			{
+				return Token{
+					TokenType::BOOL,
+					static_cast<bool>(boost::get<std::string>(a.value) == boost::get<std::string>(b.value)),
+					representation.at(0)->evaluate(context).filePos
+				};
+			}
+			if(a.type == TokenType::NUMBER)
+			{
+				return Token{
+					TokenType::BOOL,
+					static_cast<bool>(boost::get<float>(a.value) == boost::get<float>(b.value)),
+					representation.at(0)->evaluate(context).filePos
+				};
+			}
+			throw CompilerException("Nelze porovnávat argumenty rozdílných typů", representation.at(0)->value);
 			MIRAGE_FN_FOOTER;
 }
 

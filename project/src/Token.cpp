@@ -16,7 +16,7 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 	}
 	if(token.type == TokenType::NUMBER)
 	{
-		stream << boost::get<float>(token.value);
+		stream << std::fixed << boost::get<float>(token.value);
 	}
 	if(token.type == TokenType::STRING)
 	{

@@ -1,0 +1,8 @@
+; Ukázka rekurze
+(definuj fact
+	(funkce (x)
+		(pokud (= x 0)
+			 1
+			 (* x (fact (- x 1))))))
+
+(fact 5)

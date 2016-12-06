@@ -1,3 +1,4 @@
-(funkce a (b c)  ; Příklad definice funkce
-	(* b c))
+(definuj krat
+	(funkce (x) (* x x)))
 
+(krat 10)

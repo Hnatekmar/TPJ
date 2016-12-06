@@ -1,0 +1,4 @@
+(definuj a 5) ; Testuji definici
+(definuj b 10)
+(definuj fn (funkce (x y) (* x y)))
+(fn a b)
