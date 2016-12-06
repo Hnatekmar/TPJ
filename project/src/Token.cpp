@@ -2,7 +2,6 @@
 
 std::ostream& operator<<(std::ostream& stream, const Token& token)
 {
-	/*
 	if(token.type == TokenType::L_PAREN)
 	{
 		stream << '(';
@@ -27,20 +26,9 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 	{
 		stream << boost::get<bool>(token.value);
 	}
-	if(token.type == TokenType::LIST)
-	{
-		auto list = boost::get<std::list<Token>>(token.value);
-		stream << '(';
-		for(auto token : list)
-		{
-			stream << token << ' ';
-		}
-		stream << ')';
-	}
 	if(token.type == TokenType::END_OF_PROGRAM)
 	{
 		stream << "EOF";
 	}
-	*/
 	return stream;
 }

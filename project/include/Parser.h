@@ -45,7 +45,7 @@ class Parser
 		{ Rule::SCall, "SCall" },
 		{ Rule::END_OF_PROGRAM, "END_OF_PROGRAM" }
 	};
-	std::map<std::string, Token> m_constants;
+	Context m_constants;
 
 	std::map<Rule, std::map<TokenType, std::list<Rule> > > m_parsingTable = { 
 		{

@@ -6,16 +6,30 @@
 #include <map>
 #include <functional>
 #include <vector>
+#include <iostream>
+#include <memory>
 
-class AST;
+struct AST;
+struct Token;
 
-typedef boost::make_recursive_variant<std::function<boost::recursive_variant_(std::vector<AST>&, 
-		std::map<std::string, boost::recursive_variant_>&)>,
+typedef boost::make_recursive_variant<std::function<Token(std::vector<std::shared_ptr<AST>>, 
+		std::map<std::string, Token>&)>,
 		float,
-		std::list<boost::recursive_variant_>,
 		std::string,
 		bool>::type MirageType;
 
-typedef std::map<std::string, MirageType> Context;
+typedef std::map<std::string, Token> Context;
+
+enum class MirageKind
+{
+	function = 0,
+	number = 1,
+	string = 2,
+	boolean = 3
+};
+/**
+ * @brief Vrátí druh typu na základě metody whitch
+ */
+MirageKind getKind(const MirageType& type);
 
 #endif
