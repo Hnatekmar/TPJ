@@ -65,6 +65,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 						{
 							auto arglist = representation.at(1)->children;
 							Context contextCopy = ctx;
+							contextCopy.insert(context.begin(), context.end());
 							if(args.size() - 1 != arglist.size())
 							{
 								throw CompilerException("Neplatný počet argumentů", args.at(0)->value);

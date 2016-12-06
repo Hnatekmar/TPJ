@@ -1,0 +1,7 @@
+(definuj . (funkce (f g)
+		(funkce (x)
+			(f (g x)))))
+
+(definuj kombinace (. * *))
+
+(kombinace 5)
