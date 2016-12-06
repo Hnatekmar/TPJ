@@ -32,7 +32,6 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 						return context[boost::get<std::string>(what.value)];
 					MIRAGE_FN_FOOTER;
 
-
 	m_constants["neguj"] = MIRAGE_FN_HEAD
 				if(representation.size() != 2)
 				{
@@ -40,6 +39,52 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				}
 				auto value = representation.at(1)->evaluate(context);
 				return Token{TokenType::BOOL, static_cast<bool>(!boost::get<bool>(value.value)), representation.at(0)->value.filePos};
+				MIRAGE_FN_FOOTER;
+
+	m_constants["a"] = MIRAGE_FN_HEAD
+				if(representation.size() < 2)
+				{
+					throw CompilerException("a bere jednu logickou hodnotu!", representation.at(1)->value);
+				}
+				bool result = true;
+
+				for(size_t i = 1; i < representation.size(); i++)
+				{
+					auto value = representation.at(i)->evaluate(context);
+					if(value.type != TokenType::BOOL)
+					{
+						throw CompilerException("a bere pouze logické hodnoty!", value);
+					}
+					result = result && boost::get<bool>(value.value);
+					if(!result)
+					{
+						break;
+					}
+				}
+				return Token{TokenType::BOOL, static_cast<bool>(result), representation.at(0)->value.filePos};
+				MIRAGE_FN_FOOTER;
+
+	m_constants["nebo"] = MIRAGE_FN_HEAD
+				if(representation.size() < 2)
+				{
+					throw CompilerException("nebo bere alespoň jednu logickou hodnotu!", representation.at(1)->value);
+				}
+				bool result = false;
+
+				for(size_t i = 1; i < representation.size(); i++)
+				{
+					auto value = representation.at(i)->evaluate(context);
+					if(value.type != TokenType::BOOL)
+					{
+						throw CompilerException("nebo bere pouze logické hodnoty!", value);
+					}
+					result = result || boost::get<bool>(value.value);
+					if(result)
+					{
+						break;
+					}
+				}
+				return Token{TokenType::BOOL, static_cast<bool>(result), representation.at(0)->value.filePos};
 				MIRAGE_FN_FOOTER;
 
 	m_constants["*"] = MIRAGE_FN_HEAD
@@ -284,6 +329,14 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				return Token{
 					TokenType::BOOL,
 					static_cast<bool>(boost::get<float>(a.value) == boost::get<float>(b.value)),
+					representation.at(0)->evaluate(context).filePos
+				};
+			}
+			if(a.type == TokenType::BOOL)
+			{
+				return Token{
+					TokenType::BOOL,
+					static_cast<bool>(boost::get<bool>(a.value) == boost::get<bool>(b.value)),
 					representation.at(0)->evaluate(context).filePos
 				};
 			}
