@@ -87,6 +87,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				return Token{TokenType::BOOL, static_cast<bool>(result), representation.at(0)->value.filePos};
 				MIRAGE_FN_FOOTER;
 
+	m_constants["chyba"] = MIRAGE_FN_HEAD
+					auto value = representation.at(1)->evaluate(context);
+					throw CompilerException("Kritická chyba", value);
+					return Token{};
+				MIRAGE_FN_FOOTER;
+
 	m_constants["*"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
