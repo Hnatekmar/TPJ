@@ -15,7 +15,8 @@ enum class TokenType
 	BOOL,
 	FUNCTION,
 	LIST,
-	END_OF_PROGRAM
+	END_OF_PROGRAM,
+	VECTOR
 };
 
 struct Token

@@ -5,7 +5,7 @@
 #include <memory>
 #include "Token.h"
 
-Token evaluateIdentifier(Token identifier, const Context& context);
+inline Token evaluateIdentifier(Token identifier, const Context& context);
 
 struct AST
 {
@@ -19,7 +19,7 @@ struct AST
 	 * @brief Vyhodnotí strom s ohledem na kontext.
 	 * @returns Hodnota výrazu
 	 */
-	Token evaluate(Context& context);
+	 Token evaluate(Context& context);
 };
 
 #endif

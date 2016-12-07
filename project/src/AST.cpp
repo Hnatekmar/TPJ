@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../include/CompilerException.h"
 
-Token evaluateIdentifier(Token identifier, const Context& context)
+inline Token evaluateIdentifier(Token identifier, const Context& context)
 {
 	while(identifier.type == TokenType::IDENTIFIER)
 	{
@@ -40,7 +40,7 @@ Token AST::evaluate(Context& context)
 		{
 			throw CompilerException("Volaná hodnota není funkce", identifier);
 		}
-		auto function = (boost::get<std::function<Token(std::vector<std::shared_ptr<AST>>, std::map<std::string, Token>&)>>)(identifier.value);
+		auto function = (boost::get<std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)>>)(identifier.value);
 		return function(children, context);
 	}
 	else

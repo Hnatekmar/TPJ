@@ -3,7 +3,7 @@
 #include <stack>
 #include <functional>
 
-typedef std::function<Token(std::vector<std::shared_ptr<AST>>, Context&)> MirageFn;
+typedef std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)> MirageFn;
 
 #define MIRAGE_FN_HEAD Token{ \
 		TokenType::FUNCTION, \

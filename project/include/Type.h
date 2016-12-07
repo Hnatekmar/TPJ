@@ -3,23 +3,25 @@
 
 #include <boost/variant.hpp>
 #include <list>
-#include <map>
+#include <unordered_map>
 #include <functional>
 #include <vector>
 #include <iostream>
 #include <memory>
+#include "../include/Vector.h"
 
 struct AST;
 struct Token;
 
-typedef boost::make_recursive_variant<std::function<Token(std::vector<std::shared_ptr<AST>>, 
-		std::map<std::string, Token>&)>,
+typedef boost::make_recursive_variant<std::function<Token(std::vector<std::shared_ptr<AST>>&, 
+		std::unordered_map<std::string, Token>&)>,
 		float,
 		std::string,
 		std::list<Token>,
+		Vector,
 		bool>::type MirageType;
 
-typedef std::map<std::string, Token> Context;
+typedef std::unordered_map<std::string, Token> Context;
 
 enum class MirageKind
 {
