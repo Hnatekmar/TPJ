@@ -105,6 +105,96 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 						representation.at(0)->value.filePos
 					};
 					MIRAGE_FN_FOOTER;
+	
+	m_constants["prvni"] = MIRAGE_FN_HEAD
+					if(representation.size() != 2)
+					{
+						throw CompilerException("Funkce bere jeden argument typu list", representation.at(0)->evaluate(context));
+					}
+					auto value = representation.at(1)->evaluate(context);
+					if(value.type != TokenType::LIST)
+					{
+						throw CompilerException("Funkce prvni bere jeden argument, který musí být typu list!", value);
+					}
+					auto list = boost::get<std::list<Token>>(value.value);
+					return list.front();
+				MIRAGE_FN_FOOTER;
+
+	m_constants["zbytek"] = MIRAGE_FN_HEAD
+					if(representation.size() != 2)
+					{
+						throw CompilerException("Funkce bere jeden argument typu list", representation.at(0)->evaluate(context));
+					}
+					auto value = representation.at(1)->evaluate(context);
+					if(value.type != TokenType::LIST)
+					{
+						throw CompilerException("Funkce zbytek bere jeden argument, který musí být typu list!", value);
+					}
+					auto list = boost::get<std::list<Token>>(value.value);
+					return Token{ 
+						 TokenType::LIST,
+						 std::list<Token>(std::next(list.begin()), list.end()),
+						 representation.at(0)->value.filePos
+					};
+				MIRAGE_FN_FOOTER;
+	
+	m_constants["pridejDozadu"] = MIRAGE_FN_HEAD
+					if(representation.size() != 3)
+					{
+						throw CompilerException("Funkce bere dva argumenty. List a hodnota.", representation.at(0)->evaluate(context));
+					}
+					auto value = representation.at(1)->evaluate(context);
+					if(value.type != TokenType::LIST)
+					{
+						throw CompilerException("Argument musí být typu list!", value);
+					}
+					auto list = boost::get<std::list<Token>>(value.value);
+					std::list<Token> newList(list.begin(), list.end());
+					newList.push_back(representation.at(2)->evaluate(context));
+					return Token{
+						TokenType::LIST,
+						newList,
+						representation.at(0)->value.filePos
+					};
+				MIRAGE_FN_FOOTER;
+
+	m_constants["pridejDopredu"] = MIRAGE_FN_HEAD
+					if(representation.size() != 3)
+					{
+						throw CompilerException("Funkce bere dva argumenty. List a hodnota.", representation.at(0)->evaluate(context));
+					}
+					auto value = representation.at(1)->evaluate(context);
+					if(value.type != TokenType::LIST)
+					{
+						throw CompilerException("Argument musí být typu list!", value);
+					}
+					auto list = boost::get<std::list<Token>>(value.value);
+					std::list<Token> newList(list.begin(), list.end());
+					newList.push_front(representation.at(2)->evaluate(context));
+					return Token{
+						TokenType::LIST,
+						newList,
+						representation.at(0)->value.filePos
+					};
+				MIRAGE_FN_FOOTER;
+	
+	m_constants["velikost"] = MIRAGE_FN_HEAD
+					if(representation.size() != 2)
+					{
+						throw CompilerException("Funkce bere jeden argument typu list.", representation.at(0)->evaluate(context));
+					}
+					auto value = representation.at(1)->evaluate(context);
+					if(value.type != TokenType::LIST)
+					{
+						throw CompilerException("Argument musí být typu list!", value);
+					}
+					auto list = boost::get<std::list<Token>>(value.value);
+					return Token{
+						TokenType::NUMBER,
+						static_cast<float>(list.size()),
+						representation.at(0)->value.filePos
+					};
+				MIRAGE_FN_FOOTER;
 
 	m_constants["*"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
