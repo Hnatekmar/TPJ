@@ -30,6 +30,20 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 	{
 		stream << (boost::get<bool>(token.value) ? "PRAVDA" : "NEPRAVDA");
 	}
+	if(token.type == TokenType::LIST)
+	{
+		auto list = boost::get<std::list<Token>>(token.value);
+		stream << '(';
+		for(auto it = list.begin(); it != list.end(); it++)
+		{
+			stream << (*it);
+			if(std::next(it) != list.end())
+			{
+				stream << ' ';
+			}
+		}
+		stream << ')';
+	}
 	if(token.type == TokenType::END_OF_PROGRAM)
 	{
 		stream << "EOF";

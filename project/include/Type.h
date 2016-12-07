@@ -16,6 +16,7 @@ typedef boost::make_recursive_variant<std::function<Token(std::vector<std::share
 		std::map<std::string, Token>&)>,
 		float,
 		std::string,
+		std::list<Token>,
 		bool>::type MirageType;
 
 typedef std::map<std::string, Token> Context;

@@ -93,6 +93,19 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					return Token{};
 				MIRAGE_FN_FOOTER;
 
+	m_constants["list"] = MIRAGE_FN_HEAD
+					std::list<Token> result;
+					for(size_t i = 1; i < representation.size(); i++)
+					{
+						result.push_back(representation.at(i)->evaluate(context));
+					}
+					return Token{
+						TokenType::LIST,
+						result,
+						representation.at(0)->value.filePos
+					};
+					MIRAGE_FN_FOOTER;
+
 	m_constants["*"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
