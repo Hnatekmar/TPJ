@@ -1,0 +1,47 @@
+; Ukázka práce s listy
+
+(definuj testovaciData (list 1 2 3 4 5))
+
+(definuj mapuj ; Aplikuje fn na všechny elementy listu
+	(funkce (kolekce fn)
+		(definuj interni 
+			(funkce (kolekce fn akumulator)
+				(pokud (= (velikost kolekce) 0)
+					akumulator
+					(interni (zbytek kolekce) fn (pridejDozadu akumulator (fn (prvni kolekce)))))))
+		(interni kolekce fn (list))))
+
+(mapuj testovaciData (funkce (x) (* x 2)))
+
+(definuj otoc ; Otočí list
+	(funkce (kolekce)
+		(definuj interni
+			(funkce (kolekce akumulator)
+				(pokud (= (velikost kolekce) 0)
+					akumulator
+					(interni (zbytek kolekce) (pridejDopredu akumulator (prvni kolekce))))))
+	(interni kolekce (list))))
+
+(otoc testovaciData)
+
+(definuj redukuj
+	(funkce (kolekce fn akumulator)
+		(pokud (= (velikost kolekce) 0)
+			akumulator
+			(redukuj (zbytek kolekce) fn (fn (prvni kolekce) akumulator)))))
+
+(definuj rozsah
+	(funkce (od do) ; vygeneruje list, který obsahuje čísla od `od` do `do`
+		(definuj interni
+			(funkce (od do akumulator)
+				(pokud (= od do)
+					(pridejDozadu akumulator od)
+					(interni (+ 1 od) do (pridejDozadu akumulator od)))))
+	(interni od do (list))))
+
+(rozsah 1 5)
+
+(definuj faktorial (funkce (data)
+			(redukuj (rozsah 2 data) (funkce (x aku) (* x aku)) 1)))
+
+(faktorial 50)
