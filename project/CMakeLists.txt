@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.6)
 project(mirage)
 
 set(CMAKE_CXX_STANDARD 14)
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+
+find_package( Boost )
+include_directories( ${Boost_INCLUDE_DIRS} )
 
 set(SOURCE_FILES
     include/AST.h
@@ -12,6 +17,8 @@ set(SOURCE_FILES
     include/Parser.h
     include/Token.h
     include/Type.h
+    include/StdLib/Define.h
+    src/StdLib/Define.cpp
     src/IFunction.cpp
     src/AST.cpp
     src/CompilerException.cpp
