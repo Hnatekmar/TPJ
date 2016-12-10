@@ -1,6 +1,7 @@
 #include "../include/AST.h"
 #include <iostream>
 #include "../include/CompilerException.h"
+#include "../include/IFunction.h"
 
 inline Token evaluateIdentifier(Token identifier, const Context& context)
 {
@@ -13,7 +14,7 @@ inline Token evaluateIdentifier(Token identifier, const Context& context)
 		}
 		else
 		{
-			throw CompilerException("Token nelze přeložit.", identifier);
+			throw InterpreterException("Token nelze přeložit.", identifier);
 		}
 	}
 	return identifier;
@@ -29,7 +30,7 @@ AST::AST(Token token, std::shared_ptr<AST>& parent, bool isCall):
 
 Token AST::evaluate(Context& context)
 {
-	if(call)
+	if(call && !quote)
 	{
 		Token identifier = children.front()->evaluate(context);
 		if(identifier.type == TokenType::IDENTIFIER)
@@ -38,14 +39,22 @@ Token AST::evaluate(Context& context)
 		}
 		if(identifier.type != TokenType::FUNCTION)
 		{
-			throw CompilerException("Volaná hodnota není funkce", identifier);
+			throw InterpreterException("Volaná hodnota není funkce", identifier);
 		}
-		auto function = (boost::get<std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)>>)(identifier.value);
-		return function(children, context);
+		auto fnType = getKind(identifier.value);
+        if(fnType == MirageKind::function)
+        {
+            auto function = (boost::get<std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)>>)(identifier.value);
+            return function(children, context);
+        }
+        else
+        {
+            return boost::get<std::shared_ptr<IFunction>>(identifier.value)->execute(children, context);
+        }
 	}
 	else
 	{
-		if(value.type == TokenType::IDENTIFIER)
+		if(value.type == TokenType::IDENTIFIER && !quote)
 		{
 			return evaluateIdentifier(value, context);
 		}

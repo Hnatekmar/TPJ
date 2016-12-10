@@ -1,12 +1,12 @@
 #include "../include/CompilerException.h"
 #include <sstream>
 
-CompilerException::CompilerException(const std::string errorMessage, const Token token) : 	m_errorMessage(errorMessage),
+InterpreterException::InterpreterException(const std::string errorMessage, const Token token) : 	m_errorMessage(errorMessage),
 												m_token(token)
 {
 }
 
-std::string CompilerException::what() const
+std::string InterpreterException::what() const
 {
 	std::stringstream ss;
 	ss << std::endl;

@@ -11,7 +11,7 @@ int main()
 		Parser parser(lexer);
 		parser.parse();
 	}
-	catch(CompilerException& c)
+	catch(InterpreterException& c)
 	{
 		std::cout << c.what() << std::endl;
 	}

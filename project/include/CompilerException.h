@@ -5,12 +5,15 @@
 #include <string>
 #include "Token.h"
 
-class CompilerException
+/**
+ * @brief Vyj
+ */
+class InterpreterException
 {
 	const std::string m_errorMessage;
 	const Token m_token;
 	public:
-		CompilerException(const std::string errorMessage, const Token token);
+		InterpreterException(const std::string errorMessage, const Token token);
 		std::string what() const;
 };
 

@@ -20,12 +20,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["definuj"] = MIRAGE_FN_HEAD
 						if(representation.size() != 3)
 						{
-							throw CompilerException("Funkce definuj přebírá 2 argumenty.", representation.front()->value);
+							throw InterpreterException("Funkce definuj přebírá 2 argumenty.", representation.front()->value);
 						}
 						auto what = representation.at(1)->value; // Identifikátor, který nahradí hodnotu
 						if(what.type != TokenType::IDENTIFIER)
 						{
-							throw CompilerException("Definuj potřebuje validní identifikátor", representation.front()->evaluate(context));
+							throw InterpreterException("Definuj potřebuje validní identifikátor", representation.front()->evaluate(context));
 							
 						}
 						context[boost::get<std::string>(what.value)] = representation.at(2)->evaluate(context);
@@ -35,7 +35,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["neguj"] = MIRAGE_FN_HEAD
 				if(representation.size() != 2)
 				{
-					throw CompilerException("Neguj bere jednu logickou hodnotu!", representation.at(1)->value);
+					throw InterpreterException("Neguj bere jednu logickou hodnotu!", representation.at(1)->value);
 				}
 				auto value = representation.at(1)->evaluate(context);
 				return Token{TokenType::BOOL, static_cast<bool>(!boost::get<bool>(value.value)), representation.at(0)->value.filePos};
@@ -44,7 +44,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["a"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
-					throw CompilerException("a bere jednu logickou hodnotu!", representation.at(1)->value);
+					throw InterpreterException("a bere jednu logickou hodnotu!", representation.at(1)->value);
 				}
 				bool result = true;
 
@@ -53,7 +53,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					auto value = representation.at(i)->evaluate(context);
 					if(value.type != TokenType::BOOL)
 					{
-						throw CompilerException("a bere pouze logické hodnoty!", value);
+						throw InterpreterException("a bere pouze logické hodnoty!", value);
 					}
 					result = result && boost::get<bool>(value.value);
 					if(!result)
@@ -67,7 +67,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["nebo"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
-					throw CompilerException("nebo bere alespoň jednu logickou hodnotu!", representation.at(1)->value);
+					throw InterpreterException("nebo bere alespoň jednu logickou hodnotu!", representation.at(1)->value);
 				}
 				bool result = false;
 
@@ -76,7 +76,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					auto value = representation.at(i)->evaluate(context);
 					if(value.type != TokenType::BOOL)
 					{
-						throw CompilerException("nebo bere pouze logické hodnoty!", value);
+						throw InterpreterException("nebo bere pouze logické hodnoty!", value);
 					}
 					result = result || boost::get<bool>(value.value);
 					if(result)
@@ -89,7 +89,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 
 	m_constants["chyba"] = MIRAGE_FN_HEAD
 					auto value = representation.at(1)->evaluate(context);
-					throw CompilerException("Kritická chyba", value);
+					throw InterpreterException("Kritická chyba", value);
 					return Token{};
 				MIRAGE_FN_FOOTER;
 
@@ -109,12 +109,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["prvni"] = MIRAGE_FN_HEAD
 					if(representation.size() != 2)
 					{
-						throw CompilerException("Funkce bere jeden argument typu list", representation.at(0)->evaluate(context));
+						throw InterpreterException("Funkce bere jeden argument typu list", representation.at(0)->evaluate(context));
 					}
 					auto value = representation.at(1)->evaluate(context);
 					if(value.type != TokenType::LIST)
 					{
-						throw CompilerException("Funkce prvni bere jeden argument, který musí být typu list!", value);
+						throw InterpreterException("Funkce prvni bere jeden argument, který musí být typu list!", value);
 					}
 					auto list = boost::get<std::list<Token>>(value.value);
 					return list.front();
@@ -123,12 +123,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["zbytek"] = MIRAGE_FN_HEAD
 					if(representation.size() != 2)
 					{
-						throw CompilerException("Funkce bere jeden argument typu list", representation.at(0)->evaluate(context));
+						throw InterpreterException("Funkce bere jeden argument typu list", representation.at(0)->evaluate(context));
 					}
 					auto value = representation.at(1)->evaluate(context);
 					if(value.type != TokenType::LIST)
 					{
-						throw CompilerException("Funkce zbytek bere jeden argument, který musí být typu list!", value);
+						throw InterpreterException("Funkce zbytek bere jeden argument, který musí být typu list!", value);
 					}
 					auto list = boost::get<std::list<Token>>(value.value);
 					return Token{ 
@@ -141,12 +141,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["pridejDozadu"] = MIRAGE_FN_HEAD
 					if(representation.size() != 3)
 					{
-						throw CompilerException("Funkce bere dva argumenty. List a hodnota.", representation.at(0)->evaluate(context));
+						throw InterpreterException("Funkce bere dva argumenty. List a hodnota.", representation.at(0)->evaluate(context));
 					}
 					auto value = representation.at(1)->evaluate(context);
 					if(value.type != TokenType::LIST)
 					{
-						throw CompilerException("Argument musí být typu list!", value);
+						throw InterpreterException("Argument musí být typu list!", value);
 					}
 					auto list = boost::get<std::list<Token>>(value.value);
 					std::list<Token> newList(list.begin(), list.end());
@@ -161,12 +161,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["pridejDopredu"] = MIRAGE_FN_HEAD
 					if(representation.size() != 3)
 					{
-						throw CompilerException("Funkce bere dva argumenty. List a hodnota.", representation.at(0)->evaluate(context));
+						throw InterpreterException("Funkce bere dva argumenty. List a hodnota.", representation.at(0)->evaluate(context));
 					}
 					auto value = representation.at(1)->evaluate(context);
 					if(value.type != TokenType::LIST)
 					{
-						throw CompilerException("Argument musí být typu list!", value);
+						throw InterpreterException("Argument musí být typu list!", value);
 					}
 					auto list = boost::get<std::list<Token>>(value.value);
 					std::list<Token> newList(list.begin(), list.end());
@@ -181,12 +181,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["velikost"] = MIRAGE_FN_HEAD
 					if(representation.size() != 2)
 					{
-						throw CompilerException("Funkce bere jeden argument typu list.", representation.at(0)->evaluate(context));
+						throw InterpreterException("Funkce bere jeden argument typu list.", representation.at(0)->evaluate(context));
 					}
 					auto value = representation.at(1)->evaluate(context);
 					if(value.type != TokenType::LIST)
 					{
-						throw CompilerException("Argument musí být typu list!", value);
+						throw InterpreterException("Argument musí být typu list!", value);
 					}
 					auto list = boost::get<std::list<Token>>(value.value);
 					return Token{
@@ -199,7 +199,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["*"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
-					throw CompilerException("* bere alespoň jeden argument!", representation.at(0)->value);
+					throw InterpreterException("* bere alespoň jeden argument!", representation.at(0)->value);
 				}
 				float product = 1.0f;
 				for(size_t i = 1; i < representation.size(); i++)
@@ -207,7 +207,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					auto value = representation.at(i)->evaluate(context);
 					if(value.type != TokenType::NUMBER)
 					{
-						throw CompilerException("* bere pouze čísla!", value);
+						throw InterpreterException("* bere pouze čísla!", value);
 					}
 					product *= boost::get<float>(value.value);
 					if(product == 0.0f)
@@ -221,7 +221,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["funkce"] = MIRAGE_FN_HEAD
 					if(representation.size() < 3)
 					{
-						throw CompilerException("Funkce potřebuje minimálně neprázdný seznam argumentů a tělo, které obsahuje minimálně jeden výraz!", representation.at(0)->value);
+						throw InterpreterException("Funkce potřebuje minimálně neprázdný seznam argumentů a tělo, které obsahuje minimálně jeden výraz!", representation.at(0)->value);
 					}
 	return Token{
 						TokenType::FUNCTION,
@@ -232,14 +232,14 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 							contextCopy.insert(context.begin(), context.end());
 							if(args.size() - 1 != arglist.size())
 							{
-								throw CompilerException("Neplatný počet argumentů", args.at(0)->value);
+								throw InterpreterException("Neplatný počet argumentů", args.at(0)->value);
 							}
 							for(size_t i = 0; i < arglist.size(); i++)
 							{
 								arglist.at(i)->call = false;
 								if(arglist.at(i)->value.type != TokenType::IDENTIFIER)
 								{
-									throw CompilerException("V argumentech musí být pouze identifikátory", arglist.at(i)->value);
+									throw InterpreterException("V argumentech musí být pouze identifikátory", arglist.at(i)->value);
 								}
 								contextCopy[boost::get<std::string>(arglist.at(i)->value.value)] = args.at(i + 1)->evaluate(ctx);
 							}
@@ -256,13 +256,13 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["/"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
-					throw CompilerException("* bere alespoň jeden argument!", representation.at(0)->value);
+					throw InterpreterException("* bere alespoň jeden argument!", representation.at(0)->value);
 				}
 				float product = 1.0f;
 				auto first = representation.at(1)->evaluate(context);
 				if(first.type != TokenType::NUMBER)
 				{
-					throw CompilerException("* bere pouze čísla!", first);
+					throw InterpreterException("* bere pouze čísla!", first);
 				}
 				product = boost::get<float>(first.value);
 				for(size_t i = 2; i < representation.size(); i++)
@@ -270,7 +270,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					auto value = representation.at(i)->evaluate(context);
 					if(value.type != TokenType::NUMBER)
 					{
-						throw CompilerException("* bere pouze čísla!", value);
+						throw InterpreterException("* bere pouze čísla!", value);
 					}
 					product /= boost::get<float>(value.value);
 					if(product == 0.0f)
@@ -284,17 +284,17 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants[">"] = MIRAGE_FN_HEAD
 				if(representation.size() != 3)
 				{
-					throw CompilerException("> bere přesně 2 argumenty!", representation.at(0)->value);
+					throw InterpreterException("> bere přesně 2 argumenty!", representation.at(0)->value);
 				}
 				auto a = representation.at(1)->evaluate(context);
 				auto b = representation.at(2)->evaluate(context);
 				if(a.type != TokenType::NUMBER)
 				{
-					throw CompilerException("První argument není číslo", a);
+					throw InterpreterException("První argument není číslo", a);
 				}
 				if(b.type != TokenType::NUMBER)
 				{
-					throw CompilerException("První argument není číslo", b);
+					throw InterpreterException("První argument není číslo", b);
 				}
 				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) > boost::get<float>(b.value)), representation.at(0)->value.filePos};
 			MIRAGE_FN_FOOTER;
@@ -302,17 +302,17 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["<"] = MIRAGE_FN_HEAD
 				if(representation.size() != 3)
 				{
-					throw CompilerException("> bere přesně 2 argumenty!", representation.at(0)->value);
+					throw InterpreterException("> bere přesně 2 argumenty!", representation.at(0)->value);
 				}
 				auto a = representation.at(1)->evaluate(context);
 				auto b = representation.at(2)->evaluate(context);
 				if(a.type != TokenType::NUMBER)
 				{
-					throw CompilerException("První argument není číslo", a);
+					throw InterpreterException("První argument není číslo", a);
 				}
 				if(b.type != TokenType::NUMBER)
 				{
-					throw CompilerException("První argument není číslo", b);
+					throw InterpreterException("První argument není číslo", b);
 				}
 				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) < boost::get<float>(b.value)), representation.at(0)->value.filePos};
 			MIRAGE_FN_FOOTER;
@@ -320,17 +320,17 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants[">="] = MIRAGE_FN_HEAD
 				if(representation.size() != 3)
 				{
-					throw CompilerException("> bere přesně 2 argumenty!", representation.at(0)->value);
+					throw InterpreterException("> bere přesně 2 argumenty!", representation.at(0)->value);
 				}
 				auto a = representation.at(1)->evaluate(context);
 				auto b = representation.at(2)->evaluate(context);
 				if(a.type != TokenType::NUMBER)
 				{
-					throw CompilerException("První argument není číslo", a);
+					throw InterpreterException("První argument není číslo", a);
 				}
 				if(b.type != TokenType::NUMBER)
 				{
-					throw CompilerException("První argument není číslo", b);
+					throw InterpreterException("První argument není číslo", b);
 				}
 				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) >= boost::get<float>(b.value)), representation.at(0)->value.filePos};
 			MIRAGE_FN_FOOTER;
@@ -338,17 +338,17 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["<="] = MIRAGE_FN_HEAD
 				if(representation.size() != 3)
 				{
-					throw CompilerException("> bere přesně 2 argumenty!", representation.at(0)->value);
+					throw InterpreterException("> bere přesně 2 argumenty!", representation.at(0)->value);
 				}
 				auto a = representation.at(1)->evaluate(context);
 				auto b = representation.at(2)->evaluate(context);
 				if(a.type != TokenType::NUMBER)
 				{
-					throw CompilerException("První argument není číslo", a);
+					throw InterpreterException("První argument není číslo", a);
 				}
 				if(b.type != TokenType::NUMBER)
 				{
-					throw CompilerException("První argument není číslo", b);
+					throw InterpreterException("První argument není číslo", b);
 				}
 				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) <= boost::get<float>(b.value)), representation.at(0)->value.filePos};
 			MIRAGE_FN_FOOTER;
@@ -356,7 +356,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["+"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
-					throw CompilerException("+ bere alespoň jeden argument!", representation.at(0)->value);
+					throw InterpreterException("+ bere alespoň jeden argument!", representation.at(0)->value);
 				}
 				float sum = 0.0f;
 				for(size_t i = 1; i < representation.size(); i++)
@@ -364,7 +364,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					auto value = representation.at(i)->evaluate(context);
 					if(value.type != TokenType::NUMBER)
 					{
-						throw CompilerException("+ bere pouze čísla!", value);
+						throw InterpreterException("+ bere pouze čísla!", value);
 					}
 					sum += boost::get<float>(value.value);
 				}
@@ -374,7 +374,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["-"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
-					throw CompilerException("- bere alespoň jeden argument!", representation.at(0)->value);
+					throw InterpreterException("- bere alespoň jeden argument!", representation.at(0)->value);
 				}
 				auto value = representation.at(1)->evaluate(context);
 				float sum = boost::get<float>(value.value);
@@ -387,7 +387,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					auto value = representation.at(i)->evaluate(context);
 					if(value.type != TokenType::NUMBER)
 					{
-						throw CompilerException("* bere pouze čísla!", value);
+						throw InterpreterException("* bere pouze čísla!", value);
 					}
 					sum -= boost::get<float>(value.value);
 				}
@@ -397,12 +397,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["pokud"] = MIRAGE_FN_HEAD
 				if(representation.size() != 4)
 				{
-						throw CompilerException("pokud bere 3 argumenty", representation.at(0)->value);
+						throw InterpreterException("pokud bere 3 argumenty", representation.at(0)->value);
 				}
 				auto assertion = representation.at(1)->evaluate(context);
 				if(assertion.type != TokenType::BOOL)
 				{
-					throw CompilerException("První argument musí být logická hodnota", assertion);
+					throw InterpreterException("První argument musí být logická hodnota", assertion);
 				}
 				if(boost::get<bool>(assertion.value))
 				{
@@ -417,13 +417,13 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 	m_constants["="] = MIRAGE_FN_HEAD
 			if(representation.size() != 3)
 			{
-				throw CompilerException("= bere 2 argumenty, které porovná", representation.at(0)->evaluate(context));
+				throw InterpreterException("= bere 2 argumenty, které porovná", representation.at(0)->evaluate(context));
 			}
 			auto a = representation.at(1)->evaluate(context);
 			auto b = representation.at(2)->evaluate(context);
 			if(a.type != b.type)
 			{
-				throw CompilerException("Nelze porovnávat argumenty rozdílných typů", b);
+				throw InterpreterException("Nelze porovnávat argumenty rozdílných typů", b);
 			}
 			if(a.type == TokenType::STRING)
 			{
@@ -449,7 +449,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 					representation.at(0)->evaluate(context).filePos
 				};
 			}
-			throw CompilerException("Nelze porovnávat argumenty rozdílných typů", representation.at(0)->value);
+			throw InterpreterException("Nelze porovnávat argumenty rozdílných typů", representation.at(0)->value);
 			MIRAGE_FN_FOOTER;
 }
 
@@ -508,7 +508,7 @@ void Parser::parse()
 			}
 			else
 			{
-				throw CompilerException("Neočekavany token", token);
+				throw InterpreterException("Neočekavany token", token);
 			}
 		}
 		else if(hasRule(rule, token.type))
@@ -520,11 +520,11 @@ void Parser::parse()
 		}
 		else
 		{
-			throw CompilerException("Přepisovací pravidlo nenalezeno", token);
+			throw InterpreterException("Přepisovací pravidlo nenalezeno", token);
 		}
 	}
 	if(!m_lexer.eof())
 	{
-		throw CompilerException("Neočekávaný konec parsování", token);
+		throw InterpreterException("Neočekávaný konec parsování", token);
 	}
 }
