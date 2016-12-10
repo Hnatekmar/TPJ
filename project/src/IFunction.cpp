@@ -4,7 +4,7 @@
 Context IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& context)
 {
     Context copy(context.begin(), context.end());
-    auto it = args.begin();
+    auto it = args.begin() + 1;
     for(std::string& argName : m_args)
     {
         if(argName == "...")
@@ -26,6 +26,11 @@ Context IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Contex
             throw InterpreterException("Neplatné množství argumentů", args.back()->value);
         }
         copy[argName] = (*it)->evaluate(context);
+        it++;
     }
-    return copy;
+    if(it != args.end())
+    {
+        throw InterpreterException("Neplatné množství argumentů", args.front()->value);
+    }
+    return std::move(copy);
 }

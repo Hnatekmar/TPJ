@@ -2,6 +2,9 @@
 #include <cassert>
 #include <stack>
 #include <functional>
+#include "../include/StdLib/Define.h"
+#include "../include/StdLib/Not.h"
+#include "../include/StdLib/CreateFunction.h"
 
 typedef std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)> MirageFn;
 
@@ -17,31 +20,26 @@ typedef std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)> Mirag
 Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				m_constants()
 {
-	m_constants["definuj"] = MIRAGE_FN_HEAD
-						if(representation.size() != 3)
-						{
-							throw InterpreterException("Funkce definuj přebírá 2 argumenty.", representation.front()->value);
-						}
-						auto what = representation.at(1)->value; // Identifikátor, který nahradí hodnotu
-						if(what.type != TokenType::IDENTIFIER)
-						{
-							throw InterpreterException("Definuj potřebuje validní identifikátor", representation.front()->evaluate(context));
-							
-						}
-						context[boost::get<std::string>(what.value)] = representation.at(2)->evaluate(context);
-						return context[boost::get<std::string>(what.value)];
-					MIRAGE_FN_FOOTER;
+    m_constants["definuj"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<Define>(),
+            {}
+    };
 
-	m_constants["neguj"] = MIRAGE_FN_HEAD
-				if(representation.size() != 2)
-				{
-					throw InterpreterException("Neguj bere jednu logickou hodnotu!", representation.at(1)->value);
-				}
-				auto value = representation.at(1)->evaluate(context);
-				return Token{TokenType::BOOL, static_cast<bool>(!boost::get<bool>(value.value)), representation.at(0)->value.filePos};
-				MIRAGE_FN_FOOTER;
+    m_constants["neguj"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<Not>(),
+            {}
+    };
 
-	m_constants["a"] = MIRAGE_FN_HEAD
+
+    m_constants["funkce"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<CreateFunction>(),
+            {}
+    };
+
+    m_constants["a"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
 					throw InterpreterException("a bere jednu logickou hodnotu!", representation.at(1)->value);
@@ -217,41 +215,6 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				}
 				return Token{TokenType::NUMBER, static_cast<float>(product), representation.at(0)->value.filePos};
 			MIRAGE_FN_FOOTER;
-	
-	m_constants["funkce"] = MIRAGE_FN_HEAD
-					if(representation.size() < 3)
-					{
-						throw InterpreterException("Funkce potřebuje minimálně neprázdný seznam argumentů a tělo, které obsahuje minimálně jeden výraz!", representation.at(0)->value);
-					}
-	return Token{
-						TokenType::FUNCTION,
-						static_cast<MirageFn>([=](std::vector<std::shared_ptr<AST>> args, Context& ctx)
-						{
-							auto arglist = representation.at(1)->children;
-							Context contextCopy = ctx;
-							contextCopy.insert(context.begin(), context.end());
-							if(args.size() - 1 != arglist.size())
-							{
-								throw InterpreterException("Neplatný počet argumentů", args.at(0)->value);
-							}
-							for(size_t i = 0; i < arglist.size(); i++)
-							{
-								arglist.at(i)->call = false;
-								if(arglist.at(i)->value.type != TokenType::IDENTIFIER)
-								{
-									throw InterpreterException("V argumentech musí být pouze identifikátory", arglist.at(i)->value);
-								}
-								contextCopy[boost::get<std::string>(arglist.at(i)->value.value)] = args.at(i + 1)->evaluate(ctx);
-							}
-							for(size_t i = 2; i < representation.size() - 1; i++)
-							{
-								representation.at(i)->evaluate(contextCopy);
-							}
-							return representation.back()->evaluate(contextCopy);
-						}),
-						representation.at(0)->value.filePos
-					};
-				MIRAGE_FN_FOOTER;
 	
 	m_constants["/"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)

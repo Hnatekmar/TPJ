@@ -1,9 +1,8 @@
 #include "../include/ASTFunction.h"
-#include "../include/AST.h"
 #include "../include/CompilerException.h"
 
-ASTFunction::ASTFunction(std::vector<std::shared_ptr<AST>>& code) :     m_args(),
-                                                                        m_body()
+ASTFunction::ASTFunction(std::vector<std::shared_ptr<AST>>& code, Context closure) : m_body(),
+                                                                                     m_closure(closure)
 {
     if(code.size() < 3)
     {
@@ -23,14 +22,14 @@ ASTFunction::ASTFunction(std::vector<std::shared_ptr<AST>>& code) :     m_args()
         }
         m_args.push_back(argName);
     }
-    m_body.insert(m_body.begin(), code.begin() + 3, code.end());
+    m_body.insert(m_body.begin(), code.begin() + 2, code.end());
 }
 
 Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& context)
 {
     // Nejprve je potřeba vytvořit nový context do kterého se vloží i argumenty funkce
     Context copy = argsToContext(args, context);
-    
+    copy.insert(m_closure.begin(), m_closure.end());
     // Samotná evaluace funkce probíhá zde. Vrací se vždy hodnota posledního výrazu v těle funkce.
     for(auto it = m_body.begin(); it != m_body.end(); it++)
     {
@@ -40,7 +39,7 @@ Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& con
         }
         else
         {
-            (*it)->evaluate(copy);
+            std::cout << (*it)->evaluate(copy) << std::endl;
         }
     }
     
