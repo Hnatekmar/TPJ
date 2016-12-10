@@ -39,9 +39,8 @@ Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& con
         }
         else
         {
-            std::cout << (*it)->evaluate(copy) << std::endl;
+            (*it)->evaluate(copy);
         }
     }
-    
     return Token{}; // Nikdy se nezavolá je zde pouze pro uspokejení kompilátoru
 }

@@ -44,4 +44,4 @@
 (definuj faktorial (funkce (data)
 			(redukuj (rozsah 2 data) (funkce (x aku) (* x aku)) 1)))
 
-(faktorial 1024)
+(faktorial 99999)

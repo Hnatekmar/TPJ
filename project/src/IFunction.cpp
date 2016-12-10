@@ -13,6 +13,7 @@ Context IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Contex
             while(it != args.end())
             {
                 variadic.push_back((*it)->evaluate(context));
+                it++;
             }
             copy[argName] = Token{
                 TokenType::LIST,
