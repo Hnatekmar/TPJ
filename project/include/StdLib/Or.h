@@ -1,3 +1,4 @@
-#ifndef STDLIB/OR
-#define STDLIB/OR
+#ifndef OR
+#define OR
+
 #endif

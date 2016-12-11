@@ -1,0 +1,9 @@
+; Makra
+(definuj infix (makro (x)
+		      ; (1 + 2)
+		      (definuj op (prvni (zbytek x)))
+		      (definuj a (prvni x))
+		      (definuj b (prvni (zbytek (zbytek x))))
+		      (list op a b)))
+
+(infix (1 + 2))

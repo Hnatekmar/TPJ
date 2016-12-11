@@ -41,6 +41,8 @@ set(SOURCE_FILES
     src/Token.cpp
     src/Type.cpp
     src/Vector.cpp
+    include/StdLib/Macro.h
+    src/StdLib/Macro.cpp
     include/StdLib/Or.h
     src/StdLib/Or.cpp
     include/StdLib/Error.h

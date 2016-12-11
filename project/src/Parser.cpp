@@ -5,6 +5,9 @@
 #include "../include/StdLib/Define.h"
 #include "../include/StdLib/Not.h"
 #include "../include/StdLib/CreateFunction.h"
+#include "../include/StdLib/Equals.h"
+#include "../include/StdLib/And.h"
+#include "../include/StdLib/Macro.h"
 
 typedef std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)> MirageFn;
 
@@ -39,28 +42,23 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
             {}
     };
 
-    m_constants["a"] = MIRAGE_FN_HEAD
-				if(representation.size() < 2)
-				{
-					throw InterpreterException("a bere jednu logickou hodnotu!", representation.at(1)->value);
-				}
-				bool result = true;
+    m_constants["="] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<Equals>(),
+            {}
+    };
 
-				for(size_t i = 1; i < representation.size(); i++)
-				{
-					auto value = representation.at(i)->evaluate(context);
-					if(value.type != TokenType::BOOL)
-					{
-						throw InterpreterException("a bere pouze logické hodnoty!", value);
-					}
-					result = result && boost::get<bool>(value.value);
-					if(!result)
-					{
-						break;
-					}
-				}
-				return Token{TokenType::BOOL, static_cast<bool>(result), representation.at(0)->value.filePos};
-				MIRAGE_FN_FOOTER;
+    m_constants["a"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<And>(),
+            {}
+    };
+
+    m_constants["makro"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<CreateMacro>(),
+        {}
+    };
 
 	m_constants["nebo"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
@@ -375,45 +373,7 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				{
 					return representation.at(3)->evaluate(context);
 				}
-			MIRAGE_FN_FOOTER;
-	
-	m_constants["="] = MIRAGE_FN_HEAD
-			if(representation.size() != 3)
-			{
-				throw InterpreterException("= bere 2 argumenty, které porovná", representation.at(0)->evaluate(context));
-			}
-			auto a = representation.at(1)->evaluate(context);
-			auto b = representation.at(2)->evaluate(context);
-			if(a.type != b.type)
-			{
-				throw InterpreterException("Nelze porovnávat argumenty rozdílných typů", b);
-			}
-			if(a.type == TokenType::STRING)
-			{
-				return Token{
-					TokenType::BOOL,
-					static_cast<bool>(boost::get<std::string>(a.value) == boost::get<std::string>(b.value)),
-					representation.at(0)->evaluate(context).filePos
-				};
-			}
-			if(a.type == TokenType::NUMBER)
-			{
-				return Token{
-					TokenType::BOOL,
-					static_cast<bool>(boost::get<float>(a.value) == boost::get<float>(b.value)),
-					representation.at(0)->evaluate(context).filePos
-				};
-			}
-			if(a.type == TokenType::BOOL)
-			{
-				return Token{
-					TokenType::BOOL,
-					static_cast<bool>(boost::get<bool>(a.value) == boost::get<bool>(b.value)),
-					representation.at(0)->evaluate(context).filePos
-				};
-			}
-			throw InterpreterException("Nelze porovnávat argumenty rozdílných typů", representation.at(0)->value);
-			MIRAGE_FN_FOOTER;
+            MIRAGE_FN_FOOTER;
 }
 
 void Parser::parse()

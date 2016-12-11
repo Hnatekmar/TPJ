@@ -43,7 +43,11 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 			}
 		}
 		stream << ')';
-	}
+    }
+    if(token.type == TokenType::MACRO_FN)
+    {
+        stream << "<makro>";
+    }
 	if(token.type == TokenType::END_OF_PROGRAM)
 	{
 		stream << "EOF";

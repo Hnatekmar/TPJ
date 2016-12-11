@@ -1,8 +1,9 @@
 #include "../include/Graphics.h"
 #include "../include/CompilerException.h"
 
-Graphics::Graphics() : m_args{"seznamVykreslitelnychObjektu"}
+Graphics::Graphics()
 {
+    m_args = {"seznamVykreslitelnychObjektu"};
 }
 
 Token Graphics::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)

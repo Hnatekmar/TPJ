@@ -16,8 +16,8 @@ enum class TokenType
 	FUNCTION,
 	LIST,
 	END_OF_PROGRAM,
-	VECTOR,
-    AST
+    MACRO_FN,
+    VECTOR
 };
 
 struct Token

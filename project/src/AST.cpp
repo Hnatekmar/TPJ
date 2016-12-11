@@ -2,8 +2,9 @@
 #include <iostream>
 #include "../include/CompilerException.h"
 #include "../include/IFunction.h"
+#include "../include/StdLib/Macro.h"
 
-inline Token evaluateIdentifier(Token identifier, const Context& context)
+Token evaluateIdentifier(Token identifier, const Context& context)
 {
 	while(identifier.type == TokenType::IDENTIFIER)
 	{
@@ -37,9 +38,9 @@ Token AST::evaluate(Context& context)
 		{
 			identifier = evaluateIdentifier(identifier, context);
 		}
-		if(identifier.type != TokenType::FUNCTION)
+        if(identifier.type != TokenType::FUNCTION && identifier.type != TokenType::MACRO_FN)
 		{
-			throw InterpreterException("Volaná hodnota není funkce", identifier);
+            throw InterpreterException("Volaná hodnota není funkce nebo makro", identifier);
 		}
 		auto fnType = getKind(identifier.value);
         if(fnType == MirageKind::function)
@@ -47,9 +48,14 @@ Token AST::evaluate(Context& context)
             auto function = (boost::get<std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)>>)(identifier.value);
             return function(children, context);
         }
-        else
+        else if(fnType == MirageKind::functionClass)
         {
             return boost::get<std::shared_ptr<IFunction>>(identifier.value)->execute(children, context);
+        }
+        else if(fnType == MirageKind::macro_fn)
+        {
+            auto newAst = boost::get<std::shared_ptr<Macro>>(identifier.value)->expand(children, context);
+            return newAst->evaluate(context);
         }
 	}
 	else

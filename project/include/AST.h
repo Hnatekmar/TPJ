@@ -5,7 +5,7 @@
 #include <memory>
 #include "Token.h"
 
-inline Token evaluateIdentifier(Token identifier, const Context& context);
+Token evaluateIdentifier(Token identifier, const Context& context);
 
 struct AST
 {
