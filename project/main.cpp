@@ -1,9 +1,8 @@
 #include <iostream>
-#include <map>
 #include "include/Lexer.h"
 #include "include/Parser.h"
 
-int main()
+int main(int argc, char** argv)
 {
 	try
 	{
@@ -11,9 +10,9 @@ int main()
 		Parser parser(lexer);
 		parser.parse();
 	}
-	catch(InterpreterException& c)
-	{
-		std::cout << c.what() << std::endl;
+    catch(InterpreterException c)
+    {
+        std::cout << "Chyba:" << c.what() << std::endl;
 	}
 	return 0;
 }

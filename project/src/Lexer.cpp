@@ -3,7 +3,6 @@
 Lexer::Lexer(std::istream& input):	m_input(input),
 					m_char(' '),
 					m_eof(false),
-					m_currenToken({TokenType::IDENTIFIER, ""}),
 					m_filePos()
 {
 }
@@ -40,7 +39,6 @@ Token Lexer::nextToken()
 			{
 				token.type = TokenType::END_OF_PROGRAM;
 				value = "END_OF_PROGRAM";
-				m_currenToken = token;
 				token.value = value;
 				return token;
 			}
@@ -203,7 +201,6 @@ Token Lexer::nextToken()
 		std::exit(9001);
 		//throw std::runtime_error("Neočekávaný znak " + m_char);
 	}
-	m_currenToken = token;
 	token.filePos = m_filePos;
 	if(token.type == TokenType::IDENTIFIER)
 	{
@@ -220,9 +217,4 @@ Token Lexer::nextToken()
 		}
 	}
 	return token;
-}
-
-Token Lexer::getCurrentToken()
-{
-	return m_currenToken;
 }

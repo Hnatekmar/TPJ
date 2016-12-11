@@ -1,0 +1,3 @@
+#ifndef STDLIB/LESSTHAN
+#define STDLIB/LESSTHAN
+#endif

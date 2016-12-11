@@ -3,6 +3,9 @@
 
 #include "IFunction.h"
 
+/**
+ * @brief Reprezentuje uživatelem definovanou funkci
+ */
 class ASTFunction : public IFunction
 {
     std::vector<std::shared_ptr<AST>> m_body;

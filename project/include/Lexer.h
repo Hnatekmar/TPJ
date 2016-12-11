@@ -26,7 +26,6 @@ class Lexer
 
 	char m_char;
 	bool m_eof;
-	Token m_currenToken;
 	FilePos m_filePos;
 
 	/**
@@ -43,11 +42,6 @@ class Lexer
 		 * Vrátí další token získaný ze streamu. Pokud se ve streamu nenachází další znaky, tak vrátí END_OF_PROGRAM token.
 		 */
 		Token nextToken();
-
-		/**
-		 * Vrátí aktualně načtený token
-		 */
-		Token getCurrentToken();
 };
 
 #endif

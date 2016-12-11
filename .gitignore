@@ -12,3 +12,5 @@ tests/bin
 *.project
 *.xmi
 .settings/
+build-*
+*.user

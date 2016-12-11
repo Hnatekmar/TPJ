@@ -482,12 +482,12 @@ void Parser::parse()
 			}
 		}
 		else
-		{
+        {
 			throw InterpreterException("Přepisovací pravidlo nenalezeno", token);
 		}
 	}
 	if(!m_lexer.eof())
 	{
-		throw InterpreterException("Neočekávaný konec parsování", token);
+        throw InterpreterException("Neočekávaný konec parsování", token);
 	}
 }
