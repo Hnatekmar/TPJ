@@ -8,6 +8,8 @@
 #include "../include/StdLib/Equals.h"
 #include "../include/StdLib/And.h"
 #include "../include/StdLib/Macro.h"
+#include "../include/StdLib/Quote.h"
+#include "../include/StdLib/Eval.h"
 
 typedef std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)> MirageFn;
 
@@ -57,6 +59,18 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
     m_constants["makro"] = Token{
         TokenType::FUNCTION,
         std::make_shared<CreateMacro>(),
+        {}
+    };
+
+    m_constants["nevyhodnocuj"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Quote>(),
+        {}
+    };
+
+    m_constants["vyhodnot"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Eval>(),
         {}
     };
 

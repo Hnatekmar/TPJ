@@ -79,6 +79,10 @@ set(SOURCE_FILES
     src/StdLib/If.cpp
     include/StdLib/Equals.h
     src/StdLib/Equals.cpp
+    include/StdLib/Quote.h
+    src/StdLib/Quote.cpp
+    include/StdLib/Eval.h
+    src/StdLib/Eval.cpp
     main.cpp)
 
 add_executable(interpreter ${SOURCE_FILES})
