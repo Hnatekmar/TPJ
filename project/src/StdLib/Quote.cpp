@@ -5,6 +5,7 @@ Token Quote::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
     std::shared_ptr<AST>& doNotEvaluate = args.at(1);
     if(doNotEvaluate->call)
     {
+        std::vector<std::shared_ptr<AST>> test = {doNotEvaluate};
         return Token{
                 TokenType::LIST,
                 astToList(doNotEvaluate->children),

@@ -396,8 +396,8 @@ void Parser::parse()
 	stack.push(Rule::END_OF_PROGRAM);
 	stack.push(Rule::Start);
 	Token token = m_lexer.nextToken();
-	auto rule = stack.top();
-	std::shared_ptr<AST> ast(nullptr);
+    Rule rule;
+    std::shared_ptr<AST> ast(nullptr);
 	while(!stack.empty())
 	{
 		rule = stack.top();
@@ -413,7 +413,7 @@ void Parser::parse()
 			if(rule == Rule::L_PAREN && token.type == TokenType::L_PAREN)
 			{
 				token = m_lexer.nextToken();
-				std::shared_ptr<AST> tmpAST(new AST(token, ast, true));
+                std::shared_ptr<AST> tmpAST = std::make_shared<AST>(token, ast, true);
 				if(ast != nullptr)
 				{
 					ast->children.push_back(tmpAST);
@@ -438,7 +438,7 @@ void Parser::parse()
 			}
 			else if(rule == Rule::atom && isAtom(token))
 			{
-				std::shared_ptr<AST> tmpAST(new AST(token, ast, false));
+                std::shared_ptr<AST> tmpAST = std::make_shared<AST>(token, ast, false);
 				assert(ast != nullptr);
 				ast->children.push_back(tmpAST);
 				token = m_lexer.nextToken();
