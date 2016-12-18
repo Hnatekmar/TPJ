@@ -1,3 +1,3 @@
-#ifndef STDLIB/ERROR
-#define STDLIB/ERROR
+#ifndef ERROR
+#define ERROR
 #endif

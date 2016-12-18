@@ -1,3 +1,3 @@
-#ifndef STDLIB/LESSOREQUAL
-#define STDLIB/LESSOREQUAL
+#ifndef LESSOREQUAL
+#define LESSOREQUAL
 #endif

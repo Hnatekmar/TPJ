@@ -1,3 +1,3 @@
-#ifndef STDLIB/ADDFRONT
-#define STDLIB/ADDFRONT
+#ifndef ADDFRONT
+#define ADDFRONT
 #endif

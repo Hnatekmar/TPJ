@@ -1,3 +1,3 @@
-#ifndef STDLIB/MINUS
-#define STDLIB/MINUS
+#ifndef MINUS
+#define MINUS
 #endif

@@ -1,9 +1,10 @@
 #include "../include/ASTFunction.h"
 #include "../include/CompilerException.h"
 
-ASTFunction::ASTFunction(std::vector<std::shared_ptr<AST>>& code, Context closure) : m_body(),
-                                                                                     m_closure(closure),
-                                                                                     IFunction()
+ASTFunction::ASTFunction(std::vector<std::shared_ptr<AST>>& code, Context closure) :
+                                                                                     IFunction(),
+                                                                                     m_body(),
+                                                                                     m_closure(closure)
 {
     if(code.size() < 3)
     {

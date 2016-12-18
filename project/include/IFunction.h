@@ -23,6 +23,7 @@ public:
      * @brief Provede funkci na základě kontextu a argumentů
      */
     virtual Token execute(std::vector<std::shared_ptr<AST>>& args, Context& context) = 0;
+    virtual ~IFunction() = default;
 };
 
 

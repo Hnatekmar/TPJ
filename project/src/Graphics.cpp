@@ -15,8 +15,6 @@ Token Graphics::execute(std::vector<std::shared_ptr<AST> > &args, Context &conte
     }
     std::list<Token> objects = boost::get<std::list<Token>>(list.value);
     std::cout << "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">";
-    for(Token& obj : objects)
-    {
-    }
     std::cout << "</svg>";
+    return Token{};
 }

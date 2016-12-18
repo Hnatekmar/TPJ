@@ -1,3 +1,3 @@
-#ifndef STDLIB/BIGGERTHAN
-#define STDLIB/BIGGERTHAN
+#ifndef BIGGERTHAN
+#define BIGGERTHAN
 #endif

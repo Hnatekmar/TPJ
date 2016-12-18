@@ -1,3 +1,3 @@
-#ifndef STDLIB/SIZE
-#define STDLIB/SIZE
+#ifndef SIZE
+#define SIZE
 #endif

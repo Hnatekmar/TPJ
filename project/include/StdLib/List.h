@@ -1,3 +1,3 @@
-#ifndef STDLIB/LIST
-#define STDLIB/LIST
+#ifndef LIST
+#define LIST
 #endif

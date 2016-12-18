@@ -1,3 +1,3 @@
-#ifndef STDLIB/DIVIDE
-#define STDLIB/DIVIDE
+#ifndef DIVIDE
+#define DIVIDE
 #endif

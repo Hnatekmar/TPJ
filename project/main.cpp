@@ -2,7 +2,7 @@
 #include "include/Lexer.h"
 #include "include/Parser.h"
 
-int main(int argc, char** argv)
+int main(int , char** )
 {
 	try
 	{

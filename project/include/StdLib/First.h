@@ -1,3 +1,3 @@
-#ifndef STDLIB/FIRST
-#define STDLIB/FIRST
+#ifndef FIRST
+#define FIRST
 #endif

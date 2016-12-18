@@ -1,3 +1,3 @@
-#ifndef STDLIB/REST
-#define STDLIB/REST
+#ifndef REST
+#define REST
 #endif

@@ -68,5 +68,6 @@ Token AST::evaluate(Context& context)
 		{
 			return value;
 		}
-	}
+    }
+    return Token{};
 }

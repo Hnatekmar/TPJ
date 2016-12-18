@@ -1,7 +1,8 @@
 #include "../../include/StdLib/Macro.h"
 #include "../../include/CompilerException.h"
 
-Macro::Macro(std::vector<std::shared_ptr<AST> > &code) : m_body()
+Macro::Macro(std::vector<std::shared_ptr<AST> > &code) : 	m_body(),
+                                                            m_args()
 {
     if(code.size() < 3)
     {
@@ -130,10 +131,11 @@ std::shared_ptr<AST> Macro::expand(std::vector<std::shared_ptr<AST> > &args, Con
             (*it)->evaluate(copy);
         }
     }
+    return nullptr;
 }
 
 
-Token CreateMacro::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
+Token CreateMacro::execute(std::vector<std::shared_ptr<AST> > &args, Context &)
 {
    Token returnVal{
         TokenType::MACRO_FN,

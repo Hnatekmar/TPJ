@@ -37,7 +37,8 @@ Context IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Contex
 }
 
 unsigned int IFunction::s_id = 0;
-IFunction::IFunction() : m_id(s_id++)
+IFunction::IFunction() : m_id(s_id++),
+                         m_args()
 {
 }
 
