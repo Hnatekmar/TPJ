@@ -41,6 +41,8 @@ $$S \rightarrow dB | d$$
 $$B \rightarrow dB | d | .C$$
 $$C \rightarrow dC | d$$
 
+
+
 \subsection{Řetězce}
 Řetězce začínají a končí na znak ". V samotném řetězci se pak může nacházet jakýkýkoliv znak před kterým se nachází $\backslash$ nebo cokoliv v množině $\blacksquare$, která reprezentuje všechny tisknutelné znaky, které nejsou $\backslash$ nebo ".
 
@@ -64,6 +66,32 @@ Jazyk má jednoduché komentáře začínající na ; a končící novým řádk
 
 $$S \rightarrow ;F$$
 $$F \rightarrow \Square F | \dlsh S$$
+
+\subsection{Symboly pro expanzi parserem}
+$G_{expanze}$(\{S, G\}, \{ $\boxplus$, \# \})
+
+$$S \rightarrow \#G$$
+$$G \rightarrow \boxplus G | \boxplus$$
+
+Kde $\boxplus$ je množina všech nebilých znaků včetně \#. 
+
+\subsection{Speciální znaky}
+$G_{specialni}$(\{S\}, \{, , ` , ', '@', \textasciitilde{} \})
+
+$$S \rightarrow  , | ` | ' | @ | \textasciitilde{}$$
+
+\subsection{Logické hodnoty}
+Logická hodnota může být buď PRAVDA nebo NEPRAVDA tedy:
+$G_{logicke}$(\{S, H, I, J, K, L, M, O\}, \{P, R, A, V, D, A, N, E\})
+
+$$S \rightarrow N H | P J$$
+$$H \rightarrow E I$$
+$$I \rightarrow P J$$ 
+$$J \rightarrow R K$$
+$$K \rightarrow A L$$
+$$L \rightarrow V M$$
+$$M \rightarrow D O$$
+$$O \rightarrow A$$
 
 \section{Stavový automat}
 Nyní je třeba z předem definované gramatiky spojit a převést na automat. Pokud tento automat nebude deterministický je třeba jej determinizovat.
@@ -119,4 +147,11 @@ $Q_{C\hat{F}}$ & $Q_{C\hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - 
 
 \input{automat.tex}
 
+\section{Parsování}
+K parsování byl použit algoritmus rozkladu parsovací tabulky.
+
+\subsection{Gramatika pro parsování}
+
+$$S \rightarrow ( Expr ) Eval S | \epsilon$$
+$$Expr \rightarrow EArg | atom \epsilon$$
 \end{document}
