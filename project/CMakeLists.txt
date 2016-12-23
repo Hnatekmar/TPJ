@@ -27,6 +27,7 @@ find_package( Boost )
 include_directories( ${Boost_INCLUDE_DIRS} )
 
 link_libraries(${Boost_LIBRARIES})
+include_directories(${CMAKE_SOURCE_DIR})
 
 set(SOURCE_FILES
     include/AST.h
@@ -100,5 +101,4 @@ set(SOURCE_FILES
     include/StdLib/Eval.h
     src/StdLib/Eval.cpp
     main.cpp)
-
 add_executable(interpreter ${SOURCE_FILES})

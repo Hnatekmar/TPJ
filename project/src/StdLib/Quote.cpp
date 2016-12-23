@@ -1,16 +1,6 @@
 #include "../../include/StdLib/Quote.h"
 
-Token Quote::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
+Token Quote::execute(std::vector<std::shared_ptr<AST> > &args, Context &)
 {
-    std::shared_ptr<AST>& doNotEvaluate = args.at(1);
-    if(doNotEvaluate->call)
-    {
-        std::vector<std::shared_ptr<AST>> test = {doNotEvaluate};
-        return Token{
-                TokenType::LIST,
-                astToList(doNotEvaluate->children),
-                doNotEvaluate->value.filePos
-        };
-    }
-    return doNotEvaluate->evaluate(context);
+    return quote(args.at(1));
 }

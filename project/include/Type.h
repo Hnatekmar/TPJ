@@ -25,7 +25,6 @@ typedef boost::make_recursive_variant<std::function<Token(std::vector<std::share
 		bool>::type MirageType;
 
 typedef std::unordered_map<std::string, Token> Context;
-
 enum class MirageKind
 {
 	function = 0,

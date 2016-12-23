@@ -24,7 +24,8 @@ struct Token
 {
 	TokenType type = TokenType::NUMBER;
 	MirageType value = 0.0f;
-	FilePos filePos = {};
+    FilePos filePos = {};
+    bool quote = false;
 };
 
 std::ostream& operator<<(std::ostream& stream, const Token& token);

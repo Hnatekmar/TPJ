@@ -10,7 +10,6 @@ Token evaluateIdentifier(Token identifier, const Context& context);
 struct AST
 {
 	bool call;
-    bool quote = false;
 	std::shared_ptr<AST> root;
 	Token value;
 	AST(Token token, std::shared_ptr<AST>& parent, bool isCall);
@@ -20,7 +19,7 @@ struct AST
 	 * @brief Vyhodnotí strom s ohledem na kontext.
 	 * @returns Hodnota výrazu
 	 */
-	 Token evaluate(Context& context);
+     Token evaluate(Context& context);
 };
 
 #endif

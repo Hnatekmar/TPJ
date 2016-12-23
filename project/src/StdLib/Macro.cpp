@@ -36,11 +36,7 @@ Context Macro::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context co
             std::list<Token> variadic;
             while(it != args.end())
             {
-                variadic.push_back(Token{
-                                       TokenType::LIST,
-                                       astToList((*it)->children),
-                                       (*it)->value.filePos
-                           });
+                variadic.push_back(quote(*it));
                 it++;
             }
             copy[argName] = Token{
@@ -54,11 +50,7 @@ Context Macro::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context co
         {
             throw InterpreterException("Neplatné množství argumentů", args.back()->value);
         }
-        copy[argName] = Token{
-                TokenType::LIST,
-                astToList((*it)->children),
-                (*it)->value.filePos
-            };
+        copy[argName] = quote(*it);
         it++;
     }
     if(it != args.end())
@@ -68,10 +60,44 @@ Context Macro::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context co
     return std::move(copy);
 }
 
+Token quote(std::shared_ptr<AST> &ast)
+{
+    if(ast->call)
+    {
+        return Token{
+            TokenType::LIST,
+            astToList(ast),
+            ast->value.filePos
+        };
+    }
+    Token copy = ast->value;
+    copy.quote = true;
+    return copy;
+}
+
+std::shared_ptr<AST> unquote(Token &value)
+{
+    if(value.type == TokenType::LIST)
+    {
+        return listToAst(boost::get<std::list<Token>>(value.value));
+    }
+    std::shared_ptr<AST> top(nullptr);
+    Token copy = value;
+    copy.quote = false;
+    return std::make_shared<AST>(
+                copy,
+                top,
+                false);
+}
+
 std::shared_ptr<AST> listToAst(std::list<Token> &list)
 {
     std::shared_ptr<AST> top(nullptr);
     std::shared_ptr<AST> node = std::make_shared<AST>(Token{}, top, true);
+    if(list.size() == 0)
+    {
+        return node;
+    }
     node->value = list.front();
     for(Token& elem : list)
     {
@@ -83,29 +109,20 @@ std::shared_ptr<AST> listToAst(std::list<Token> &list)
         }
         else
         {
-            node->children.push_back(std::make_shared<AST>(elem, node, false));
+            Token copy = elem;
+            copy.quote = false;
+            node->children.push_back(std::make_shared<AST>(copy, node, false));
         }
     }
     return node;
 }
 
-std::list<Token> astToList(std::vector<std::shared_ptr<AST> > &ast)
+std::list<Token> astToList(std::shared_ptr<AST> &ast)
 {
     std::list<Token> list;
-    for(std::shared_ptr<AST>& elem : ast)
+    for(std::shared_ptr<AST>& elem : ast->children)
     {
-        if(elem->call)
-        {
-            list.push_back(Token{
-                               TokenType::LIST,
-                               astToList(elem->children),
-                               elem->value.filePos
-                           });
-        }
-        else
-        {
-            list.push_back(elem->value);
-        }
+        list.push_back(quote(elem));
     }
     return list;
 }
@@ -144,3 +161,4 @@ Token CreateMacro::execute(std::vector<std::shared_ptr<AST> > &args, Context &)
     };
    return returnVal;
 }
+

@@ -6,7 +6,7 @@
 
 Token evaluateIdentifier(Token identifier, const Context& context)
 {
-	while(identifier.type == TokenType::IDENTIFIER)
+    while(identifier.type == TokenType::IDENTIFIER && !identifier.quote)
 	{
 		std::string value = boost::get<std::string>(identifier.value);
 		if(context.find(value) != context.end())
@@ -31,7 +31,7 @@ AST::AST(Token token, std::shared_ptr<AST>& parent, bool isCall):
 
 Token AST::evaluate(Context& context)
 {
-	if(call && !quote)
+    if(call)
 	{
 		Token identifier = children.front()->evaluate(context);
 		if(identifier.type == TokenType::IDENTIFIER)
@@ -60,7 +60,7 @@ Token AST::evaluate(Context& context)
 	}
 	else
 	{
-		if(value.type == TokenType::IDENTIFIER && !quote)
+        if(value.type == TokenType::IDENTIFIER && !value.quote)
 		{
 			return evaluateIdentifier(value, context);
 		}
