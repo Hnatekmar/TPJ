@@ -8,11 +8,18 @@
 
 (infix (1 + 2))
 
-(definuj dfn (makro (nazev argumenty telo)
+(definuj spoj (funkce (a b)
+		      (pokud (= (velikost b) 0)
+			     a
+			     (spoj (pridejDozadu a (prvni b)) (zbytek b)))))
+
+(definuj dfn (makro (nazev argumenty ...)
 		    (list definuj
 			  nazev
-			  (list funkce argumenty telo))))
+			  (spoj (list funkce argumenty) ...))))
 
-(dfn foo (x y ...) (* x y (prvni ...)))
+(dfn foo (x y) 
+     (definuj pi 3.14)
+     (* x y pi))
 
-(foo 5 6 7 8 9)
+(foo 5 6)
