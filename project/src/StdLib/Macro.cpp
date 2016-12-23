@@ -56,7 +56,7 @@ Context IMacro::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context c
     {
         throw InterpreterException("Neplatné množství argumentů", args.front()->value);
     }
-    return std::move(copy);
+    return copy;
 }
 
 Token quote(std::shared_ptr<AST> &ast)

@@ -23,3 +23,38 @@
      (* x y pi))
 
 (foo 5 6)
+
+(definuj blok (makro (...) ; Makro blok provede sekvenci příkazů a vrátí poslední
+		           ; Příklad - (blok 1 2 3) => 3
+		     (list (spoj (list funkce (nevyhodnocuj ())) ...))))
+
+(blok
+  (definuj pi 3.14)
+  (* pi 2))
+
+(dfn id (x) x)
+
+(definuj aplikuj (makro (nazev argumenty)
+			(spoj (list nazev) (vyhodnot argumenty))))
+
+(definuj prepinac (makro (...)
+			 (pokud (= (velikost ...) 0)
+				(chyba "Makro prepinac potrebuje alespon jeden argument")
+				(pokud (= (velikost ...) 1)
+				       (blok
+					 (definuj polozka (prvni ...))
+					 (definuj predikat (prvni polozka))
+					 (list pokud
+					       predikat
+					       (prvni (zbytek polozka))
+					       (list chyba "Prepinac dosel do konce")))
+				       (blok
+					 (definuj polozka (prvni ...))
+					 (definuj predikat (vyhodnot (prvni polozka)))
+					 (list pokud
+					       predikat
+					       (prvni (zbytek polozka))
+					       (list aplikuj prepinac (zbytek ...))))))))
+; Expanduje se do
+; 	 5
+(prepinac ((= 5 5) 5) ((= 4 4) 4))

@@ -2,6 +2,11 @@
 
 (definuj testovaciData (list 1 2 3 4 5))
 
+(definuj spoj (funkce (a b)
+		      (pokud (= (velikost b) 0)
+			     a
+			     (spoj (pridejDozadu a (prvni b)) (zbytek b)))))
+
 (definuj mapuj ; Aplikuje fn na všechny elementy listu
 	(funkce (kolekce fn)
 		(definuj interni 
@@ -40,6 +45,6 @@
 (rozsah 1 5)
 
 (definuj faktorial (funkce (data)
-			(redukuj (rozsah 2 data) (funkce (a b) (* a b)) 1)))
+			(redukuj (rozsah 2 data) * 1)))
 
-(faktorial 999)
+(faktorial 9999)

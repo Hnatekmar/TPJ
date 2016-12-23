@@ -33,7 +33,7 @@ Context IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Contex
     {
         throw InterpreterException("Neplatné množství argumentů", args.front()->value);
     }
-    return std::move(copy);
+    return copy;
 }
 
 unsigned long IFunction::s_id = 0;
