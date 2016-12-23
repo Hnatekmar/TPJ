@@ -1,8 +1,7 @@
 #include "../../include/StdLib/Macro.h"
 #include "../../include/CompilerException.h"
 
-Macro::Macro(std::vector<std::shared_ptr<AST> > &code) : 	m_body(),
-                                                            m_args()
+Macro::Macro(std::vector<std::shared_ptr<AST> > &code)
 {
     if(code.size() < 3)
     {
@@ -25,7 +24,7 @@ Macro::Macro(std::vector<std::shared_ptr<AST> > &code) : 	m_body(),
     m_body.insert(m_body.begin(), code.begin() + 2, code.end());
 }
 
-Context Macro::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context context)
+Context IMacro::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context context)
 {
     Context copy(context.begin(), context.end());
     auto it = args.begin() + 1;
@@ -128,7 +127,7 @@ std::list<Token> astToList(std::shared_ptr<AST> &ast)
 }
 
 
-std::shared_ptr<AST> Macro::expand(std::vector<std::shared_ptr<AST> > &args, Context &context)
+std::shared_ptr<AST> IMacro::expand(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
     Context copy = argsToContext(args, context);
     // Samotná evaluace funkce probíhá zde. Vrací se vždy hodnota posledního výrazu v těle funkce.

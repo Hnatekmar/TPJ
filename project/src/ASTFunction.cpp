@@ -1,5 +1,6 @@
 #include "../include/ASTFunction.h"
 #include "../include/CompilerException.h"
+#include "../include/StdLib/Macro.h"
 
 ASTFunction::ASTFunction(std::vector<std::shared_ptr<AST>>& code, Context closure) :
                                                                                      IFunction(),
@@ -37,11 +38,20 @@ Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& con
         // Samotná evaluace funkce probíhá zde. Vrací se vždy hodnota posledního výrazu v těle funkce.
         for(auto it = m_body.begin(); it != m_body.end(); it++)
         {
+            std::shared_ptr<AST> evaluate = *it;
+            if(evaluate->call)
+            {
+                auto fn = evaluateIdentifier((*it)->children.front()->value, copy);
+                if(fn.type == TokenType::MACRO_FN)
+                {
+                    evaluate = boost::get<std::shared_ptr<IMacro>>(fn.value)->expand(evaluate->children, copy);
+                }
+            }
             if(std::next(it) == m_body.end())
             {
-                if((*it)->call)
+                if(evaluate->call)
                 {
-                    auto fn1 = evaluateIdentifier((*it)->children.front()->value, copy);
+                    auto fn1 = evaluateIdentifier(evaluate->children.front()->value, copy);
                     auto fn2 = evaluateIdentifier(args.front()->value, copy);
                     if(getKind(fn1.value) == getKind(fn2.value) && getKind(fn1.value) == MirageKind::functionClass)
                     {
@@ -49,16 +59,17 @@ Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& con
                         auto fn2Ptr = boost::get<std::shared_ptr<IFunction>>(fn2.value);
                         if(fn1Ptr->getId() == fn2Ptr->getId())
                         {
+                            copy = argsToContext(evaluate->children, copy);
                             it = m_body.begin();
                             continue;
                         }
                     }
                 }
-                return (*it)->evaluate(copy);
+                return evaluate->evaluate(copy);
             }
             else
             {
-                (*it)->evaluate(copy);
+                evaluate->evaluate(copy);
             }
         }
     } while(true);

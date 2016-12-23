@@ -12,7 +12,7 @@
 struct AST;
 struct Token;
 class IFunction;
-class Macro;
+class IMacro;
 
 typedef boost::make_recursive_variant<std::function<Token(std::vector<std::shared_ptr<AST>>&, 
 		std::unordered_map<std::string, Token>&)>,
@@ -21,7 +21,7 @@ typedef boost::make_recursive_variant<std::function<Token(std::vector<std::share
 		std::list<Token>,
 		Vector,
         std::shared_ptr<IFunction>,
-        std::shared_ptr<Macro>,
+        std::shared_ptr<IMacro>,
 		bool>::type MirageType;
 
 typedef std::unordered_map<std::string, Token> Context;

@@ -54,7 +54,7 @@ Token AST::evaluate(Context& context)
         }
         else if(fnType == MirageKind::macro_fn)
         {
-            auto newAst = boost::get<std::shared_ptr<Macro>>(identifier.value)->expand(children, context);
+            auto newAst = boost::get<std::shared_ptr<IMacro>>(identifier.value)->expand(children, context);
             return newAst->evaluate(context);
         }
 	}

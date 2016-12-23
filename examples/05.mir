@@ -22,8 +22,6 @@
 					(interni (zbytek kolekce) (pridejDopredu akumulator (prvni kolekce))))))
 	(interni kolekce (list))))
 
-(otoc testovaciData)
-
 (definuj redukuj
 	(funkce (kolekce fn akumulator)
 		(pokud (= (velikost kolekce) 0)
@@ -42,6 +40,6 @@
 (rozsah 1 5)
 
 (definuj faktorial (funkce (data)
-			(redukuj (rozsah 2 data) (funkce (x aku) (* x aku)) 1)))
+			(redukuj (rozsah 2 data) (funkce (a b) (* a b)) 1)))
 
-(faktorial 99999)
+(faktorial 999)

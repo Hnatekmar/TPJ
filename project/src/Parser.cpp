@@ -10,6 +10,7 @@
 #include "../include/StdLib/Macro.h"
 #include "../include/StdLib/Quote.h"
 #include "../include/StdLib/Eval.h"
+#include "../include/StdLib/If.h"
 
 typedef std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)> MirageFn;
 
@@ -74,7 +75,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
         {}
     };
 
-	m_constants["nebo"] = MIRAGE_FN_HEAD
+    m_constants["pokud"] = Token{
+         TokenType::MACRO_FN,
+         std::make_shared<If>(),
+         {}
+    };
+    m_constants["nebo"] = MIRAGE_FN_HEAD
 				if(representation.size() < 2)
 				{
 					throw InterpreterException("nebo bere alespoň jednu logickou hodnotu!", representation.at(1)->value);
@@ -369,25 +375,6 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 				return Token{TokenType::NUMBER, static_cast<float>(sum), representation.at(0)->value.filePos};
 			MIRAGE_FN_FOOTER;
 
-	m_constants["pokud"] = MIRAGE_FN_HEAD
-				if(representation.size() != 4)
-				{
-						throw InterpreterException("pokud bere 3 argumenty", representation.at(0)->value);
-				}
-				auto assertion = representation.at(1)->evaluate(context);
-				if(assertion.type != TokenType::BOOL)
-				{
-					throw InterpreterException("První argument musí být logická hodnota", assertion);
-				}
-				if(boost::get<bool>(assertion.value))
-				{
-					return representation.at(2)->evaluate(context);
-				}
-				else
-				{
-					return representation.at(3)->evaluate(context);
-				}
-            MIRAGE_FN_FOOTER;
 }
 
 void Parser::parse()

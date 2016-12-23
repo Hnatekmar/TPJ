@@ -1,12 +1,13 @@
 #ifndef IF
 #define IF
 
-#include "../IFunction.h"
+#include "Macro.h"
 
-class If : public IFunction
+class If : public IMacro
 {
 public:
-    Token execute(std::vector<std::shared_ptr<AST> > &args, Context &context) override;
+    If();
+    std::shared_ptr<AST> expand(std::vector<std::shared_ptr<AST> > &args, Context &context) override;
 };
 
 #endif

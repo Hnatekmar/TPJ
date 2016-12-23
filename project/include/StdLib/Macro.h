@@ -20,13 +20,14 @@ Token quote(std::shared_ptr<AST>& ast);
  */
 std::shared_ptr<AST> unquote(Token& value);
 
-class Macro
+class IMacro
 {
-    std::vector<std::shared_ptr<AST>> m_body;
+protected:
+    std::vector<std::shared_ptr<AST>> m_body = {};
+    std::vector<std::string> m_args = {};
     Context argsToContext(std::vector<std::shared_ptr<AST> > &args, Context context);
-    std::vector<std::string> m_args;
 public:
-    Macro(std::vector<std::shared_ptr<AST>>& code);
+    virtual ~IMacro() = default;
 
     /**
      * @brief Provede expanzi makra (modifikuje ast, tak aby při dalším zavolání nemuselo docházet k expanzi)
@@ -34,8 +35,15 @@ public:
      * @param context
      * @return Ast reprezentující expandované makro
      */
-    std::shared_ptr<AST> expand(std::vector<std::shared_ptr<AST> > &args, Context &context);
+    virtual std::shared_ptr<AST> expand(std::vector<std::shared_ptr<AST> > &args, Context &context);
 };
+
+class Macro : public IMacro
+{
+public:
+    Macro(std::vector<std::shared_ptr<AST>>& code);
+};
+
 
 #include "../IFunction.h"
 

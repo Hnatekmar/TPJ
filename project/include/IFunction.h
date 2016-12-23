@@ -11,8 +11,8 @@
 class IFunction
 {
 protected:
-    static unsigned int s_id;
-    unsigned int m_id;
+    static unsigned long s_id;
+    unsigned long m_id;
     std::vector<std::string> m_args;
     Context argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& context);
     
