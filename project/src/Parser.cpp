@@ -23,7 +23,7 @@ typedef std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)> Mirag
 	}
 
 
-Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
+Parser::Parser() :
 				m_constants()
 {
     m_constants["definuj"] = Token{
@@ -377,12 +377,12 @@ Parser::Parser(Lexer& lexer) :	m_lexer(lexer),
 
 }
 
-void Parser::parse()
+void Parser::parse(Lexer &lexer)
 {
 	std::stack<Rule> stack;
 	stack.push(Rule::END_OF_PROGRAM);
 	stack.push(Rule::Start);
-	Token token = m_lexer.nextToken();
+    Token token = lexer.nextToken();
     Rule rule;
     std::shared_ptr<AST> ast(nullptr);
 	while(!stack.empty())
@@ -399,7 +399,7 @@ void Parser::parse()
 		{
 			if(rule == Rule::L_PAREN && token.type == TokenType::L_PAREN)
 			{
-				token = m_lexer.nextToken();
+                token = lexer.nextToken();
                 std::shared_ptr<AST> tmpAST = std::make_shared<AST>(token, ast, true);
 				if(ast != nullptr)
 				{
@@ -412,7 +412,7 @@ void Parser::parse()
 			}
 			else if(rule == Rule::R_PAREN && token.type == TokenType::R_PAREN)
 			{
-				token = m_lexer.nextToken();
+                token = lexer.nextToken();
 				assert(ast != nullptr);
 				if(ast->root != nullptr)
 				{
@@ -428,7 +428,7 @@ void Parser::parse()
                 std::shared_ptr<AST> tmpAST = std::make_shared<AST>(token, ast, false);
 				assert(ast != nullptr);
 				ast->children.push_back(tmpAST);
-				token = m_lexer.nextToken();
+                token = lexer.nextToken();
 			}
 			else
 			{
@@ -447,7 +447,7 @@ void Parser::parse()
 			throw InterpreterException("Přepisovací pravidlo nenalezeno", token);
 		}
 	}
-	if(!m_lexer.eof())
+    if(!lexer.eof())
 	{
         throw InterpreterException("Neočekávaný konec parsování", token);
 	}

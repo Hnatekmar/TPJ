@@ -1,8 +1,10 @@
+#!./project/bin/interpreter
+
 ; Ukázka rekurze
 (definuj fact
-	(funkce (x)
+	(funkce (x acc)
 		(pokud (= x 0)
-			 1
-			 (* x (fact (- x 1))))))
+			 acc
+			 (fact (- x 1) (* acc x)))))
 
-(fact 50)
+(fact 99999 1)

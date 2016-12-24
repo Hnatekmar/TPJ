@@ -1,3 +1,4 @@
+#!./project/bin/interpreter
 ; Ukázka práce s listy
 
 (definuj testovaciData (list 1 2 3 4 5))

@@ -51,7 +51,7 @@ Token Lexer::nextToken()
 				continue;
 			}
 
-			if(m_char == ';')
+            if(m_char == ';' || m_char == '#')
 			{
 				state = State::q_f;
 				continue;

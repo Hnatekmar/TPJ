@@ -62,9 +62,9 @@ Je gramatika popisující všechny bílé znaky $G_{bileznaky}$(\{S\}, \{$\dlsh 
 $$S \rightarrow  \dlsh S | \mapsto S | \sqcup S$$
 
 \subsection{Komentáře}
-Jazyk má jednoduché komentáře začínající na ; a končící novým řádkem $G_{komentare}$(\{S, F\}, \{$\dlsh$, ;, $\Square$\}, P, S)
+Jazyk má jednoduché komentáře začínající na ; nebo \# a končící novým řádkem $G_{komentare}$(\{S, F\}, \{$\dlsh$, \#,  ;, $\Square$\}, P, S)
 
-$$S \rightarrow ;F$$
+$$S \rightarrow ;F | \#F$$
 $$F \rightarrow \Square F | \dlsh S$$
 
 \subsection{Symboly pro expanzi parserem}

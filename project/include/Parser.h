@@ -33,8 +33,8 @@ class Parser
 		SCall,
 		END_OF_PROGRAM
 	};
-	Lexer& m_lexer;
-	std::map<Rule, std::string> m_ruleToString = {
+
+    std::map<Rule, std::string> m_ruleToString = {
 		{ Rule::Start, "Start" },
 		{ Rule::Expression, "Expression" },
 		{ Rule::EArgs, "EArgs" },
@@ -171,8 +171,8 @@ class Parser
 
 	void except(TokenType type);
 	public:
-		Parser(Lexer& lexer);
-		void parse();
+        Parser();
+        void parse(Lexer& lexer);
 };
 
 #endif
