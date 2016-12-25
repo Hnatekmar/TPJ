@@ -11,17 +11,20 @@
 #include "../include/StdLib/Quote.h"
 #include "../include/StdLib/Eval.h"
 #include "../include/StdLib/If.h"
-
-typedef std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)> MirageFn;
-
-#define MIRAGE_FN_HEAD Token{ \
-		TokenType::FUNCTION, \
-			static_cast<MirageFn>([](std::vector<std::shared_ptr<AST>> representation, Context& context){ \
-					assert(representation.size() >= 1);
-#define MIRAGE_FN_FOOTER }), \
-		{} \
-	}
-
+#include "../include/StdLib/Times.h"
+#include "../include/StdLib/List.h"
+#include "../include/StdLib/Import.h"
+#include "../include/StdLib/First.h"
+#include "../include/StdLib/AddBack.h"
+#include "../include/StdLib/AddFront.h"
+#include "../include/StdLib/Divide.h"
+#include "../include/StdLib/Plus.h"
+#include "../include/StdLib/Minus.h"
+#include "../include/StdLib/Size.h"
+#include "../include/StdLib/Rest.h"
+#include "../include/StdLib/Or.h"
+#include "../include/StdLib/Error.h"
+#include "../include/StdLib/Debug.h"
 
 Parser::Parser() :
 				m_constants()
@@ -37,7 +40,6 @@ Parser::Parser() :
             std::make_shared<Not>(),
             {}
     };
-
 
     m_constants["funkce"] = Token{
             TokenType::FUNCTION,
@@ -80,301 +82,90 @@ Parser::Parser() :
          std::make_shared<If>(),
          {}
     };
-    m_constants["nebo"] = MIRAGE_FN_HEAD
-				if(representation.size() < 2)
-				{
-					throw InterpreterException("nebo bere alespoň jednu logickou hodnotu!", representation.at(1)->value);
-				}
-				bool result = false;
 
-				for(size_t i = 1; i < representation.size(); i++)
-				{
-					auto value = representation.at(i)->evaluate(context);
-					if(value.type != TokenType::BOOL)
-					{
-						throw InterpreterException("nebo bere pouze logické hodnoty!", value);
-					}
-					result = result || boost::get<bool>(value.value);
-					if(result)
-					{
-						break;
-					}
-				}
-				return Token{TokenType::BOOL, static_cast<bool>(result), representation.at(0)->value.filePos};
-				MIRAGE_FN_FOOTER;
+    m_constants["*"] = Token{
+          TokenType::FUNCTION,
+          std::make_shared<Times>(),
+          {}
+    };
 
-	m_constants["chyba"] = MIRAGE_FN_HEAD
-					auto value = representation.at(1)->evaluate(context);
-					throw InterpreterException("Kritická chyba", value);
-					return Token{};
-				MIRAGE_FN_FOOTER;
+    m_constants["/"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Divide>(),
+        {}
+    };
 
-	m_constants["list"] = MIRAGE_FN_HEAD
-					std::list<Token> result;
-					for(size_t i = 1; i < representation.size(); i++)
-					{
-						result.push_back(representation.at(i)->evaluate(context));
-					}
-					return Token{
-						TokenType::LIST,
-						result,
-						representation.at(0)->value.filePos
-					};
-					MIRAGE_FN_FOOTER;
-	
-	m_constants["prvni"] = MIRAGE_FN_HEAD
-					if(representation.size() != 2)
-					{
-						throw InterpreterException("Funkce bere jeden argument typu list", representation.at(0)->evaluate(context));
-					}
-					auto value = representation.at(1)->evaluate(context);
-					if(value.type != TokenType::LIST)
-					{
-						throw InterpreterException("Funkce prvni bere jeden argument, který musí být typu list!", value);
-					}
-					auto list = boost::get<std::list<Token>>(value.value);
-					return list.front();
-				MIRAGE_FN_FOOTER;
+    m_constants["+"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Plus>(),
+        {}
+    };
 
-	m_constants["zbytek"] = MIRAGE_FN_HEAD
-					if(representation.size() != 2)
-					{
-						throw InterpreterException("Funkce bere jeden argument typu list", representation.at(0)->evaluate(context));
-					}
-					auto value = representation.at(1)->evaluate(context);
-					if(value.type != TokenType::LIST)
-					{
-						throw InterpreterException("Funkce zbytek bere jeden argument, který musí být typu list!", value);
-					}
-					auto list = boost::get<std::list<Token>>(value.value);
-					return Token{ 
-						 TokenType::LIST,
-						 std::list<Token>(std::next(list.begin()), list.end()),
-						 representation.at(0)->value.filePos
-					};
-				MIRAGE_FN_FOOTER;
-	
-	m_constants["pridejDozadu"] = MIRAGE_FN_HEAD
-					if(representation.size() != 3)
-					{
-						throw InterpreterException("Funkce bere dva argumenty. List a hodnota.", representation.at(0)->evaluate(context));
-					}
-					auto value = representation.at(1)->evaluate(context);
-					if(value.type != TokenType::LIST)
-					{
-						throw InterpreterException("Argument musí být typu list!", value);
-					}
-					auto list = boost::get<std::list<Token>>(value.value);
-					std::list<Token> newList(list.begin(), list.end());
-					newList.push_back(representation.at(2)->evaluate(context));
-					return Token{
-						TokenType::LIST,
-						newList,
-						representation.at(0)->value.filePos
-					};
-				MIRAGE_FN_FOOTER;
+    m_constants["-"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Minus>(),
+        {}
+    };
 
-	m_constants["pridejDopredu"] = MIRAGE_FN_HEAD
-					if(representation.size() != 3)
-					{
-						throw InterpreterException("Funkce bere dva argumenty. List a hodnota.", representation.at(0)->evaluate(context));
-					}
-					auto value = representation.at(1)->evaluate(context);
-					if(value.type != TokenType::LIST)
-					{
-						throw InterpreterException("Argument musí být typu list!", value);
-					}
-					auto list = boost::get<std::list<Token>>(value.value);
-					std::list<Token> newList(list.begin(), list.end());
-					newList.push_front(representation.at(2)->evaluate(context));
-					return Token{
-						TokenType::LIST,
-						newList,
-						representation.at(0)->value.filePos
-					};
-				MIRAGE_FN_FOOTER;
-	
-	m_constants["velikost"] = MIRAGE_FN_HEAD
-					if(representation.size() != 2)
-					{
-						throw InterpreterException("Funkce bere jeden argument typu list.", representation.at(0)->evaluate(context));
-					}
-					auto value = representation.at(1)->evaluate(context);
-					if(value.type != TokenType::LIST)
-					{
-						throw InterpreterException("Argument musí být typu list!", value);
-					}
-					auto list = boost::get<std::list<Token>>(value.value);
-					return Token{
-						TokenType::NUMBER,
-						static_cast<float>(list.size()),
-						representation.at(0)->value.filePos
-					};
-				MIRAGE_FN_FOOTER;
+    m_constants["list"] = Token{
+          TokenType::FUNCTION,
+          std::make_shared<ListFn>(),
+          {}
+    };
 
-	m_constants["*"] = MIRAGE_FN_HEAD
-				if(representation.size() < 2)
-				{
-					throw InterpreterException("* bere alespoň jeden argument!", representation.at(0)->value);
-				}
-				float product = 1.0f;
-				for(size_t i = 1; i < representation.size(); i++)
-				{
-					auto value = representation.at(i)->evaluate(context);
-					if(value.type != TokenType::NUMBER)
-					{
-						throw InterpreterException("* bere pouze čísla!", value);
-					}
-					product *= boost::get<float>(value.value);
-					if(product == 0.0f)
-					{
-						break;
-					}
-				}
-				return Token{TokenType::NUMBER, static_cast<float>(product), representation.at(0)->value.filePos};
-			MIRAGE_FN_FOOTER;
-	
-	m_constants["/"] = MIRAGE_FN_HEAD
-				if(representation.size() < 2)
-				{
-					throw InterpreterException("* bere alespoň jeden argument!", representation.at(0)->value);
-				}
-				float product = 1.0f;
-				auto first = representation.at(1)->evaluate(context);
-				if(first.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("* bere pouze čísla!", first);
-				}
-				product = boost::get<float>(first.value);
-				for(size_t i = 2; i < representation.size(); i++)
-				{
-					auto value = representation.at(i)->evaluate(context);
-					if(value.type != TokenType::NUMBER)
-					{
-						throw InterpreterException("* bere pouze čísla!", value);
-					}
-					product /= boost::get<float>(value.value);
-					if(product == 0.0f)
-					{
-						break;
-					}
-				}
-				return Token{TokenType::NUMBER, static_cast<float>(product), representation.at(0)->value.filePos};
-			MIRAGE_FN_FOOTER;
+    m_constants["importuj"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Import>(*this),
+        {}
+    };
 
-	m_constants[">"] = MIRAGE_FN_HEAD
-				if(representation.size() != 3)
-				{
-					throw InterpreterException("> bere přesně 2 argumenty!", representation.at(0)->value);
-				}
-				auto a = representation.at(1)->evaluate(context);
-				auto b = representation.at(2)->evaluate(context);
-				if(a.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("První argument není číslo", a);
-				}
-				if(b.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("První argument není číslo", b);
-				}
-				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) > boost::get<float>(b.value)), representation.at(0)->value.filePos};
-			MIRAGE_FN_FOOTER;
+    m_constants["prvni"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<First>(),
+        {}
+    };
 
-	m_constants["<"] = MIRAGE_FN_HEAD
-				if(representation.size() != 3)
-				{
-					throw InterpreterException("> bere přesně 2 argumenty!", representation.at(0)->value);
-				}
-				auto a = representation.at(1)->evaluate(context);
-				auto b = representation.at(2)->evaluate(context);
-				if(a.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("První argument není číslo", a);
-				}
-				if(b.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("První argument není číslo", b);
-				}
-				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) < boost::get<float>(b.value)), representation.at(0)->value.filePos};
-			MIRAGE_FN_FOOTER;
+    m_constants["pridejDozadu"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<AddBack>(),
+        {}
+    };
 
-	m_constants[">="] = MIRAGE_FN_HEAD
-				if(representation.size() != 3)
-				{
-					throw InterpreterException("> bere přesně 2 argumenty!", representation.at(0)->value);
-				}
-				auto a = representation.at(1)->evaluate(context);
-				auto b = representation.at(2)->evaluate(context);
-				if(a.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("První argument není číslo", a);
-				}
-				if(b.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("První argument není číslo", b);
-				}
-				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) >= boost::get<float>(b.value)), representation.at(0)->value.filePos};
-			MIRAGE_FN_FOOTER;
+    m_constants["pridejDopredu"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<AddFront>(),
+        {}
+    };
 
-	m_constants["<="] = MIRAGE_FN_HEAD
-				if(representation.size() != 3)
-				{
-					throw InterpreterException("> bere přesně 2 argumenty!", representation.at(0)->value);
-				}
-				auto a = representation.at(1)->evaluate(context);
-				auto b = representation.at(2)->evaluate(context);
-				if(a.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("První argument není číslo", a);
-				}
-				if(b.type != TokenType::NUMBER)
-				{
-					throw InterpreterException("První argument není číslo", b);
-				}
-				return Token{TokenType::BOOL, static_cast<bool>(boost::get<float>(a.value) <= boost::get<float>(b.value)), representation.at(0)->value.filePos};
-			MIRAGE_FN_FOOTER;
+    m_constants["velikost"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Size>(),
+        {}
+    };
 
-	m_constants["+"] = MIRAGE_FN_HEAD
-				if(representation.size() < 2)
-				{
-					throw InterpreterException("+ bere alespoň jeden argument!", representation.at(0)->value);
-				}
-				float sum = 0.0f;
-				for(size_t i = 1; i < representation.size(); i++)
-				{
-					auto value = representation.at(i)->evaluate(context);
-					if(value.type != TokenType::NUMBER)
-					{
-						throw InterpreterException("+ bere pouze čísla!", value);
-					}
-					sum += boost::get<float>(value.value);
-				}
-				return Token{TokenType::NUMBER, static_cast<float>(sum), representation.at(0)->value.filePos};
-			MIRAGE_FN_FOOTER;
+    m_constants["zbytek"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Rest>(),
+        {}
+    };
 
-	m_constants["-"] = MIRAGE_FN_HEAD
-				if(representation.size() < 2)
-				{
-					throw InterpreterException("- bere alespoň jeden argument!", representation.at(0)->value);
-				}
-				auto value = representation.at(1)->evaluate(context);
-				float sum = boost::get<float>(value.value);
-				if(representation.size() == 2)
-				{
-					sum = -sum;
-				}
-				for(size_t i = 2; i < representation.size(); i++)
-				{
-					auto value = representation.at(i)->evaluate(context);
-					if(value.type != TokenType::NUMBER)
-					{
-						throw InterpreterException("* bere pouze čísla!", value);
-					}
-					sum -= boost::get<float>(value.value);
-				}
-				return Token{TokenType::NUMBER, static_cast<float>(sum), representation.at(0)->value.filePos};
-			MIRAGE_FN_FOOTER;
+    m_constants["nebo"] = Token{
+        TokenType::MACRO_FN,
+        std::make_shared<Or>(),
+        {}
+    };
 
+    m_constants["chyba"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Error>(),
+        {}
+    };
+
+    m_constants["debuguj"] = Token{
+         TokenType::FUNCTION,
+         std::make_shared<Debug>(),
+         {}
+    };
 }
 
 void Parser::parse(Lexer &lexer)

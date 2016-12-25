@@ -1,4 +1,4 @@
-#!./project/bin/interpreter
+#!../project/bin/interpreter
 ; Ukázka práce s listy
 
 (definuj testovaciData (list 1 2 3 4 5))
@@ -39,11 +39,11 @@
 		(definuj interni
 			(funkce (od do akumulator)
 				(pokud (= od do)
-					(pridejDozadu akumulator od)
+					(pridejDopredu akumulator od)
 					(interni (+ 1 od) do (pridejDozadu akumulator od)))))
 	(interni od do (list))))
 
-(rozsah 1 5)
+(rozsah 2 5)
 
 (definuj faktorial (funkce (data)
 			(redukuj (rozsah 2 data) * 1)))

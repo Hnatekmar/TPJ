@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     catch(InterpreterException c)
     {
         std::cout << "Chyba:" << c.what() << std::endl;
-	}
+    }
 	return 0;
 }
 

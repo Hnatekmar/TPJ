@@ -3,7 +3,7 @@
 
 Context IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& context)
 {
-    Context copy(context.begin(), context.end());
+    Context copy(context);
     auto it = args.begin() + 1;
     for(std::string& argName : m_args)
     {

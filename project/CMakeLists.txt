@@ -44,6 +44,12 @@ set(SOURCE_FILES
     include/StdLib/CreateFunction.h
     include/Graphics.h
     include/StdLib/And.h
+    include/StdLib/Import.h
+    include/StdLib/Error.h
+    include/StdLib/Debug.h
+    src/StdLib/Debug.cpp
+    src/StdLib/Error.cpp
+    src/StdLib/Import.cpp
     src/StdLib/And.cpp
     src/Graphics.cpp
     src/StdLib/CreateFunction.cpp

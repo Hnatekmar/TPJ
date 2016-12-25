@@ -1,4 +1,31 @@
-#!./project/bin/interpreter
+#!../build-project-Desktop-Debug/interpreter
+
+(importuj "./06.mir")
+
+(definuj spoj (funkce (a b)
+		      (pokud (= (velikost b) 0)
+			     a
+			     (spoj (pridejDozadu a (prvni b)) (zbytek b)))))
+
+(definuj blok (makro (...) ; Makro blok provede sekvenci příkazů a vrátí poslední
+		           ; Příklad - (blok 1 2 3) => 3
+		     (list (spoj (list funkce (nevyhodnocuj ())) ...))))
+
+(definuj id (funkce (x) x))
+
+(definuj * (makro (...)
+		  (pokud (= (velikost ...) 0)
+			 (chyba "* prebira alespon 2 argumenty")
+			 (pokud (= (velikost ...) 1)
+				(list krat (prvni ...) 1)
+				(blok
+				  (definuj a (vyhodnot (prvni ...)))
+				  (definuj b (vyhodnot (spoj (list *) (zbytek ...))))
+				  (pokud (nebo (= a 0) (= a (/ 1 0)))
+					 (list id a)
+					   (list (nevyhodnocuj krat) a b)))))))
+
+(* 5 7 98 94 9819)
 
 ; Ukázka rekurze
 (definuj fact

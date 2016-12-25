@@ -3,7 +3,7 @@
 
 #include <boost/variant.hpp>
 #include <list>
-#include <unordered_map>
+#include <map>
 #include <functional>
 #include <vector>
 #include <memory>
@@ -15,7 +15,7 @@ class IFunction;
 class IMacro;
 
 typedef boost::make_recursive_variant<std::function<Token(std::vector<std::shared_ptr<AST>>&, 
-		std::unordered_map<std::string, Token>&)>,
+        std::map<std::string, Token>&)>,
 		float,
 		std::string,
 		std::list<Token>,
@@ -24,7 +24,7 @@ typedef boost::make_recursive_variant<std::function<Token(std::vector<std::share
         std::shared_ptr<IMacro>,
 		bool>::type MirageType;
 
-typedef std::unordered_map<std::string, Token> Context;
+typedef std::map<std::string, Token> Context;
 enum class MirageKind
 {
 	function = 0,

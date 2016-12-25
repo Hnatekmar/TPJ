@@ -1,12 +1,12 @@
-#ifndef FIRST
-#define FIRST
+#ifndef DEBUG
+#define DEBUG
 
 #include "../IFunction.h"
 
-class First : public IFunction
+class Debug : public IFunction
 {
 public:
-    First();
+    Debug();
     Token execute(std::vector<std::shared_ptr<AST> > &args, Context &context) override;
 };
 
