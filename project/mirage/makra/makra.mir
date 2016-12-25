@@ -1,0 +1,41 @@
+; Soubor obsahuje několik základních maker pro jednodušší psaní programů
+
+; Zkratka pro (definuj nazev (funkce (argumenty) ...))
+(definuj defn (makro (nazev argumenty ...)
+	(list definuj nazev
+		  (spoj (list funkce argumenty) ...))))
+
+(definuj defm (makro (nazev argumenty ...)
+	(list definuj nazev
+		  (spoj (list makro argumenty) ...))))
+
+; Makro blok slouží k řetězení příkazů a vrátí hodnotu posledního z ních.
+; Například (blok 1 2 3) vrátí 3 ale vyhodnotí jak 1, tak 2
+(definuj blok (makro (...)
+	(list (spoj (list funkce (nevyhodnocuj ())) ...))))
+
+; Ekvivalent switch ve většině programovacích jazyků. Použití (prepinac ((>= 1 2) 2) ((= 1 1) 4)) => 2
+(definuj prepinac (makro (...)
+			 (pokud (= (velikost ...) 0)
+				(chyba "Makro prepinac potrebuje alespon jeden argument")
+				(pokud (= (velikost ...) 1)
+				       (blok
+					 (definuj polozka (prvni ...))
+					 (definuj predikat (prvni polozka))
+					 (list pokud
+					       predikat
+					       (prvni (zbytek polozka))
+					       (list chyba "Prepinac dosel do konce")))
+				       (blok
+					 (definuj polozka (prvni ...))
+					 (definuj predikat (vyhodnot (prvni polozka)))
+					 (list pokud
+					       predikat
+					       (prvni (zbytek polozka))
+					       (list aplikuj prepinac (zbytek ...))))))))
+					       
+; Makro aplikuj zavolá funkci s argumenty z listu. Například (aplikuj * (list 1 2)) je ekvivalentní (* 1 2)
+(definuj aplikuj (makro (nazev argumenty)
+			(spoj (list nazev) (vyhodnot argumenty))))
+			
+(defn id (x) x)

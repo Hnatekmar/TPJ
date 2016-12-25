@@ -1,0 +1,15 @@
+(importuj "mirage/lists/lists.mir")
+(importuj "mirage/makra/makra.mir")
+
+(defn < (a b)
+	(pokud (= a b)
+		 NEPRAVDA
+         (neguj (> a b))))
+ 
+(defn <= (a b)
+	(pokud (= a b)
+         PRAVDA
+         (neguj (> a b))))
+
+(defn >= (a b)
+	(nebo (= a b) (> a b)))
