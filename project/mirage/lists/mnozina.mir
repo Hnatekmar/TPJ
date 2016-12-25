@@ -1,0 +1,23 @@
+(importuj "mirage/lists/lists.mir")
+(importuj "mirage/makra/makra.mir")
+
+(definuj pridejDoMnoziny
+	(funkce (mnozina hodnota)
+		(pokud (jeVListu mnozina hodnota)
+			mnozina
+			(pridejDozadu mnozina hodnota))))
+
+(definuj mnozina (funkce (...)
+					(redukuj ... (funkce (x akumulator) (pridejDoMnoziny akumulator x)) (list))))
+
+(definuj sjednoceni
+	(funkce (a b)
+		(aplikuj mnozina (spoj a b))))
+		
+(definuj rozdil
+	(funkce (mnozinaA mnozinaB)
+		(filtr mnozinaA (funkce (x) (a (jeVListu mnozinaA x) (neguj (jeVListu mnozinaB x)))))))
+		
+(definuj prunik
+	(funkce (mnozinaA mnozinaB)
+		(filtr mnozinaA (funkce (x) (a (jeVListu mnozinaA x) (jeVListu mnozinaB x))))))

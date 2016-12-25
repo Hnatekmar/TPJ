@@ -13,8 +13,8 @@ Token Debug::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
     char yesOrNo = 'f';
     while(yesOrNo != 'A')
     {
-        std::cout << "Přejete si pokračovat? (A / N)";
-        std::cin >> yesOrNo;
+        std::cout << "Přejete si pokračovat? (A / N)" << std::endl;
+        std::cin >> std::noskipws >> yesOrNo;
         if(yesOrNo == 'N')
         {
             std::cout << "Končím debugování." << std::endl;

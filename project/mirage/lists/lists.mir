@@ -26,6 +26,10 @@
 		(pokud (= (velikost kolekce) 0)
 			akumulator
 			(redukuj (zbytek kolekce) fn (fn (prvni kolekce) akumulator)))))
+			
+(definuj redukujZprava
+	(funkce (x)
+		(redukuj (otoc x)))) 
 
 (definuj rozsah
 	(funkce (od do) ; vygeneruje list, který obsahuje čísla od `od` do `do`
@@ -36,4 +40,30 @@
 					(interni (+ 1 od) do (pridejDozadu akumulator od)))))
 	(interni od do (list))))
 
+(definuj zip (funkce (a b)
+	(definuj interni (funkce (a b akumulator)
+		(pokud (nebo (= (velikost a) 0) (= (velikost b) 0))
+		       akumulator
+		       (interni (zbytek a) (zbytek b) (pridejDozadu akumulator (list (prvni a) (prvni b)))))))
+		(interni a b (list))))
 
+(definuj jeVListu
+	(funkce (kolekce hodnota)
+		(pokud (= (velikost kolekce) 0)
+			NEPRAVDA
+			(pokud (= (prvni kolekce) hodnota)
+				PRAVDA
+				(jeVListu (zbytek kolekce) hodnota)))))
+				
+(definuj filtr
+	(funkce (kolekce fn)
+		(definuj interni
+			(funkce (kolekce fn akumulator)
+						(pokud (= (velikost kolekce) 0)
+								akumulator
+								(pokud (fn (prvni kolekce))
+									(interni (zbytek kolekce) fn (pridejDozadu akumulator (prvni kolekce)))
+									(interni (zbytek kolekce) fn akumulator)))))
+									(interni kolekce fn (list))))
+								
+		 
