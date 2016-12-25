@@ -53,7 +53,7 @@ Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& con
                 {
                     auto fn1 = evaluateIdentifier(evaluate->children.front()->value, copy);
                     auto fn2 = evaluateIdentifier(args.front()->value, copy);
-                    if(getKind(fn1.value) == getKind(fn2.value) && getKind(fn1.value) == MirageKind::functionClass)
+                    if(getKind(fn1.value) == getKind(fn2.value) && getKind(fn1.value) == MirageKind::function)
                     {
                         auto fn1Ptr = boost::get<std::shared_ptr<IFunction>>(fn1.value);
                         auto fn2Ptr = boost::get<std::shared_ptr<IFunction>>(fn2.value);

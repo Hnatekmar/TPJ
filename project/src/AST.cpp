@@ -45,11 +45,6 @@ Token AST::evaluate(Context& context)
 		auto fnType = getKind(identifier.value);
         if(fnType == MirageKind::function)
         {
-            auto function = (boost::get<std::function<Token(std::vector<std::shared_ptr<AST>>&, Context&)>>)(identifier.value);
-            return function(children, context);
-        }
-        else if(fnType == MirageKind::functionClass)
-        {
             return boost::get<std::shared_ptr<IFunction>>(identifier.value)->execute(children, context);
         }
         else if(fnType == MirageKind::macro_fn)

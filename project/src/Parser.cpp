@@ -25,6 +25,7 @@
 #include "../include/StdLib/Or.h"
 #include "../include/StdLib/Error.h"
 #include "../include/StdLib/Debug.h"
+#include "../include/StdLib/BiggerThan.h"
 
 Parser::Parser() :
 				m_constants()
@@ -164,6 +165,12 @@ Parser::Parser() :
     m_constants["debuguj"] = Token{
          TokenType::FUNCTION,
          std::make_shared<Debug>(),
+         {}
+    };
+
+    m_constants[">"] = Token{
+         TokenType::FUNCTION,
+         std::make_shared<BiggerThan>(),
          {}
     };
 }

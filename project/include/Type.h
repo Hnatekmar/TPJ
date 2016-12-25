@@ -14,9 +14,7 @@ struct Token;
 class IFunction;
 class IMacro;
 
-typedef boost::make_recursive_variant<std::function<Token(std::vector<std::shared_ptr<AST>>&, 
-        std::map<std::string, Token>&)>,
-		float,
+typedef boost::make_recursive_variant<float,
 		std::string,
 		std::list<Token>,
 		Vector,
@@ -27,14 +25,13 @@ typedef boost::make_recursive_variant<std::function<Token(std::vector<std::share
 typedef std::map<std::string, Token> Context;
 enum class MirageKind
 {
-	function = 0,
-	number = 1,
-	string = 2,
-    list = 3,
-    vector = 4,
-    functionClass = 5,
-    macro_fn = 6,
-    boolean = 7
+    number = 0,
+    string = 1,
+    list = 2,
+    vector = 3,
+    function = 4,
+    macro_fn = 5,
+    boolean = 6
 };
 
 /**

@@ -12,11 +12,11 @@ Token BiggerThan::execute(std::vector<std::shared_ptr<AST> > &args, Context &con
     Context copy = argsToContext(args, context);
     Token& a = copy.at("a");
     Token& b = copy.at("b");
-    if(a.type == TokenType::NUMBER)
+    if(a.type != TokenType::NUMBER)
     {
         throw InterpreterException("Hodnota není číslo", a);
     }
-    if(b.type == TokenType::NUMBER)
+    if(b.type != TokenType::NUMBER)
     {
         throw InterpreterException("Hodnota není číslo", a);
     }
