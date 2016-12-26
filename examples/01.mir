@@ -1,4 +1,0 @@
-(definuj krat
-	(funkce (x) (* x x)))
-
-(krat 10)

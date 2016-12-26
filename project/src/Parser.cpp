@@ -26,6 +26,8 @@
 #include "../include/StdLib/Error.h"
 #include "../include/StdLib/Debug.h"
 #include "../include/StdLib/BiggerThan.h"
+#include "../include/Graphics.h"
+#include "../include/StdLib/CreateGraphicsElement.h"
 
 Parser::Parser() :
 				m_constants()
@@ -173,6 +175,18 @@ Parser::Parser() :
          std::make_shared<BiggerThan>(),
          {}
     };
+
+    m_constants["vykresli"] = Token{
+         TokenType::FUNCTION,
+         std::make_shared<Graphics>(),
+         {}
+    };
+
+    m_constants["element"] = Token{
+         TokenType::FUNCTION,
+         std::make_shared<CreateGraphicsElement>(),
+         {}
+    };
 }
 
 void Parser::parse(Lexer &lexer)
@@ -189,8 +203,8 @@ void Parser::parse(Lexer &lexer)
 		stack.pop();
 		if(rule == Rule::SCall)
 		{
-			assert(ast != nullptr);
-			std::cout << "Hodnota výrazu: " << ast->evaluate(m_constants) << std::endl;
+            assert(ast != nullptr);
+            ast->evaluate(m_constants);
 			ast = nullptr;
 		}
 		else if(isTerminal(rule))

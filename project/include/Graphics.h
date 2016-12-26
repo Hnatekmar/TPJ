@@ -3,7 +3,7 @@
 
 #include "IFunction.h"
 
-class Graphics : IFunction
+class Graphics : public IFunction
 {
 public:
     Graphics();

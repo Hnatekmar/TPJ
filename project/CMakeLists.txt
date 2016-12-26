@@ -63,7 +63,11 @@ set(SOURCE_FILES
     src/Parser.cpp
     src/Token.cpp
     src/Type.cpp
+    include/StdLib/CreateGraphicsElement.h
+    src/StdLib/CreateGraphicsElement.cpp
     src/Vector.cpp
+    include/GraphicsObject.h
+    src/GraphicsObject.cpp
     include/StdLib/Macro.h
     src/StdLib/Macro.cpp
     include/StdLib/Or.h

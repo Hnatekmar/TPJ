@@ -8,19 +8,21 @@
 #include <vector>
 #include <memory>
 #include "../include/Vector.h"
+#include "../include/GraphicsObject.h"
 
 struct AST;
 struct Token;
 class IFunction;
 class IMacro;
 
-typedef boost::make_recursive_variant<float,
+typedef boost::variant<float,
 		std::string,
 		std::list<Token>,
 		Vector,
         std::shared_ptr<IFunction>,
         std::shared_ptr<IMacro>,
-		bool>::type MirageType;
+        bool,
+        std::shared_ptr<GraphicsObject>> MirageType;
 
 typedef std::map<std::string, Token> Context;
 enum class MirageKind
@@ -31,7 +33,8 @@ enum class MirageKind
     vector = 3,
     function = 4,
     macro_fn = 5,
-    boolean = 6
+    boolean = 6,
+    GraphicsObject = 7
 };
 
 /**

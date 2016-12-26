@@ -17,7 +17,8 @@ enum class TokenType
 	LIST,
 	END_OF_PROGRAM,
     MACRO_FN,
-    VECTOR
+    VECTOR,
+    GRAPHICS_ELEMENT
 };
 
 struct Token
