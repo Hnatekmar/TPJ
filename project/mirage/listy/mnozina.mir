@@ -1,4 +1,4 @@
-(importuj "mirage/lists/lists.mir")
+(importuj "mirage/listy/listy.mir")
 (importuj "mirage/makra/makra.mir")
 
 (definuj pridejDoMnoziny

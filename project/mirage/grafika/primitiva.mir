@@ -1,0 +1,38 @@
+; Definuje seznam grafických primitiv 
+(importuj "mirage/listy/listy.mir")
+(importuj "mirage/makra/makra.mir")
+
+(definuj obdelnik (funkce (vyska sirka)
+	 (element "rect" (list "width" (hodnota->retezec sirka) "height" (hodnota->retezec vyska)) (list))))
+
+(definuj ctverec (funkce (velikost)
+	 (obdelnik velikost velikost)))
+
+(definuj elipsa (funkce (sirka vyska)
+			(element "ellipse" (list "cx" (hodnota->retezec sirka) "cy" (hodnota->retezec vyska))
+				 (list))))
+
+(definuj kruh (funkce (polomer)
+		      (elipsa polomer polomer)))
+
+(definuj cesta (funkce (popis)
+		       (definuj text
+				(redukuj
+				 (mapuj popis
+				      (funkce (x)
+					      (definuj hodnota (hodnota->retezec x))
+					      (pridejDozadu (prepinac
+							((= hodnota "POSUN") "M")
+							((= hodnota "LINEARNI-POSUN") "L")
+							((= hodnota "KVADRATICKY-POSUN") "Q")
+							((= hodnota "KUBICKY-POSUN") "C")
+							((= hodnota "KRUHOVY-POSUN") "A")
+							((= 1 1) hodnota)
+						) " ")))
+				 pridejDopredu
+				 ""))
+		       (element "path" (list "d" text) (list))))
+
+(definuj usecka (funkce (x1 y1 x2 y2 ...)
+			(element "line" (spoj (list "x1" x1 "y1" y1 "x2" x2 "y2" y2) ...)
+				 (list))))

@@ -63,6 +63,8 @@ set(SOURCE_FILES
     src/Parser.cpp
     src/Token.cpp
     src/Type.cpp
+    include/StdLib/ToString.h
+    src/StdLib/ToString.cpp
     include/StdLib/CreateGraphicsElement.h
     src/StdLib/CreateGraphicsElement.cpp
     src/Vector.cpp

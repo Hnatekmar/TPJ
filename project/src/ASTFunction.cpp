@@ -39,12 +39,16 @@ Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& con
         for(auto it = m_body.begin(); it != m_body.end(); it++)
         {
             std::shared_ptr<AST> evaluate = *it;
-            if(evaluate->call)
+            while(evaluate->call)
             {
-                auto fn = evaluateIdentifier((*it)->children.front()->value, copy);
+                auto fn = evaluateIdentifier(evaluate->children.front()->value, copy);
                 if(fn.type == TokenType::MACRO_FN)
                 {
                     evaluate = boost::get<std::shared_ptr<IMacro>>(fn.value)->expand(evaluate->children, copy);
+                }
+                else
+                {
+                    break;
                 }
             }
             if(std::next(it) == m_body.end())

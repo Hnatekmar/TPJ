@@ -28,6 +28,7 @@
 #include "../include/StdLib/BiggerThan.h"
 #include "../include/Graphics.h"
 #include "../include/StdLib/CreateGraphicsElement.h"
+#include "../include/StdLib/ToString.h"
 
 Parser::Parser() :
 				m_constants()
@@ -185,6 +186,12 @@ Parser::Parser() :
     m_constants["element"] = Token{
          TokenType::FUNCTION,
          std::make_shared<CreateGraphicsElement>(),
+         {}
+    };
+
+    m_constants["hodnota->retezec"] = Token{
+         TokenType::FUNCTION,
+         std::make_shared<ToString>(),
          {}
     };
 }

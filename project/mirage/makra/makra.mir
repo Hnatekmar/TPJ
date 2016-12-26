@@ -14,28 +14,29 @@
 (definuj blok (makro (...)
 	(list (spoj (list funkce (nevyhodnocuj ())) ...))))
 
+(defn id (x) x)
+
 ; Ekvivalent switch ve většině programovacích jazyků. Použití (prepinac ((>= 1 2) 2) ((= 1 1) 4)) => 2
 (definuj prepinac (makro (...)
 			 (pokud (= (velikost ...) 0)
 				(chyba "Makro prepinac potrebuje alespon jeden argument")
 				(pokud (= (velikost ...) 1)
 				       (blok
-					 (definuj polozka (prvni ...))
-					 (definuj predikat (prvni polozka))
-					 (list pokud
+					 (definuj polozka (prvni (zbytek (prvni ...))))
+					 (definuj predikat (vyhodnot (prvni (prvni ...))))
+					 (pokud
 					       predikat
-					       (prvni (zbytek polozka))
+					       (list id polozka)
 					       (list chyba "Prepinac dosel do konce")))
 				       (blok
-					 (definuj polozka (prvni ...))
-					 (definuj predikat (vyhodnot (prvni polozka)))
-					 (list pokud
+					 (definuj polozka (prvni (zbytek (prvni ...))))
+					 (definuj predikat (vyhodnot (prvni (prvni ...))))
+					 (pokud
 					       predikat
-					       (prvni (zbytek polozka))
-					       (list aplikuj prepinac (zbytek ...))))))))
-					       
+					       (list id polozka)
+					       (spoj (list prepinac) (zbytek ...))))))))
+
 ; Makro aplikuj zavolá funkci s argumenty z listu. Například (aplikuj * (list 1 2)) je ekvivalentní (* 1 2)
 (definuj aplikuj (makro (nazev argumenty)
 			(spoj (list nazev) (vyhodnot argumenty))))
-			
-(defn id (x) x)
+

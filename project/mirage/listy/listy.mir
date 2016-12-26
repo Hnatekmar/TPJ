@@ -65,5 +65,3 @@
 									(interni (zbytek kolekce) fn (pridejDozadu akumulator (prvni kolekce)))
 									(interni (zbytek kolekce) fn akumulator)))))
 									(interni kolekce fn (list))))
-								
-		 

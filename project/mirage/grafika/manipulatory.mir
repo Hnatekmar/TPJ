@@ -1,0 +1,53 @@
+(definuj skupina
+	 (funkce (atributy deti)
+		 (element "g" atributy deti)))
+
+(definuj natri-vnitrek (funkce (objekt barva)
+	       (skupina (list "fill" barva) (list objekt))))
+
+(definuj natri-vnejsek (funkce (objekt barva)
+	       (skupina (list "stroke" barva) (list objekt))))
+
+(definuj posun (funkce (objekt posunX posunY)
+		       (skupina (list "transform" (pridejDozadu "translate(" 
+								(pridejDozadu
+								  (pridejDozadu 
+									  (pridejDozadu (hodnota->retezec posunX) ",")
+									  (hodnota->retezec posunY))
+								  ")")
+								)) (list objekt))))
+
+(definuj otoc-r (funkce (objekt uhel)
+		       (skupina (list "transform" (pridejDozadu "rotate(" 
+								(pridejDozadu
+								    (hodnota->retezec uhel) ")")))
+				(list objekt))))
+
+(definuj otoc-rxy (funkce (objekt uhel x y)
+		       (skupina (list "transform" (pridejDozadu "rotate(" 
+								(pridejDozadu
+								  	(pridejDozadu
+										(pridejDozadu
+											(pridejDozadu
+											  (pridejDozadu
+											    (hodnota->retezec uhel) 
+											    ",")
+											    (hodnota->retezec x))
+											",")
+										(hodnota->retezec y))
+									    ")")))
+				(list objekt))))
+
+(definuj rozsir-sv (funkce (objekt sirka vyska)
+			   (skupina (list "transform"
+					  (pridejDozadu "scale("
+							(pridejDozadu (hodnota->retezec sirka)
+								      (pridejDozadu ","
+										    (pridejDozadu (hodnota->retezec vyska)
+												  ")")))))
+				    (list objekt))))
+
+(definuj rozsir-f (funkce (objekt faktor)
+			  (skupina (list "transform"
+					 (pridejDozadu (pridejDozadu "scale(" (hodnota->retezec faktor)) ")"))
+				   (list objekt))))
