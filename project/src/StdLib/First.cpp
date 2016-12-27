@@ -28,10 +28,10 @@ Token First::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
     {
         throw InterpreterException("String je prázdný!", collection);
     }
-    std::string result = "" + string.at(0);
+    std::string result = string.substr(0, 1);
     return Token{
         TokenType::STRING,
-        result,
-        collection.filePos
+        std::move(result),
+        std::move(collection.filePos)
     };
 }

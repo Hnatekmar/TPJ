@@ -40,3 +40,15 @@
 (definuj aplikuj (makro (nazev argumenty)
 			(spoj (list nazev) (vyhodnot argumenty))))
 
+; Makro necht je obdoba makra let z lispu.
+; Příklad použití
+; (necht ((x 5) (y 6))
+;         (* x y)) => 30
+(definuj necht
+	 (makro (argumenty ...)
+		(list 
+			(spoj 
+			  (spoj (list funkce (nevyhodnocuj ()))
+				  (mapuj argumenty
+					 (funkce (argument)
+						 (list definuj (prvni argument) (prvni (zbytek argument)))))) ...))))
