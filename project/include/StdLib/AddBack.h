@@ -1,5 +1,5 @@
-#ifndef ADDBACK
-#define ADDBACK
+#ifndef ADD_BACK
+#define ADD_BACK
 
 #include "../IFunction.h"
 

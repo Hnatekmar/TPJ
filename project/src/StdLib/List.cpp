@@ -7,6 +7,7 @@ ListFn::ListFn()
 
 Token ListFn::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
-    return std::move(copy.at("..."));
+    Context copy(context);
+    argsToContext(args, copy);
+    return copy.at("...");
 }

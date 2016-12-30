@@ -1,39 +1,57 @@
 #include "../include/IFunction.h"
 #include "../include/CompilerException.h"
+#include <sstream>
 
-Context IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& context)
+
+void IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& context)
 {
     Context copy(context);
-    auto it = args.begin() + 1;
-    for(std::string& argName : m_args)
+    auto it = args.rbegin();
+    for(auto argIt = m_args.rbegin(); argIt != m_args.rend(); argIt++)
     {
+        const std::string& argName = (*argIt);
         if(argName == "...")
         {
-            std::list<Token> variadic;
-            while(it != args.end())
+            List<Token> variadic;
+            size_t count = args.size() - m_args.size();
+            while(count > 0)
             {
-                variadic.push_back((*it)->evaluate(context));
+                variadic = variadic.add((*it)->evaluate(copy));
                 it++;
+                count--;
             }
-            copy[argName] = Token{
+            context[argName] = Token{
                 TokenType::LIST,
-                std::move(variadic),
+                variadic,
                 args.front()->value.filePos
             };
-            break;
+            continue;
         }
-        if(it == args.end())
+        if(it == args.rend())
         {
-            throw InterpreterException("Neplatné množství argumentů", args.back()->value);
+            std::stringstream ss;
+            ss << "Neplatné množství argumentů očekával jsem (";
+            for(std::string& arg : m_args)
+            {
+                ss << arg << " ";
+            }
+            ss << ")";
+            throw InterpreterException(ss.str(), args.front()->evaluate(context));
         }
-        copy[argName] = (*it)->evaluate(context);
+        context[argName] = (*it)->evaluate(copy);
         it++;
     }
-    if(it != args.end())
+    if(it != args.rend() - 1)
     {
-        throw InterpreterException("Neplatné množství argumentů", args.front()->value);
+        std::stringstream ss;
+        ss << "Neplatné množství argumentů očekával jsem (";
+        for(std::string& arg : m_args)
+        {
+            ss << arg << " ";
+        }
+        ss << ")";
+        throw InterpreterException(std::move(ss.str()), args.front()->evaluate(context));
     }
-    return copy;
 }
 
 unsigned long IFunction::s_id = 0;

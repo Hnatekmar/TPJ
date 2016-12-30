@@ -1,5 +1,6 @@
 #include "../../include/StdLib/Macro.h"
 #include "../../include/CompilerException.h"
+#include <list>
 
 Macro::Macro(std::vector<std::shared_ptr<AST> > &code)
 {
@@ -26,21 +27,20 @@ Macro::Macro(std::vector<std::shared_ptr<AST> > &code)
 
 Context IMacro::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context context)
 {
-    Context copy(context);
     auto it = args.begin() + 1;
     for(std::string& argName : m_args)
     {
         if(argName == "...")
         {
-            std::list<Token> variadic;
+            List<Token> variadic;
             while(it != args.end())
             {
-                variadic.push_back(quote(*it));
+                variadic = variadic.addBack(quote(*it));
                 it++;
             }
-            copy[argName] = Token{
+            context[argName] = Token{
                 TokenType::LIST,
-                std::move(variadic),
+                variadic,
                 args.front()->value.filePos
             };
             break;
@@ -49,14 +49,14 @@ Context IMacro::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context c
         {
             throw InterpreterException("Neplatné množství argumentů", args.back()->value);
         }
-        copy[argName] = quote(*it);
+        context[argName] = quote(*it);
         it++;
     }
     if(it != args.end())
     {
         throw InterpreterException("Neplatné množství argumentů", args.front()->value);
     }
-    return copy;
+    return context;
 }
 
 Token quote(std::shared_ptr<AST> &ast)
@@ -78,7 +78,7 @@ std::shared_ptr<AST> unquote(Token &value)
 {
     if(value.type == TokenType::LIST)
     {
-        return listToAst(boost::get<std::list<Token>>(value.value));
+        return listToAst(boost::get<List<Token>>(value.value));
     }
     std::shared_ptr<AST> top(nullptr);
     Token copy = value;
@@ -89,7 +89,7 @@ std::shared_ptr<AST> unquote(Token &value)
                 false);
 }
 
-std::shared_ptr<AST> listToAst(std::list<Token> &list)
+std::shared_ptr<AST> listToAst(List<Token> list)
 {
     std::shared_ptr<AST> top(nullptr);
     std::shared_ptr<AST> node = std::make_shared<AST>(Token{}, top, true);
@@ -97,31 +97,33 @@ std::shared_ptr<AST> listToAst(std::list<Token> &list)
     {
         return node;
     }
-    node->value = list.front();
-    for(Token& elem : list)
+    node->value = list.first();
+    List<Token> it = list;
+    while(!it.empty())
     {
-        if(elem.type == TokenType::LIST)
+        if(it.first().type == TokenType::LIST)
         {
-            auto subNode = listToAst(boost::get<std::list<Token>>(elem.value));
+            auto subNode = listToAst(boost::get<List<Token>>(it.first().value));
             subNode->call = true;
             node->children.push_back(subNode);
         }
         else
         {
-            Token copy = elem;
+            Token copy = it.first();
             copy.quote = false;
             node->children.push_back(std::make_shared<AST>(copy, node, false));
         }
+        it = it.rest();
     }
     return node;
 }
 
-std::list<Token> astToList(std::shared_ptr<AST> &ast)
+List<Token> astToList(std::shared_ptr<AST> &ast)
 {
-    std::list<Token> list;
+    List<Token> list;
     for(std::shared_ptr<AST>& elem : ast->children)
     {
-        list.push_back(quote(elem));
+        list = list.addBack(quote(elem));
     }
     return list;
 }
@@ -140,7 +142,7 @@ std::shared_ptr<AST> IMacro::expand(std::vector<std::shared_ptr<AST> > &args, Co
             {
                 throw InterpreterException("Makro musí vracet list", token);
             }
-            return listToAst(boost::get<std::list<Token>>(token.value));
+            return listToAst(boost::get<List<Token>>(token.value));
         }
         else
         {

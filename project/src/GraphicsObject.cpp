@@ -1,7 +1,8 @@
 #include "../include/GraphicsObject.h"
 #include <sstream>
+#include "../include/Token.h"
 
-GraphicsObject::GraphicsObject(std::string name, std::map<std::string, std::string> params, std::list<GraphicsObject> children):
+GraphicsObject::GraphicsObject(std::string name, std::map<std::string, std::string> params, List<Token> children):
     m_params(params),
     m_children(children),
     m_name(name)
@@ -17,9 +18,19 @@ std::string GraphicsObject::toString()
         ss << pair.first << " = \"" << pair.second << "\" ";
     }
     ss << ">";
-    for(auto& child : m_children)
+    auto it = m_children;
+    while(!it.empty())
     {
-        ss << child.toString();
+        if(it.first().type == TokenType::GRAPHICS_ELEMENT)
+        {
+            auto graphics = boost::get<std::shared_ptr<GraphicsObject>>(it.first().value);
+            ss << graphics->toString();
+        }
+        else
+        {
+            ss << it.first();
+        }
+        it = it.rest();
     }
     ss << "</" << m_name << ">";
     return ss.str();

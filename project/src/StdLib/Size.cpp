@@ -8,7 +8,8 @@ Size::Size()
 
 Token Size::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     auto collection = copy.at("kotejner");
     if(collection.type != TokenType::STRING && collection.type != TokenType::LIST)
     {
@@ -16,7 +17,7 @@ Token Size::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
     }
     if(collection.type == TokenType::LIST)
     {
-        std::list<Token>& list = boost::get<std::list<Token>>(collection.value);
+        List<Token> list = boost::get<List<Token>>(collection.value);
         return Token{
             TokenType::NUMBER,
             static_cast<float>(list.size()),

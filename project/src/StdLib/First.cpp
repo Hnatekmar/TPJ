@@ -8,7 +8,8 @@ First::First()
 
 Token First::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     auto collection = copy.at("kontejner");
     if(collection.type != TokenType::STRING && collection.type != TokenType::LIST)
     {
@@ -16,12 +17,12 @@ Token First::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
     }
     if(collection.type == TokenType::LIST)
     {
-        std::list<Token>& list = boost::get<std::list<Token>>(collection.value);
-        if(list.size() == 0)
+        List<Token> list = boost::get<List<Token>>(collection.value);
+        if(list.empty())
         {
             throw InterpreterException("List je prázdný!", collection);
         }
-        return list.front();
+        return list.first();
     }
     std::string string = boost::get<std::string>(collection.value);
     if(string.size() == 0)

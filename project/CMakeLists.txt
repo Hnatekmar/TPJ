@@ -47,6 +47,8 @@ set(SOURCE_FILES
     include/StdLib/Import.h
     include/StdLib/Error.h
     include/StdLib/Debug.h
+    include/List.h
+    src/List.cpp
     src/StdLib/Debug.cpp
     src/StdLib/Error.cpp
     src/StdLib/Import.cpp

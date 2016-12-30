@@ -8,7 +8,8 @@ ToString::ToString()
 
 Token ToString::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     std::stringstream ss;
     ss << copy.at("hodnota");
     return Token{

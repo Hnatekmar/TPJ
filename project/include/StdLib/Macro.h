@@ -2,9 +2,10 @@
 #define MACRO
 
 #include "../AST.h"
+#include <list>
 
-std::shared_ptr<AST> listToAst(std::list<Token>& list);
-std::list<Token> astToList(std::shared_ptr<AST>& ast);
+std::shared_ptr<AST> listToAst(List<Token> list);
+List<Token> astToList(std::shared_ptr<AST>& ast);
 
 /**
  * @brief Vrátí neevaluované ast v podobě tokenu. Pokud je to volání vrátí list, pokud je to identifikátor vrátí neevaluovaný identifikátor

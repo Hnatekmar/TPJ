@@ -9,7 +9,8 @@ BiggerThan::BiggerThan()
 
 Token BiggerThan::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     Token& a = copy.at("a");
     Token& b = copy.at("b");
     if(a.type != TokenType::NUMBER)

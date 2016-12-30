@@ -9,7 +9,8 @@ AddBack::AddBack()
 
 Token AddBack::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     Token& list = copy.at("kolekce");
     Token value = copy.at("hodnota");
     if(list.type != TokenType::LIST && list.type != TokenType::STRING)
@@ -18,11 +19,11 @@ Token AddBack::execute(std::vector<std::shared_ptr<AST> > &args, Context &contex
     }
     if(list.type == TokenType::LIST)
     {
-        std::list<Token> collection = boost::get<std::list<Token>>(list.value);
-        collection.push_back(value);
+        List<Token> collection = boost::get<List<Token>>(list.value);
+        collection = collection.addBack(value);
         return Token{
         TokenType::LIST,
-            std::move(collection),
+            collection,
             std::move(list.filePos)
         };
     }

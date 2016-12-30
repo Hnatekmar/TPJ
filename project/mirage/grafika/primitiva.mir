@@ -34,5 +34,10 @@
 		       (element "path" (list "d" text) (list))))
 
 (definuj usecka (funkce (x1 y1 x2 y2 ...)
-			(element "line" (spoj (list "x1" x1 "y1" y1 "x2" x2 "y2" y2) ...)
+			(element "line" (spoj (list "x1" (hodnota->retezec x1) "y1" (hodnota->retezec y1) "x2" (hodnota->retezec x2) "y2" (hodnota->retezec y2)) ...)
 				 (list))))
+
+(definuj polygon (funkce (...)
+			 (element "polygon" (list "points" (redukuj (mapuj ... 
+									   (funkce (x) (pridejDozadu (hodnota->retezec x) " ")))
+											pridejDopredu "")) (list))))

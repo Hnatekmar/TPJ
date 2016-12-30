@@ -3,6 +3,11 @@
 			     a
 			     (spoj (pridejDozadu a (prvni b)) (zbytek b)))))
 
+(definuj spoj-rychle (funkce (a b)
+			     (pokud (= (velikost b) 0)
+				     a
+				     (spoj-rychle (pridejDopredu a (prvni b)) (zbytek b)))))
+
 (definuj mapuj ; Aplikuje fn na všechny elementy listu
 	(funkce (kolekce fn)
 		(definuj interni 
@@ -36,8 +41,8 @@
 		(definuj interni
 			(funkce (od do akumulator)
 				(pokud (= od do)
-					(pridejDopredu akumulator od)
-					(interni (+ 1 od) do (pridejDozadu akumulator od)))))
+					akumulator
+					(interni od (- do 1) (pridejDopredu akumulator do)))))
 	(interni od do (list))))
 
 (definuj zip (funkce (a b)

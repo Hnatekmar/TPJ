@@ -10,7 +10,8 @@ CreateGraphicsElement::CreateGraphicsElement()
 
 Token CreateGraphicsElement::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     Token& elementName = copy.at("jmenoElementu");
     if(elementName.type != TokenType::STRING)
     {
@@ -23,27 +24,27 @@ Token CreateGraphicsElement::execute(std::vector<std::shared_ptr<AST> > &args, C
         throw InterpreterException("Položka není typu list!", arguments);
     }
     std::map<std::string, std::string> argMap;
-    std::list<Token>& argList = boost::get<std::list<Token>>(arguments.value);
+    List<Token>& argList = boost::get<List<Token>>(arguments.value);
     if(argList.size() % 2 != 0)
     {
         throw InterpreterException("Argumenty musí být ve formátu (list nazevArgumentu hodnotaArgumentu ...)", arguments);
     }
-    auto it = argList.begin();
-    while(it != argList.end())
+    auto it = argList;
+    while(!it.empty())
     {
-        if((*it).type != TokenType::STRING)
+        if(it.first().type != TokenType::STRING)
         {
-            throw InterpreterException("Položka není typu string!", (*it));
+            throw InterpreterException("Položka není typu string!", it.first());
         }
-        std::string key = boost::get<std::string>((*it).value);
-        it++;
-        if((*it).type != TokenType::STRING)
+        std::string key = boost::get<std::string>(it.first().value);
+        it = it.rest();
+        if(it.first().type != TokenType::STRING)
         {
-            throw InterpreterException("Položka není typu string!", (*it));
+            throw InterpreterException("Položka není typu string!", it.first());
         }
-        std::string value = boost::get<std::string>((*it).value);
+        std::string value = boost::get<std::string>(it.first().value);
         argMap[key] = value;
-        it++;
+        it = it.rest();
     }
 
     Token& children = copy.at("naslednici");
@@ -52,22 +53,10 @@ Token CreateGraphicsElement::execute(std::vector<std::shared_ptr<AST> > &args, C
     {
         throw InterpreterException("Položka není typu list!", arguments);
     }
-    std::list<Token> childrenList = boost::get<std::list<Token>>(children.value);
-    std::list<GraphicsObject> objectList;
-    auto childIt = childrenList.begin();
-    while(childIt != childrenList.end())
-    {
-        if((*childIt).type != TokenType::GRAPHICS_ELEMENT)
-        {
-            throw InterpreterException("Položka není typu element!", (*childIt));
-        }
-        objectList.push_back(*boost::get<std::shared_ptr<GraphicsObject>>((*childIt).value).get());
-        childIt++;
-    }
-
+    List<Token> childrenList = boost::get<List<Token>>(children.value);
     return Token{
         TokenType::GRAPHICS_ELEMENT,
-        std::make_shared<GraphicsObject>(name, argMap, objectList),
+        std::make_shared<GraphicsObject>(name, argMap, childrenList),
         elementName.filePos
     };
 }

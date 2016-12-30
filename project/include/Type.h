@@ -2,9 +2,8 @@
 #define TYPE_H
 
 #include <boost/variant.hpp>
-#include <list>
+#include "List.h"
 #include <map>
-#include <functional>
 #include <vector>
 #include <memory>
 #include "../include/Vector.h"
@@ -17,7 +16,7 @@ class IMacro;
 
 typedef boost::variant<float,
 		std::string,
-		std::list<Token>,
+        List<Token>,
 		Vector,
         std::shared_ptr<IFunction>,
         std::shared_ptr<IMacro>,
@@ -38,7 +37,7 @@ enum class MirageKind
 };
 
 /**
- * @brief Vrátí druh typu na základě metody whitch
+ * @brief Vrátí druh typu na základě metody which
  */
 MirageKind getKind(const MirageType& type);
 

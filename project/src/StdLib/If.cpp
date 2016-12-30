@@ -10,7 +10,7 @@ If::If()
 
 std::shared_ptr<AST> If::expand(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    auto copy = argsToContext(args, context);
+    Context copy = argsToContext(args, context);
     auto predicate = unquote(copy.at("predikat"))->evaluate(context);
     if(predicate.type != TokenType::BOOL)
     {

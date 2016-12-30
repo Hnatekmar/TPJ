@@ -31,7 +31,8 @@ ASTFunction::ASTFunction(std::vector<std::shared_ptr<AST>>& code, Context closur
 Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& context)
 {
     // Nejprve je potřeba vytvořit nový context do kterého se vloží i argumenty funkce
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     copy.insert(m_closure.begin(), m_closure.end());
     do
     {
@@ -63,7 +64,7 @@ Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& con
                         auto fn2Ptr = boost::get<std::shared_ptr<IFunction>>(fn2.value);
                         if(fn1Ptr->getId() == fn2Ptr->getId())
                         {
-                            copy = argsToContext(evaluate->children, copy);
+                            argsToContext(evaluate->children, copy);
                             it = m_body.begin();
                             continue;
                         }

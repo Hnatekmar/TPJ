@@ -15,8 +15,8 @@
 #include "../include/StdLib/List.h"
 #include "../include/StdLib/Import.h"
 #include "../include/StdLib/First.h"
-#include "../include/StdLib/AddBack.h"
 #include "../include/StdLib/AddFront.h"
+#include "../include/StdLib/AddBack.h"
 #include "../include/StdLib/Divide.h"
 #include "../include/StdLib/Plus.h"
 #include "../include/StdLib/Minus.h"
@@ -129,15 +129,15 @@ Parser::Parser() :
         {}
     };
 
-    m_constants["pridejDozadu"] = Token{
-        TokenType::FUNCTION,
-        std::make_shared<AddBack>(),
-        {}
-    };
-
     m_constants["pridejDopredu"] = Token{
         TokenType::FUNCTION,
         std::make_shared<AddFront>(),
+        {}
+    };
+
+    m_constants["pridejDozadu"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<AddBack>(),
         {}
     };
 

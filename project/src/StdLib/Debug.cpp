@@ -8,7 +8,8 @@ Debug::Debug()
 
 Token Debug::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     std::cout << "Hodnota: " << copy.at("hodnota") << std::endl;
     char yesOrNo = 'f';
     while(yesOrNo != 'A')

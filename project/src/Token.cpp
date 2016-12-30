@@ -32,17 +32,21 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 	}
 	if(token.type == TokenType::LIST)
 	{
-		auto list = boost::get<std::list<Token>>(token.value);
-		stream << '(';
-		for(auto it = list.begin(); it != list.end(); it++)
-		{
-			stream << (*it);
-			if(std::next(it) != list.end())
-			{
-				stream << ' ';
-			}
+        auto list = boost::get<List<Token>>(token.value);
+        stream << '(';
+        while(!list.empty())
+        {
+            if(!list.empty())
+            {
+                stream << list.first();
+                if(!list.rest().empty())
+                {
+                    stream << ' ';
+                }
+            }
+            list = list.rest();
 		}
-		stream << ')';
+        stream << ')';
     }
     if(token.type == TokenType::MACRO_FN)
     {

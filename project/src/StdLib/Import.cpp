@@ -2,6 +2,7 @@
 #include <fstream>
 #include "include/CompilerException.h"
 #include "include/Lexer.h"
+
 Import::Import(Parser &parser) : m_parser(parser)
 {
     m_args.push_back("cesta");
@@ -9,7 +10,8 @@ Import::Import(Parser &parser) : m_parser(parser)
 
 Token Import::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-     Context copy = argsToContext(args, context);
+     Context copy(context);
+     argsToContext(args, copy);
      Token path = copy.at("cesta");
      if(path.type != TokenType::STRING)
      {

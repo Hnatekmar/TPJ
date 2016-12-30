@@ -14,8 +14,8 @@ protected:
     static unsigned long s_id;
     unsigned long m_id;
     std::vector<std::string> m_args;
-    Context argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& context);
-    
+    void argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& context);
+
 public:
     IFunction();
     unsigned int getId();

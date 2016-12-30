@@ -8,6 +8,7 @@ Error::Error()
 
 Token Error::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
 {
-    Context copy = argsToContext(args, context);
+    Context copy(context);
+    argsToContext(args, copy);
     throw InterpreterException("Kritická chyba vyvolaná z aplikace", copy.at("hodnota"));
 }
