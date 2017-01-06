@@ -263,7 +263,18 @@ void Parser::parse(Lexer &lexer)
 		}
 		else
         {
-			throw InterpreterException("Přepisovací pravidlo nenalezeno", token);
+            std::string error = "Přepisovací pravidlo nenalezeno! Očekával jsem jednu z následujících hodnot (dle pravidla " + m_ruleToString[rule] + "):";
+            if(m_parsingTable.find(rule) == m_parsingTable.end())
+            {
+                throw InterpreterException("Přepisovací pravidlo nenalezeno", token);
+            }
+            auto& ruleTable = m_parsingTable[rule];
+            for(const auto& kv : ruleTable)
+            {
+                error += "\n\t" + m_tokenTypeToString[kv.first];
+            }
+            error += "\n";
+            throw InterpreterException(error, token);
 		}
 	}
     if(!lexer.eof())

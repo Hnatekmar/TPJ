@@ -32,18 +32,27 @@ class Parser
 		epsilon,
 		SCall,
 		END_OF_PROGRAM
-	};
+    };
+
+    std::map<TokenType, std::string> m_tokenTypeToString = {
+        { TokenType::BOOL, "logická hodnota" },
+        { TokenType::END_OF_PROGRAM, "EOF (konec programu)" },
+        { TokenType::IDENTIFIER, "identifikátor" },
+        { TokenType::L_PAREN, "levá závorka" },
+        { TokenType::R_PAREN, "pravá závorka" },
+        { TokenType::NUMBER, "číslo" }
+    };
 
     std::map<Rule, std::string> m_ruleToString = {
-		{ Rule::Start, "Start" },
-		{ Rule::Expression, "Expression" },
-		{ Rule::EArgs, "EArgs" },
-		{ Rule::L_PAREN, "L_PAREN" },
-		{ Rule::R_PAREN, "R_PAREN" },
-		{ Rule::atom, "atom" },
-		{ Rule::epsilon, "epsilon" },
-		{ Rule::SCall, "SCall" },
-		{ Rule::END_OF_PROGRAM, "END_OF_PROGRAM" }
+        { Rule::Start, "Začátek" },
+        { Rule::Expression, "výraz" },
+        { Rule::EArgs, "argument" },
+        { Rule::L_PAREN, "Závorka (" },
+        { Rule::R_PAREN, "Závorka )" },
+        { Rule::atom, "atom (číslo, řetězec, identifikátor)" },
+        { Rule::epsilon, "cokoliv" },
+        { Rule::SCall, "Volání/aplikace (výraz ve tvaru (...) )" },
+        { Rule::END_OF_PROGRAM, "konec programu" }
 	};
 	Context m_constants;
 
