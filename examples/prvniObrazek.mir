@@ -1,0 +1,9 @@
+(importuj "mirage/mirage.mir")
+
+(definuj cisla (rozsah 1 20))
+
+(vykresli 
+  (mapuj cisla (funkce (x)
+			 (posun
+			   (natri-vnitrek
+			     (otoc-rxy (ctverec x) x (/ x 2) (/ x 2)) "rgb(25, 65, 80)") (* x (+ x 20)) 10))) 100 100)

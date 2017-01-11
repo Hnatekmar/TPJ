@@ -23,15 +23,19 @@ class Parser
 {
 	enum class Rule
 	{
-		Start,
-		Expression,
-		EArgs,
-		L_PAREN,
+        PROGRAM,
+        EXPRESSION,
+        EXPRESSION2,
+        ARGUMENT,
+        EXPANSION,
+        ATOM,
+        L_PAREN,
 		R_PAREN,
-		atom,
-		epsilon,
-		SCall,
-		END_OF_PROGRAM
+        S_CALL,
+        EPSILON,
+        END_OF_PROGRAM,
+        EXPANSION_NAME,
+        BUILD_TREE
     };
 
     std::map<TokenType, std::string> m_tokenTypeToString = {
@@ -40,104 +44,181 @@ class Parser
         { TokenType::IDENTIFIER, "identifikátor" },
         { TokenType::L_PAREN, "levá závorka" },
         { TokenType::R_PAREN, "pravá závorka" },
+        { TokenType::STRING, "řetězec" },
+        { TokenType::EXPANSION, "expanze" },
         { TokenType::NUMBER, "číslo" }
     };
 
     std::map<Rule, std::string> m_ruleToString = {
-        { Rule::Start, "Začátek" },
-        { Rule::Expression, "výraz" },
-        { Rule::EArgs, "argument" },
+        { Rule::PROGRAM, "Začátek" },
+        { Rule::EXPRESSION, "výraz" },
+        { Rule::EXPRESSION2, "výraz" },
+        { Rule::ARGUMENT, "argument" },
         { Rule::L_PAREN, "Závorka (" },
         { Rule::R_PAREN, "Závorka )" },
-        { Rule::atom, "atom (číslo, řetězec, identifikátor)" },
-        { Rule::epsilon, "cokoliv" },
-        { Rule::SCall, "Volání/aplikace (výraz ve tvaru (...) )" },
+        { Rule::ATOM, "atom (číslo, řetězec, identifikátor)" },
+        { Rule::EPSILON, "cokoliv" },
+        { Rule::S_CALL, "Volání/aplikace (výraz ve tvaru (...))" },
         { Rule::END_OF_PROGRAM, "konec programu" }
-	};
+    };
 	Context m_constants;
 
-	std::map<Rule, std::map<TokenType, std::list<Rule> > > m_parsingTable = { 
-		{
-			{
-				Rule::Start,
-				{
-					{
-						TokenType::L_PAREN,
-						{
-							Rule::Expression,
-							Rule::SCall,
-							Rule::Start
-						},
-					},
-					{
-						TokenType::END_OF_PROGRAM,
-						{
-							Rule::epsilon
-						}
-					}
-				}
-			},
-			{
-				Rule::Expression,
-				{
-					{
-						TokenType::L_PAREN,
-						{
-							Rule::L_PAREN,
-							Rule::EArgs,
-							Rule::R_PAREN
-						}
-					}
-				}
-			},
-			{
-				Rule::EArgs,
-				{
-					{
-						TokenType::NUMBER,
-						{
-							Rule::atom,
-							Rule::EArgs
-						}
-					},
-					{
-						TokenType::IDENTIFIER,
-						{
-							Rule::atom,
-							Rule::EArgs
-						}
-					},
-					{
-						TokenType::STRING,
-						{
-							Rule::atom,
-							Rule::EArgs
-						}
-					},
-					{
-						TokenType::BOOL,
-						{
-							Rule::atom,
-							Rule::EArgs
-						}
-					},
-					{
-						TokenType::L_PAREN,
-						{
-							Rule::Expression,
-							Rule::EArgs
-						}
-					},
-					{
-						TokenType::R_PAREN,
-						{
-							Rule::epsilon
-						}
-					}
-				}
-			}
-		}
-	};
+    std::map<Rule, std::map<TokenType, std::list<Rule> > > m_parsingTable =
+    {
+            {
+                    Rule::PROGRAM,
+                    {
+                            {
+                                    TokenType::L_PAREN,
+                                    {
+                                            Rule::EXPRESSION,
+                                            Rule::S_CALL,
+                                            Rule::PROGRAM
+                                    }
+                            },
+                            {
+                                    TokenType::EXPANSION,
+                                    {
+                                            Rule::EXPANSION,
+                                            Rule::S_CALL,
+                                            Rule::PROGRAM
+                                    }
+                            },
+                            {
+                                    TokenType::END_OF_PROGRAM,
+                                    {
+                                            Rule::EPSILON
+                                    }
+                            }
+                    }
+            },
+            {
+                    Rule::EXPRESSION,
+                    {
+                            {
+                                    TokenType::L_PAREN,
+                                    {
+                                            Rule::L_PAREN,
+                                            Rule::EXPRESSION2,
+                                            Rule::BUILD_TREE
+                                    }
+                            },
+                            {
+                                    TokenType::EXPANSION,
+                                    {
+                                            Rule::EXPANSION,
+                                            Rule::BUILD_TREE
+                                    }
+                            }
+                    }
+            },
+            {
+                    Rule::EXPRESSION2,
+                    {
+                            {
+                                    TokenType::L_PAREN,
+                                    {
+                                            Rule::ARGUMENT,
+                                            Rule::EXPRESSION2
+                                    }
+                            },
+                            {
+                                    TokenType::R_PAREN,
+                                    {
+                                            Rule::R_PAREN
+                                    }
+                            },
+                            {
+                                    TokenType::BOOL,
+                                    {
+                                            Rule::ARGUMENT,
+                                            Rule::EXPRESSION2
+                                    }
+                            },
+                            {
+                                    TokenType::IDENTIFIER,
+                                    {
+                                            Rule::ARGUMENT,
+                                            Rule::EXPRESSION2
+                                    }
+                            },
+                            {
+                                    TokenType::STRING,
+                                    {
+                                            Rule::ARGUMENT,
+                                            Rule::EXPRESSION2
+                                    }
+                            },
+                            {
+                                    TokenType::NUMBER,
+                                    {
+                                            Rule::ARGUMENT,
+                                            Rule::EXPRESSION2
+                                    }
+                            },
+                            {
+                                    TokenType::EXPANSION,
+                                    {
+                                            Rule::ARGUMENT,
+                                            Rule::EXPRESSION2
+                                    }
+                            }
+                    }
+            },
+            {
+                    Rule::ARGUMENT,
+                    {
+                            {
+                                    TokenType::L_PAREN,
+                                    {
+                                            Rule::EXPRESSION
+                                    }
+                            },
+                            {
+                                    TokenType::BOOL,
+                                    {
+                                            Rule::ATOM
+                                    }
+                            },
+                            {
+                                    TokenType::IDENTIFIER,
+                                    {
+                                            Rule::ATOM
+                                    }
+                            },
+                            {
+                                    TokenType::STRING,
+                                    {
+                                            Rule::ATOM
+                                    }
+                            },
+                            {
+                                    TokenType::NUMBER,
+                                    {
+                                            Rule::ATOM
+                                    }
+                            },
+                            {
+                                    TokenType::EXPANSION,
+                                    {
+                                            Rule::EXPRESSION
+                                    }
+                            }
+                    }
+            },
+            {
+                    Rule::EXPANSION,
+                    {
+                            {
+                                    TokenType::EXPANSION,
+                                    {
+                                            Rule::EXPANSION_NAME,
+                                            Rule::ARGUMENT
+                                    }
+                            }
+                    }
+            }
+    };
 
 	Token evaluate(std::shared_ptr<AST>& ast, Context& context);
 
@@ -148,7 +229,12 @@ class Parser
 
 	bool isTerminal(const Rule& rule)
 	{
-		return rule != Rule::SCall && rule != Rule::Start && rule != Rule::EArgs && rule != Rule::Expression;
+        return rule != Rule::S_CALL &&
+               rule != Rule::PROGRAM &&
+               rule != Rule::EXPANSION &&
+               rule != Rule::EXPRESSION &&
+               rule != Rule::ARGUMENT &&
+               rule != Rule::EXPRESSION2;
 	}
 
 	/**

@@ -14,3 +14,6 @@ tests/bin
 .settings/
 build-*
 *.user
+*.bak
+*.cbp
+*.cmake

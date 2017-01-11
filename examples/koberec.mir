@@ -1,0 +1,13 @@
+(importuj "mirage/mirage.mir")
+
+(defn koberec (hloubka)
+      (defn interni (x y akumulator hloubka)
+	      (pokud (= hloubka 0)
+		     (list)
+		     (blok
+		       (definuj velikost (* hloubka 10))
+		       (definuj nahore (interni x (- y velikost) akumulator (- hloubka 1)))
+		       (list (posun (ctverec velikost velikost) x y)))))
+      (interni 0 0 (list) hloubka))
+
+(vykresli (koberec 5))

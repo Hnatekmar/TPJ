@@ -4,7 +4,7 @@
 #include "../AST.h"
 #include <list>
 
-std::shared_ptr<AST> listToAst(List<Token> list);
+std::shared_ptr<AST> listToAst(const List<Token> &list);
 List<Token> astToList(std::shared_ptr<AST>& ast);
 
 /**

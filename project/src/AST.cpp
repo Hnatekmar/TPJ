@@ -6,7 +6,7 @@
 
 Token evaluateIdentifier(Token identifier, const Context& context)
 {
-    while(identifier.type == TokenType::IDENTIFIER && !identifier.quote)
+    while((identifier.type == TokenType::IDENTIFIER || identifier.type == TokenType::EXPANSION) && !identifier.quote)
 	{
 		std::string value = boost::get<std::string>(identifier.value);
 		if(context.find(value) != context.end())
@@ -34,7 +34,7 @@ Token AST::evaluate(Context& context)
     if(call)
 	{
 		Token identifier = children.front()->evaluate(context);
-		if(identifier.type == TokenType::IDENTIFIER)
+        if(identifier.type == TokenType::IDENTIFIER || identifier.type == TokenType::EXPANSION)
 		{
 			identifier = evaluateIdentifier(identifier, context);
 		}

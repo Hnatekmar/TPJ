@@ -7,6 +7,7 @@ void IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& 
 {
     Context copy(context);
     auto it = args.rbegin();
+    List<Token> evaluatedArgs;
     for(auto argIt = m_args.rbegin(); argIt != m_args.rend(); argIt++)
     {
         const std::string& argName = (*argIt);
@@ -25,6 +26,7 @@ void IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& 
                 variadic,
                 args.front()->value.filePos
             };
+            evaluatedArgs = evaluatedArgs.add(context[argName]);
             continue;
         }
         if(it == args.rend())
@@ -36,9 +38,11 @@ void IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& 
                 ss << arg << " ";
             }
             ss << ")";
+            ss << " dostal jsem " << args.size() << " argumentů";
             throw InterpreterException(ss.str(), args.front()->evaluate(context));
         }
         context[argName] = (*it)->evaluate(copy);
+        evaluatedArgs = evaluatedArgs.add(context[argName]);
         it++;
     }
     if(it != args.rend() - 1)
@@ -49,7 +53,15 @@ void IFunction::argsToContext(std::vector<std::shared_ptr<AST>>& args, Context& 
         {
             ss << arg << " ";
         }
-        ss << ")";
+        ss << ") a dostal jsem " << args.size() - 1 << " argumentů" << std::endl;
+        size_t argNum = 0;
+        evaluatedArgs = evaluatedArgs.rest();
+        while(!evaluatedArgs.empty())
+        {
+            ss << '\t' << "Argument číslo " << argNum << ' ' << evaluatedArgs.first() << std::endl;
+            argNum++;
+            evaluatedArgs = evaluatedArgs.rest();
+        }
         throw InterpreterException(std::move(ss.str()), args.front()->evaluate(context));
     }
 }

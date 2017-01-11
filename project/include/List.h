@@ -37,7 +37,7 @@ public:
     {
     }
 
-    inline bool empty()
+    inline bool empty() const
     {
         return m_list == nullptr;
     }
@@ -53,7 +53,7 @@ public:
         assert(!empty());
     }
 
-    const T first()
+    const T first() const
     {
         if(m_list == nullptr)
         {
@@ -63,7 +63,7 @@ public:
         return m_list->first;
     }
 
-    List<T> rest()
+    List<T> rest() const
     {
         if(m_list != nullptr)
         {
@@ -72,7 +72,7 @@ public:
         return List();
     }
 
-    size_t size()
+    size_t size() const
     {
         List<T> it = *this;
         size_t sizeOfList = 0;
@@ -84,7 +84,7 @@ public:
         return sizeOfList;
     }
 
-    T last()
+    T last() const
     {
         if(empty())
         {
@@ -98,7 +98,7 @@ public:
         return it.first();
     }
 
-    List<T> addBack(T value)
+    List<T> addBack(T value) const
     {
         if(empty())
         {
@@ -124,7 +124,7 @@ public:
         return List();
     }
 
-    List<T> add(T value)
+    List<T> add(T value) const
     {
         List newList(value);
         newList.m_list->rest = m_list;

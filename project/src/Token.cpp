@@ -55,6 +55,10 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 	if(token.type == TokenType::END_OF_PROGRAM)
 	{
 		stream << "EOF";
-	}
+    }
+    if(token.type == TokenType::EXPANSION)
+    {
+        stream << boost::get<std::string>(token.value);
+    }
 	return stream;
 }

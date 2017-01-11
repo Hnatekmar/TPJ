@@ -39,19 +39,33 @@ Token Lexer::nextToken()
 			{
 				token.type = TokenType::END_OF_PROGRAM;
 				value = "END_OF_PROGRAM";
-				token.value = value;
+                token.value = value;
+                token.filePos = m_filePos;
 				return token;
 			}
 		}
 		
 		if(state == State::q_s) // Startovní stav
 		{
-			if(std::isspace(m_char))
+            if(m_char == '#')
+            {
+                state = State::q_g;
+                token.type = TokenType::EXPANSION;
+                value = m_char;
+                continue;
+            }
+            if(m_char == '$')
+            {
+                state = State::q_h;
+                token.type = TokenType::BOOL;
+                continue;
+            }
+            if(std::isspace(m_char))
 			{
 				continue;
 			}
 
-            if(m_char == ';' || m_char == '#')
+            if(m_char == ';')
 			{
 				state = State::q_f;
 				continue;
@@ -84,7 +98,7 @@ Token Lexer::nextToken()
 			if(m_char == '(')
 			{
 				value = m_char;
-			token.type = TokenType::L_PAREN;
+                token.type = TokenType::L_PAREN;
 				token.value = value;
 				break;
 			}
@@ -95,10 +109,48 @@ Token Lexer::nextToken()
 				token.type = TokenType::STRING;
 				token.value = value;
 				continue;
-			}
-		}
+            }
+        }
 
-		/**
+        if(state == State::q_g)
+        {
+            if(!std::isspace(m_char))
+            {
+                value += m_char;
+                state = State::q_gf;
+                continue;
+            }
+        }
+
+        if(state == State::q_gf)
+        {
+            if(!std::isspace(m_char))
+            {
+                value += m_char;
+                continue;
+            }
+            else
+            {
+                token.value = value;
+                break;
+            }
+        }
+
+        if(state == State::q_h)
+        {
+            if(m_char == 'p')
+            {
+                token.value = true;
+                break;
+            }
+            else if(m_char == 'n')
+            {
+                token.value = false;
+                break;
+            }
+        }
+
+        /**
 		 * Načítá čísla
 		 */
 		if(state == State::q_bf)
@@ -198,23 +250,9 @@ Token Lexer::nextToken()
 		}
 
 		std::cerr << '<' << m_filePos.line << ":" << m_filePos.pos << "> Neočekávaný znak " << m_char << std::endl;
-		std::exit(9001);
+        std::exit(1);
 		//throw std::runtime_error("Neočekávaný znak " + m_char);
 	}
 	token.filePos = m_filePos;
-	if(token.type == TokenType::IDENTIFIER)
-	{
-		std::string value = boost::get<std::string>(token.value);
-		if(value == "PRAVDA")
-		{
-			token.value = true;
-			token.type = TokenType::BOOL;
-		}
-		if(value == "NEPRAVDA")
-		{
-			token.value = false;
-			token.type = TokenType::BOOL;
-		}
-	}
 	return token;
 }

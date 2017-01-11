@@ -1,0 +1,22 @@
+(importuj "mirage/mirage.mir")
+
+(pokud (= PRAVDA (= 1 1))
+       PRAVDA
+       (chyba "= nefunguje spravne"))
+
+(pokud (= PRAVDA (> 5 2))
+       PRAVDA
+       (chyba "> nefunguje spravne"))
+
+(definuj id (funkce (x) x))
+
+(pokud (= 5 (id 5))
+       5
+       (chyba "Closure nefunguje"))
+
+(definuj infix (makro (x f y) (list f x y)))
+
+(pokud (= 8 (infix 2 * 4))
+       8
+       (chyba "základní makra nefunguji"))
+

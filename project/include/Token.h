@@ -18,7 +18,8 @@ enum class TokenType
 	END_OF_PROGRAM,
     MACRO_FN,
     VECTOR,
-    GRAPHICS_ELEMENT
+    GRAPHICS_ELEMENT,
+    EXPANSION
 };
 
 struct Token

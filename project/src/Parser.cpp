@@ -29,10 +29,32 @@
 #include "../include/Graphics.h"
 #include "../include/StdLib/CreateGraphicsElement.h"
 #include "../include/StdLib/ToString.h"
+#include "../include/StdLib/Sinus.h"
+#include "../include/StdLib/Cosinus.h"
+#include "../include/StdLib/Sqrt.h"
+#include "../include/StdLib/RegisterExpansion.h"
 
 Parser::Parser() :
 				m_constants()
 {
+    m_constants["odmocnina"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<Sqrt>(),
+            {}
+    };
+
+    m_constants["sinus"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<Sine>(),
+            {}
+    };
+
+    m_constants["kosinus"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<Cosine>(),
+            {}
+    };
+
     m_constants["definuj"] = Token{
             TokenType::FUNCTION,
             std::make_shared<Define>(),
@@ -70,6 +92,12 @@ Parser::Parser() :
     };
 
     m_constants["nevyhodnocuj"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Quote>(),
+        {}
+    };
+
+    m_constants["#nevyhodnocuj"] = Token{
         TokenType::FUNCTION,
         std::make_shared<Quote>(),
         {}
@@ -165,7 +193,19 @@ Parser::Parser() :
         {}
     };
 
+    m_constants["#chyba"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Error>(),
+        {}
+    };
+
     m_constants["debuguj"] = Token{
+         TokenType::FUNCTION,
+         std::make_shared<Debug>(),
+         {}
+    };
+
+    m_constants["#debuguj"] = Token{
          TokenType::FUNCTION,
          std::make_shared<Debug>(),
          {}
@@ -194,13 +234,19 @@ Parser::Parser() :
          std::make_shared<ToString>(),
          {}
     };
+
+    m_constants["definujExpanzi"] = Token{
+         TokenType::MACRO_FN,
+         std::make_shared<RegisterExpansion>(),
+         {}
+    };
 }
 
 void Parser::parse(Lexer &lexer)
 {
 	std::stack<Rule> stack;
 	stack.push(Rule::END_OF_PROGRAM);
-	stack.push(Rule::Start);
+    stack.push(Rule::PROGRAM);
     Token token = lexer.nextToken();
     Rule rule;
     std::shared_ptr<AST> ast(nullptr);
@@ -208,7 +254,7 @@ void Parser::parse(Lexer &lexer)
 	{
 		rule = stack.top();
 		stack.pop();
-		if(rule == Rule::SCall)
+        if(rule == Rule::S_CALL)
 		{
             assert(ast != nullptr);
             ast->evaluate(m_constants);
@@ -225,14 +271,29 @@ void Parser::parse(Lexer &lexer)
 					ast->children.push_back(tmpAST);
 				}
 				ast = tmpAST;
-			}
-			else if(rule == Rule::epsilon)
-			{
-			}
-			else if(rule == Rule::R_PAREN && token.type == TokenType::R_PAREN)
-			{
+            }
+            else if(rule == Rule::EXPANSION_NAME && token.type == TokenType::EXPANSION)
+            {
+                std::shared_ptr<AST> tmpAST = std::make_shared<AST>(token, ast, true);
+                if(ast != nullptr)
+                {
+                    ast->children.push_back(tmpAST);
+                }
+                ast = tmpAST;
+                std::shared_ptr<AST> fnCall = std::make_shared<AST>(token, ast, false);
+                ast->children.push_back(fnCall);
                 token = lexer.nextToken();
-				assert(ast != nullptr);
+            }
+            else if(rule == Rule::EPSILON)
+			{
+            }
+            else if(rule == Rule::R_PAREN && token.type == TokenType::R_PAREN)
+            {
+                token = lexer.nextToken();
+            }
+            else if(rule == Rule::BUILD_TREE)
+            {
+                assert(ast != nullptr);
 				if(ast->root != nullptr)
 				{
 					ast = ast->root;
@@ -242,7 +303,7 @@ void Parser::parse(Lexer &lexer)
 			{
 				break;
 			}
-			else if(rule == Rule::atom && isAtom(token))
+            else if(rule == Rule::ATOM && isAtom(token))
 			{
                 std::shared_ptr<AST> tmpAST = std::make_shared<AST>(token, ast, false);
 				assert(ast != nullptr);
@@ -251,7 +312,7 @@ void Parser::parse(Lexer &lexer)
 			}
 			else
 			{
-				throw InterpreterException("Neočekavany token", token);
+                throw InterpreterException("Neočekavany token typu " + m_tokenTypeToString[token.type], token);
 			}
 		}
 		else if(hasRule(rule, token.type))
@@ -280,5 +341,5 @@ void Parser::parse(Lexer &lexer)
     if(!lexer.eof())
 	{
         throw InterpreterException("Neočekávaný konec parsování", token);
-	}
+    }
 }

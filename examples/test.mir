@@ -1,0 +1,4 @@
+(importuj "mirage/mirage.mir")
+
+(vykresli (list
+	    (usecka 0 0 100 100 "red")))

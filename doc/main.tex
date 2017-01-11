@@ -12,8 +12,14 @@
 \usepackage[]{algorithm2e}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usepackage{rotating}
+\usepackage{placeins}
+\usetikzlibrary{arrows,automata,positioning}
 
-\title{Programovací jazyk SVGER}
+\author{Martin Hnátek}
+\title{Programovací jazyk Mirage}
+
+\date{}
 
 \begin{document}
 
@@ -41,8 +47,6 @@ $$S \rightarrow dB | d$$
 $$B \rightarrow dB | d | .C$$
 $$C \rightarrow dC | d$$
 
-
-
 \subsection{Řetězce}
 Řetězce začínají a končí na znak ". V samotném řetězci se pak může nacházet jakýkýkoliv znak před kterým se nachází $\backslash$ nebo cokoliv v množině $\blacksquare$, která reprezentuje všechny tisknutelné znaky, které nejsou $\backslash$ nebo ".
 
@@ -62,12 +66,13 @@ Je gramatika popisující všechny bílé znaky $G_{bileznaky}$(\{S\}, \{$\dlsh 
 $$S \rightarrow  \dlsh S | \mapsto S | \sqcup S$$
 
 \subsection{Komentáře}
-Jazyk má jednoduché komentáře začínající na ; nebo \# a končící novým řádkem $G_{komentare}$(\{S, F\}, \{$\dlsh$, \#,  ;, $\Square$\}, P, S)
+Jazyk má jednoduché komentáře začínající na ; nebo \# a končící novým řádkem $G_{komentare}$(\{S, F\}, \{$\dlsh$, ;, $\Square$\}, P, S)
 
-$$S \rightarrow ;F | \#F$$
+$$S \rightarrow ;F $$
 $$F \rightarrow \Square F | \dlsh S$$
 
 \subsection{Symboly pro expanzi parserem}
+
 $G_{expanze}$(\{S, G\}, \{ $\boxplus$, \# \})
 
 $$S \rightarrow \#G$$
@@ -75,23 +80,13 @@ $$G \rightarrow \boxplus G | \boxplus$$
 
 Kde $\boxplus$ je množina všech nebilých znaků včetně \#. 
 
-\subsection{Speciální znaky}
-$G_{specialni}$(\{S\}, \{, , ` , ', '@', \textasciitilde{} \})
-
-$$S \rightarrow  , | ` | ' | @ | \textasciitilde{}$$
-
 \subsection{Logické hodnoty}
-Logická hodnota může být buď PRAVDA nebo NEPRAVDA tedy:
-$G_{logicke}$(\{S, H, I, J, K, L, M, O\}, \{P, R, A, V, D, A, N, E\})
+Logická hodnota může být buď \$p pro pravdu (true) a \$n pro nepravdu:
+\\
+$G_{logicke}$(\{S, H\}, \{\$, n, p\})
 
-$$S \rightarrow N H | P J$$
-$$H \rightarrow E I$$
-$$I \rightarrow P J$$ 
-$$J \rightarrow R K$$
-$$K \rightarrow A L$$
-$$L \rightarrow V M$$
-$$M \rightarrow D O$$
-$$O \rightarrow A$$
+$$S \rightarrow \$H$$
+$$H \rightarrow n | p$$
 
 \section{Stavový automat}
 Nyní je třeba z předem definované gramatiky spojit a převést na automat. Pokud tento automat nebude deterministický je třeba jej determinizovat.
@@ -114,44 +109,108 @@ $$S \rightarrow \dlsh | \mapsto | \sqcup | ;A | \Square$$
 $$A \rightarrow \Square A | ;A | \dlsh $$
 
 Po spojení gramatik a odstranění jednoduchých pravidel dostaváme gramatiku
-$G_{finalni}$(\{$S_{od}$\}, \{$\mapsto$, $\sqcup$, $\dlsh$, ;, $\Square$, $\backslash$, $\blacksquare$, ", d, ., z, m, (, )\}, P, S)
-$$S \rightarrow zA | z | dB | d | "D | ;F | \dlsh S | \mapsto S | \sqcup S | ( | )$$
+$G_{finalni}$(\{$S, A, B, C, D, E, F, G, H$\}, \{$\mapsto$, $\sqcup$, $\dlsh$, ;, $\Square$, $\backslash$, $\blacksquare$, $\boxplus$, ", d, ., z, m, (, ), \$, \#, p, n\}, P, S)
+$$S \rightarrow zA | z | dB | d | "D | ;F | \dlsh S | \mapsto S | \sqcup S | ( | ) | \#G | \$H$$
 $$A \rightarrow mA | m$$
 $$B \rightarrow dB | d | .C$$
 $$C \rightarrow dC | d$$
 $$D \rightarrow " | \backslash E | \blacksquare D$$
 $$E \rightarrow "D | \backslash D | \blacksquare D$$
 $$F \rightarrow \Square F | \dlsh S$$
-\newpage
+$$G \rightarrow \boxplus G | \boxplus$$
+$$H \rightarrow n | p$$
 
-\begin{table}[]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}lllllllllllllll@{}}
-\toprule
-$\delta$& d & z & m & ( & ) & $\blacksquare$ & $\Square$ & $\backslash$ & ; & . & " & $\dlsh$ & $\mapsto$ & $\sqcup$   \\ \midrule
-$Q_{S}$ & $Q_{B\hat{F}}$ & $Q_{A\hat{F}}$ & - & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & - & - & - & $Q_{F}$ & - & $Q_{D}$ & $Q_{S}$ & $Q_{S}$ & $Q_{S}$ \\
-$Q_{C}$ & $Q_{C\hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - & - \\
-$Q_{D}$ & - & - & - & - & - & $Q_{D}$ & - & $Q_{E}$ & - & - & $Q_{\hat{F}}$ & - & - & - \\
-$Q_{E}$ & - & - & - & - & - & $Q_{D}$ & - & $Q_{D}$ & - & - & $Q_{D}$ & - & - & - \\
-$Q_{F}$ & - & - & - & - & - & - & $Q_{F}$ & - & - & - & - & $Q_{S}$ & - & - \\
-$Q_{\hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - & - & - \\
-$Q_{A\hat{F}}$ & - & - & $Q_{A\hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - \\
-$Q_{B\hat{F}}$ & $Q_{B\hat{F}}$ & - & - & - & - & - & - & - & - & $Q_{C}$ & - & - & - & - \\
-$Q_{C\hat{F}}$ & $Q_{C\hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - & - \\ \bottomrule
-\end{tabular}%
-}
-\caption{Determinizovaný automat}
-\label{f}
-\end{table}
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{sidewaystable}[]
+%\centering
+	\begin{tabular}{@{}lcccccccccccccccccc@{}}
+		\toprule
+		\multicolumn{1}{c}{$\delta$} & z & m & d & . & $\backslash$ & “ & ( & ) & $\dlsh$ & $\mapsto$ & $\sqcup$ & ; & $\Square$ & $\boxplus$ & \$ & \# & p & n \\ \midrule
+		$Q_{S}$ & $Q_{A\hat{F}}$ & - & $Q_{B, \hat{F}}$ & - & - & $Q_{D}$ & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ & $Q_{S}$ & $Q_{S}$ & $Q_{S}$ & $Q_{F}$ & - & - & $Q_{H}$ & $Q_{G}$ & - & - \\
+		$Q_{C}$ & $Q_{C, \hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - \\
+		$Q_{D}$ & - & - & - & - & - & $Q_{D}$ & - & $Q_{E}$ & - & - & $Q_{\hat{F}}$ & - & - & - & - & - & - & - \\
+		$Q_{E}$ & - & - & - & - & - & $Q_{D}$ & - & $Q_{D}$ & - & - & $Q_{D}$ & - & - & - & - & - & - & - \\
+		$Q_{F}$ & - & - & - & - &  & - & $Q_{F}$ & - & - & - & - & $Q_{S}$ & - & - & - & - & - & - \\
+		$Q_{G}$ & - & - & - & - & - & - & - & - & - & - & - & - & - & $Q_{G, \hat{F}}$ &  &  & - & - \\
+		$Q_{H}$ & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & $Q_{\hat{F}}$ & $Q_{\hat{F}}$ \\
+		$Q_{\hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - \\
+		$Q_{A,\hat{F}}$ & - & - & $Q_{A\hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - \\
+		$Q_{B, \hat{F}}$ & $Q_{B, \hat{F}}$ & - & - & - & - & - & - & - & - & $Q_{C}$ & - & - & - & - & - & - & - & - \\
+		$Q_{C, \hat{F}}$ & $Q_{C, \hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - & - \\
+		$Q_{G, \hat{F}}$ & - & - & - & - & - & - & - & - & - & - & - & - & - & $Q_{G, \hat{F}}$ & - & - & - & - \\ \bottomrule
+		\end{tabular}
+		\caption{Tabulka popisující DFA}
+	\label{Tabulka popisující DFA}
+\end{sidewaystable}
+
+%\newpage
 
 \input{automat.tex}
 
 \section{Parsování}
-K parsování byl použit algoritmus rozkladu parsovací tabulky.
+Návrh gramatiky pro parser vychází z následujících syntaktických diagramů.
+\newpage
+\subsection{Program}
+Každý program se skládá z 0 až $\infty$ výrazů.
 
-\subsection{Gramatika pro parsování}
+\begin{figure}[!h]
+	%\FloatBarrier
+    \centering
+    \includegraphics[width=0.3\textwidth]{obrazky/Program.png}
+    \caption{Syntaktický diagram pro program}
+    \label{fig:Syntaktický diagram pro program}
+\end{figure}
 
-$$S \rightarrow ( Expr ) Eval S | \epsilon$$
-$$Expr \rightarrow EArg | atom \epsilon$$
+\subsection{Atom}
+Atom představuje základní element jazyka Mirage. Může to být buď řetězec, číslo nebo identifikátor.
+\begin{figure}[!h]
+	%\FloatBarrier
+    \centering
+    \includegraphics[width=0.5\textwidth]{obrazky/Atom.png}
+    \caption{Syntaktický diagram pro Atom}
+    \label{fig:Syntaktický diagram pro Atom}
+\end{figure}
+
+\newpage
+\subsection{Vyraz}
+\begin{figure}[!h]
+	%\FloatBarrier
+    \centering
+    \includegraphics[width=0.5\textwidth]{obrazky/Vyraz.png}
+    \caption{Syntaktický diagram pro Atom}
+    \label{fig:Syntaktický diagram pro Atom}
+\end{figure}
+\subsection{Argument}
+\begin{figure}[!h]
+	%\FloatBarrier
+    \centering
+    \includegraphics[width=0.5\textwidth]{obrazky/Argument.png}
+    \caption{Syntaktický diagram pro Atom}
+    \label{fig:Syntaktický diagram pro Atom}
+\end{figure}
+
+\subsection{Expanze}
+\begin{figure}[!h]
+	%\FloatBarrier
+    \centering
+    \includegraphics[width=0.5\textwidth]{obrazky/Expanze.png}
+    \caption{Syntaktický diagram pro Atom}
+    \label{fig:Syntaktický diagram pro Atom}
+\end{figure}
+
+\section{Gramatika pro parsování}
+$$Program \rightarrow Vyraz\:Program\:|\:\epsilon$$
+$$Vyraz \rightarrow\:(\:Vyraz2\:|\:Expanze$$
+$$Vyraz2 \rightarrow\:Argument\:Vyraz2\:|\:)$$
+$$Argument \rightarrow Atom\:|\:Vyraz$$
+$$Expanze \rightarrow nazev\:Argument$$
+$$Atom \rightarrow cislo | identifikator | retezec$$
+
+\subsection{Množina FF a parsovací tabulka}
+Pro tvorbu parsovací tabulky je třeba spočítat množinu FF, která vychází z popsané gramatiky.
+
+$$FF(S) = \{(,\} \bigcup FF(Expanze) = \{\}$$
+
+
 \end{document}

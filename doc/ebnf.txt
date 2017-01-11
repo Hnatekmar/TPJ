@@ -1,0 +1,4 @@
+Vyraz ::= '(' Argumenty ')'
+Argumenty ::= Atom Argumenty | Vyraz Argumenty
+Expanze ::= nazev Vyraz | nazev Atom
+Atom ::= retezec | cislo | identifikator | Expanze

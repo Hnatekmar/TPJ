@@ -16,7 +16,10 @@ class Lexer
 		q_c, // Desetiná tečka
 		q_d, // Řetězec
 		q_e, // Řetězec s escape větev
-		q_f, // Komentář
+        q_f, // Komentář
+        q_g, // Expanze
+        q_gf,
+        q_h, // pravda/nepravda
 		q_af, // Identifikátor
 		q_bf, // Číslo před desetinou čárkou
 		q_cf, // Číslo za desetinou čárkou

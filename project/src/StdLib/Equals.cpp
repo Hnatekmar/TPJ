@@ -14,7 +14,7 @@ Token Equals::execute(std::vector<std::shared_ptr<AST> > &args, Context &context
     {
         throw InterpreterException("Nelze porovnávat argumenty rozdílných typů", b);
     }
-    if(a.type == TokenType::STRING)
+    if(a.type == TokenType::STRING || a.type == TokenType::IDENTIFIER)
     {
         return Token{
             TokenType::BOOL,
@@ -38,5 +38,5 @@ Token Equals::execute(std::vector<std::shared_ptr<AST> > &args, Context &context
                             args.at(0)->evaluate(context).filePos
         };
     }
-    throw InterpreterException("Nelze porovnávat argumenty rozdílných typů", args.at(0)->value);
+    throw InterpreterException("Argumenty tohoto typu nelze porovnat", a);
 }

@@ -1,0 +1,49 @@
+(importuj "mirage/mirage.mir")
+
+(defn bod (x y)
+      (list x y))
+
+(defn bod-x (bod)
+      (prvni bod))
+
+(defn bod-y (bod)
+      (prvni (zbytek bod)))
+
+(defn polovina-usecky (bodA bodB)
+      (bod
+	(/ (+ (bod-x bodA) (bod-x bodB)) 2)
+	(/ (+ (bod-y bodA) (bod-y bodB)) 2)))
+
+(defn vykresli-usecku (bodA bodB)
+       (aplikuj usecka (spoj bodA (spoj bodB (list "black"))))
+       )
+
+(defn trojuhelnik
+      (bodA bodB bodC)
+      (list
+	(vykresli-usecku bodA bodB)
+	(vykresli-usecku bodA bodC)
+	(vykresli-usecku bodB bodC)))
+
+(defn secti-body (bodA bodB)
+      (bod (+ (bod-x bodA) (bod-x bodB))
+	   (+ (bod-y bodA) (bod-y bodB))))
+
+(defn sierpinsky
+      (bodA bodB bodC hloubka)
+      (pokud (= hloubka 0)
+	     (list)
+	     (blok
+	       (definuj horniCast (sierpinsky (polovina-usecky bodA bodC) (polovina-usecky bodB bodC) bodC (- hloubka 1))) ; Horni cast
+	       (definuj levaDolni (sierpinsky bodA (polovina-usecky bodA bodB) (polovina-usecky bodA bodC) (- hloubka 1))) ; Horni cast
+	       (definuj pravaDolni (sierpinsky (polovina-usecky bodA bodB) bodB (polovina-usecky bodB bodC) (- hloubka 1))) ; Horni cast
+		 (spoj-rychle
+		   (spoj-rychle
+		     (spoj-rychle 
+		       (spoj-rychle
+			 (trojuhelnik bodA bodB bodC)
+			 (trojuhelnik (polovina-usecky bodA bodC) (polovina-usecky bodB bodC) (polovina-usecky bodA bodB))) horniCast)
+		     levaDolni)
+		   pravaDolni))))
+
+(vykresli (sierpinsky (bod 0 10000) (bod 10000 10000) (bod 5000 0) 5) 10000 10000)

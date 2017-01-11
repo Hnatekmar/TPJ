@@ -30,6 +30,16 @@ link_libraries(${Boost_LIBRARIES})
 include_directories(${CMAKE_SOURCE_DIR})
 
 set(SOURCE_FILES
+    include/StdLib/StringToIdentifier.h
+    src/StdLib/StringToIdentifier.cpp
+    include/StdLib/Sinus.h
+    src/StdLib/Sinus.cpp
+    include/StdLib/Cosinus.h
+    src/StdLib/Cosinus.cpp
+    include/StdLib/Sqrt.h
+    src/StdLib/Sqrt.cpp
+    include/StdLib/RegisterExpansion.h
+    src/StdLib/RegisterExpansion.cpp
     include/AST.h
     include/CompilerException.h
     include/FilePos.h

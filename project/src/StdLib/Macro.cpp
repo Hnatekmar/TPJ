@@ -89,7 +89,7 @@ std::shared_ptr<AST> unquote(Token &value)
                 false);
 }
 
-std::shared_ptr<AST> listToAst(List<Token> list)
+std::shared_ptr<AST> listToAst(const List<Token>& list)
 {
     std::shared_ptr<AST> top(nullptr);
     std::shared_ptr<AST> node = std::make_shared<AST>(Token{}, top, true);
@@ -149,6 +149,7 @@ std::shared_ptr<AST> IMacro::expand(std::vector<std::shared_ptr<AST> > &args, Co
             (*it)->evaluate(copy);
         }
     }
+    assert(false);
     return nullptr;
 }
 

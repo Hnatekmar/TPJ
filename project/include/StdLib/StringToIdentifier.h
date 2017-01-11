@@ -1,0 +1,3 @@
+#ifndef STRINGTOIDENTIFIER
+#define STRINGTOIDENTIFIER
+#endif

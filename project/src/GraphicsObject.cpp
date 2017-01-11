@@ -15,7 +15,7 @@ std::string GraphicsObject::toString()
     ss << "<" << m_name << " ";
     for(auto& pair : m_params)
     {
-        ss << pair.first << " = \"" << pair.second << "\" ";
+        ss << pair.first << "=\"" << pair.second << "\" ";
     }
     ss << ">";
     auto it = m_children;

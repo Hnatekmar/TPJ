@@ -8,6 +8,9 @@
 (definuj natri-vnejsek (funkce (objekt barva)
 	       (skupina (list "stroke" barva) (list objekt))))
 
+(definuj sirka-okraje (funkce (objekt sirka)
+			      (skupina (list "stroke-width" (hodnota->retezec sirka)) (list objekt))))
+
 (definuj posun (funkce (objekt posunX posunY)
 		       (skupina (list "transform" (pridejDozadu "translate(" 
 								(pridejDozadu
