@@ -76,3 +76,17 @@ unsigned int IFunction::getId()
 {
     return m_id;
 }
+
+List<Token> IFunction::argList()
+{
+    List<Token> list;
+    for(auto it = m_args.rbegin(); it != m_args.rend(); it++)
+    {
+        list = list.add(Token{
+                           TokenType::STRING,
+                           *it,
+                           {}
+                        });
+    }
+    return list;
+}

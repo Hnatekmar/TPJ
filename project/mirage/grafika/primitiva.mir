@@ -9,7 +9,7 @@
 	 (obdelnik velikost velikost)))
 
 (definuj elipsa (funkce (sirka vyska)
-			(element "ellipse" (list "cx" (hodnota->retezec sirka) "cy" (hodnota->retezec vyska))
+			(element "ellipse" (list "rx" (hodnota->retezec sirka) "ry" (hodnota->retezec vyska))
 				 (list))))
 
 (definuj kruh (funkce (polomer)

@@ -3,6 +3,16 @@
 (defn bod (x y)
       (list x y))
 
+(defn proved-operaci (operace bodA bodB)
+      (bod (operace (bod-x bodA) (bod-x bodB))
+	   (operace (bod-y bodA) (bod-y bodB))))
+
+(defn minus (bodA bodB)
+      (proved-operaci - bodA bodB))
+
+(defn plus (bodA bodB)
+      (proved-operaci - bodA bodB))
+
 (defn bod-x (bod)
       (prvni bod))
 
@@ -14,9 +24,12 @@
 	(/ (+ (bod-x bodA) (bod-x bodB)) 2)
 	(/ (+ (bod-y bodA) (bod-y bodB)) 2)))
 
+(defn vzdalenost (bodA bodB)
+      (odmocnina (+ (* (bod-x bodA) (bod-x bodB))
+		    (* (bod-y bodA) (bod-y bodB)))))
+
 (defn vykresli-usecku (bodA bodB)
-       (aplikuj usecka (spoj bodA (spoj bodB (list "black"))))
-       )
+       (aplikuj usecka (spoj bodA (spoj bodB (list "black")))))
 
 (defn trojuhelnik
       (bodA bodB bodC)
@@ -34,9 +47,15 @@
       (pokud (= hloubka 0)
 	     (list)
 	     (blok
+	       (definuj delka (vzdalenost bodA bodB))
+	       (definuj h (* (/ (odmocnina 3) 2) delka))
+	       (definuj kruh-x (plus (polovina-usecky bodA bodC) (bod h 0)))
+	       (definuj kruh-y (plus (polovina-usecky bodA bodB) (bod 0 h)))
 	       (definuj horniCast (sierpinsky (polovina-usecky bodA bodC) (polovina-usecky bodB bodC) bodC (- hloubka 1))) ; Horni cast
 	       (definuj levaDolni (sierpinsky bodA (polovina-usecky bodA bodB) (polovina-usecky bodA bodC) (- hloubka 1))) ; Horni cast
 	       (definuj pravaDolni (sierpinsky (polovina-usecky bodA bodB) bodB (polovina-usecky bodB bodC) (- hloubka 1))) ; Horni cast
+	       (spoj-rychle
+		 (list (posun (natri-vnitrek (natri-vnejsek (kruh (* hloubka 10)) "black") "transparent") (bod-x kruh-y) (bod-y kruh-x)))
 		 (spoj-rychle
 		   (spoj-rychle
 		     (spoj-rychle 
@@ -44,6 +63,6 @@
 			 (trojuhelnik bodA bodB bodC)
 			 (trojuhelnik (polovina-usecky bodA bodC) (polovina-usecky bodB bodC) (polovina-usecky bodA bodB))) horniCast)
 		     levaDolni)
-		   pravaDolni))))
+		   pravaDolni)))))
 
-(vykresli (sierpinsky (bod 0 10000) (bod 10000 10000) (bod 5000 0) 5) 10000 10000)
+(vykresli (sierpinsky (bod 0 1000) (bod 1000 1000) (bod 500 0) 4) 1000 1000)

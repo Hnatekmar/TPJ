@@ -33,6 +33,8 @@
 #include "../include/StdLib/Cosinus.h"
 #include "../include/StdLib/Sqrt.h"
 #include "../include/StdLib/RegisterExpansion.h"
+#include "../include/StdLib/GetArguments.h"
+#include "../include/StdLib/ExpandMacro.h"
 
 Parser::Parser() :
 				m_constants()
@@ -40,6 +42,12 @@ Parser::Parser() :
     m_constants["odmocnina"] = Token{
             TokenType::FUNCTION,
             std::make_shared<Sqrt>(),
+            {}
+    };
+
+    m_constants["makro->vyraz"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<ExpandMacro>(),
             {}
     };
 
@@ -52,6 +60,12 @@ Parser::Parser() :
     m_constants["kosinus"] = Token{
             TokenType::FUNCTION,
             std::make_shared<Cosine>(),
+            {}
+    };
+
+    m_constants["funkce->argumenty"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<GetArguments>(),
             {}
     };
 
@@ -151,6 +165,12 @@ Parser::Parser() :
         {}
     };
 
+    m_constants["#importuj"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Import>(*this),
+        {}
+    };
+
     m_constants["prvni"] = Token{
         TokenType::FUNCTION,
         std::make_shared<First>(),
@@ -242,7 +262,7 @@ Parser::Parser() :
     };
 }
 
-void Parser::parse(Lexer &lexer)
+void Parser::parse(Lexer &lexer, bool printExpression)
 {
 	std::stack<Rule> stack;
 	stack.push(Rule::END_OF_PROGRAM);
@@ -257,7 +277,14 @@ void Parser::parse(Lexer &lexer)
         if(rule == Rule::S_CALL)
 		{
             assert(ast != nullptr);
-            ast->evaluate(m_constants);
+            if(printExpression)
+            {
+                std::cout << ast->evaluate(m_constants) << std::endl;;
+            }
+            else
+            {
+                ast->evaluate(m_constants);
+            }
 			ast = nullptr;
 		}
 		else if(isTerminal(rule))

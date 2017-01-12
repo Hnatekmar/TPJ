@@ -51,8 +51,8 @@ class Parser
 
     std::map<Rule, std::string> m_ruleToString = {
         { Rule::PROGRAM, "Začátek" },
-        { Rule::EXPRESSION, "výraz" },
-        { Rule::EXPRESSION2, "výraz" },
+        { Rule::EXPRESSION, "výraz (..." },
+        { Rule::EXPRESSION2, "výraz ... nebo )" },
         { Rule::ARGUMENT, "argument" },
         { Rule::L_PAREN, "Závorka (" },
         { Rule::R_PAREN, "Závorka )" },
@@ -267,7 +267,7 @@ class Parser
 	void except(TokenType type);
 	public:
         Parser();
-        void parse(Lexer& lexer);
+        void parse(Lexer& lexer, bool printExpression = false);
 };
 
 #endif

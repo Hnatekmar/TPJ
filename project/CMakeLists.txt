@@ -30,6 +30,8 @@ link_libraries(${Boost_LIBRARIES})
 include_directories(${CMAKE_SOURCE_DIR})
 
 set(SOURCE_FILES
+    include/StdLib/GetArguments.h
+    src/StdLib/GetArguments.cpp
     include/StdLib/StringToIdentifier.h
     src/StdLib/StringToIdentifier.cpp
     include/StdLib/Sinus.h
@@ -124,5 +126,8 @@ set(SOURCE_FILES
     src/StdLib/Quote.cpp
     include/StdLib/Eval.h
     src/StdLib/Eval.cpp
-    main.cpp)
-add_executable(interpreter ${SOURCE_FILES})
+    include/StdLib/ExpandMacro.h
+    src/StdLib/ExpandMacro.cpp)
+
+add_executable(mirageC main.cpp ${SOURCE_FILES})
+add_executable(mirageI mainInterpreter.cpp ${SOURCE_FILES})

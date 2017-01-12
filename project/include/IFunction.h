@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include "AST.h"
+#include "List.h"
 
 /**
  * @brief Interface popisující funkci.
@@ -19,6 +20,8 @@ protected:
 public:
     IFunction();
     unsigned int getId();
+    List<Token> argList();
+
     /**
      * @brief Provede funkci na základě kontextu a argumentů
      */

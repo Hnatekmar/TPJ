@@ -2,6 +2,8 @@
 (importuj "mirage/makra/makra.mir")
 (importuj "mirage/grafika/grafika.mir")
 
+(definujExpanzi ' nevyhodnocuj)
+
 (defn < (a b)
 	(pokud (= a b)
 		 NEPRAVDA

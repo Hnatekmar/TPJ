@@ -1,2 +1,3 @@
 (importuj "mirage/grafika/primitiva.mir")
 (importuj "mirage/grafika/manipulatory.mir")
+(importuj "mirage/grafika/barvy.mir")

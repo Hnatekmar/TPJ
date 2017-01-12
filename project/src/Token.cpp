@@ -48,6 +48,10 @@ std::ostream& operator<<(std::ostream& stream, const Token& token)
 		}
         stream << ')';
     }
+    if(token.type == TokenType::GRAPHICS_ELEMENT)
+    {
+        stream << boost::get<std::shared_ptr<GraphicsObject> >(token.value)->toString();
+    }
     if(token.type == TokenType::MACRO_FN)
     {
         stream << "<makro>";
