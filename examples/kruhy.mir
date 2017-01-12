@@ -1,0 +1,6 @@
+#importuj "mirage/mirage.mir"
+
+(vykresli (mapuj (rozsah 1 20) (funkce (x) (natri-vnejsek
+					      (natri-vnitrek (posun (kruh (* x 10)) 500 500) "transparent")
+					"black")
+					)) 10000 10000)

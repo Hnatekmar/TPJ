@@ -1,0 +1,12 @@
+(definuj cerna "black")
+(definuj namornicka "navy")
+(definuj tmave-modra "darkblue")
+(definuj stredne-modra "mediumblue")
+(definuj modra "blue")
+(definuj zelene "green")
+(definuj tmave-zelena "dark-green")
+(definuj cirkova-modr "teal")
+(definuj tmava-modrozelena "darkcyan")
+(definuj citrusova "lime")
+(definuj vodova "aqua")
+
