@@ -205,12 +205,17 @@ $$Vyraz \rightarrow\:(\:Vyraz2\:|\:Expanze$$
 $$Vyraz2 \rightarrow\:Argument\:Vyraz2\:|\:)$$
 $$Argument \rightarrow Atom\:|\:Vyraz$$
 $$Expanze \rightarrow nazev\:Argument$$
-$$Atom \rightarrow cislo | identifikator | retezec$$
+$$Atom \rightarrow cislo | identifikator | retezec | logickaHodnota$$
 
 \subsection{Množina FF a parsovací tabulka}
 Pro tvorbu parsovací tabulky je třeba spočítat množinu FF, která vychází z popsané gramatiky.
 
-$$FF(S) = \{(,\} \bigcup FF(Expanze) = \{\}$$
+$$First(Program) = \{ \epsilon \} \bigcup First(Vyraz) = \{\epsilon, (, nazev\}$$
+$$First(Vyraz) = \{ ( \} \bigcup First(Expanze) = \{(, nazev\}$$
+$$First(Expanze) = \{ nazev \}$$
+$$First(Argument) = First(Atom) \bigcup First(vyraz) = $$
+$$\{cislo, identifikator,retezec, logickaHodnota, (, nazev\}$$
+$$First(Atom) = \{cislo, identifikator, retezec, logickaHodnota\}$$
 
-
+$$Follow(Program) = \{\$\}$$
 \end{document}

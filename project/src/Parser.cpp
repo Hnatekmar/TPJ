@@ -35,6 +35,7 @@
 #include "../include/StdLib/RegisterExpansion.h"
 #include "../include/StdLib/GetArguments.h"
 #include "../include/StdLib/ExpandMacro.h"
+#include "../include/StdLib/GetType.h"
 
 Parser::Parser() :
 				m_constants()
@@ -42,6 +43,12 @@ Parser::Parser() :
     m_constants["odmocnina"] = Token{
             TokenType::FUNCTION,
             std::make_shared<Sqrt>(),
+            {}
+    };
+
+    m_constants["typ"] = Token{
+            TokenType::FUNCTION,
+            std::make_shared<GetType>(),
             {}
     };
 
@@ -111,13 +118,19 @@ Parser::Parser() :
         {}
     };
 
-    m_constants["#nevyhodnocuj"] = Token{
+    m_constants["#'"] = Token{
         TokenType::FUNCTION,
         std::make_shared<Quote>(),
         {}
     };
 
     m_constants["vyhodnot"] = Token{
+        TokenType::FUNCTION,
+        std::make_shared<Eval>(),
+        {}
+    };
+
+    m_constants["#vyhodnot"] = Token{
         TokenType::FUNCTION,
         std::make_shared<Eval>(),
         {}

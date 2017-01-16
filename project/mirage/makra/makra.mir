@@ -52,3 +52,9 @@
 				  (mapuj argumenty
 					 (funkce (argument)
 						 (list definuj (prvni argument) (prvni (zbytek argument)))))) ...))))
+
+(defm funkce->expanze (fn nazev)
+      (definuj fun (vyhodnot fn))
+      (list definujExpanzi nazev (list makro #' (x)
+					(list #' spoj (list #' list fun) #' x))))
+

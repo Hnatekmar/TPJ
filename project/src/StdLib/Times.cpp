@@ -11,12 +11,7 @@ Token Times::execute(std::vector<std::shared_ptr<AST> > &args, Context &context)
     Context copy(context);
     argsToContext(args, copy);
     List<Token> it = boost::get<List<Token>>(copy.at("...").value);
-    if(it.first().type != TokenType::NUMBER)
-    {
-        throw InterpreterException("Není číslo", it.first());
-    }
-    float product = boost::get<float>(it.first().value);
-    it = it.rest();
+    float product = 1;
     while(!it.empty())
     {
         if(it.first().type != TokenType::NUMBER)

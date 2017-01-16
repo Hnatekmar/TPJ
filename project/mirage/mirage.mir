@@ -1,4 +1,7 @@
+(definuj PRAVDA $p)
+(definuj NEPRAVDA $n)
 (importuj "mirage/listy/listy.mir")
+(importuj "mirage/typ.mir")
 (importuj "mirage/makra/makra.mir")
 (importuj "mirage/grafika/grafika.mir")
 

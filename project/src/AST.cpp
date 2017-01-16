@@ -32,7 +32,11 @@ AST::AST(Token token, std::shared_ptr<AST>& parent, bool isCall):
 Token AST::evaluate(Context& context)
 {
     if(call)
-	{
+    {
+        if(children.size() == 0)
+        {
+            throw InterpreterException("Snažíte se evaluovat prázdný list ()", {});
+        }
 		Token identifier = children.front()->evaluate(context);
         if(identifier.type == TokenType::IDENTIFIER || identifier.type == TokenType::EXPANSION)
 		{

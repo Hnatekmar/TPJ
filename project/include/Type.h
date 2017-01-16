@@ -17,23 +17,22 @@ class IMacro;
 typedef boost::variant<float,
 		std::string,
         List<Token>,
-		Vector,
         std::shared_ptr<IFunction>,
         std::shared_ptr<IMacro>,
         bool,
         std::shared_ptr<GraphicsObject>> MirageType;
 
 typedef std::map<std::string, Token> Context;
+
 enum class MirageKind
 {
     number = 0,
     string = 1,
     list = 2,
-    vector = 3,
-    function = 4,
-    macro_fn = 5,
-    boolean = 6,
-    GraphicsObject = 7
+    function = 3,
+    macro_fn = 4,
+    boolean = 5,
+    GraphicsObject = 6
 };
 
 /**

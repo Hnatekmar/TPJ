@@ -5,24 +5,23 @@
 
 int main()
 {
-	try
-	{
+    std::stringstream ss;
+    std::string line;
+    Parser parser;
+    while(std::getline(std::cin, line))
+    {
         std::stringstream ss;
-        std::string line;
-        Parser parser;
-        while(std::getline(std::cin, line))
+        ss << line;
+        try
         {
-            std::cout << "> ";
-            std::stringstream ss;
-            ss << line;
             Lexer lexer(ss);
             parser.parse(lexer, true);
         }
-	}
-	catch(InterpreterException c)
-	{
-		std::cerr << "Chyba:" << c.what() << std::endl;
-	}
+        catch(InterpreterException c)
+        {
+            std::cerr << "Chyba:" << c.what() << std::endl;
+        }
+    }
 	return 0;
 }
 

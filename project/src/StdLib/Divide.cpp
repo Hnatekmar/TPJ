@@ -31,5 +31,4 @@ Token Divide::execute(std::vector<std::shared_ptr<AST> > &args, Context &context
         std::move(product),
         std::move(copy.at("...").filePos)
     };
-
 }

@@ -30,6 +30,8 @@ link_libraries(${Boost_LIBRARIES})
 include_directories(${CMAKE_SOURCE_DIR})
 
 set(SOURCE_FILES
+    include/StdLib/GetType.h
+    src/StdLib/GetType.cpp
     include/StdLib/GetArguments.h
     src/StdLib/GetArguments.cpp
     include/StdLib/StringToIdentifier.h
