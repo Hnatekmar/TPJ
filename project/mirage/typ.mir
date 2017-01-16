@@ -1,0 +1,14 @@
+#importuj "mirage/listy/listy.mir"
+#importuj "mirage/makra/makra.mir"
+
+(defn typ? (nazev)
+      (funkce (x)
+	      (= (typ x) nazev)))
+
+(definuj retezec? (typ? "retezec"))
+(definuj cislo? (typ? "cislo"))
+(definuj list? (typ? "list"))
+(definuj identifikator? (typ? "identifikator"))
+(definuj makro? (typ? "makro"))
+(definuj funkce? (typ? "funkce"))
+(definuj logickaHodnota? (typ? "logicka_hodnota"))
