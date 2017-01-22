@@ -4,6 +4,7 @@
 #include <memory>
 #include <assert.h>
 #include <exception>
+#include <stdexcept>
 
 template<typename T>
 class List

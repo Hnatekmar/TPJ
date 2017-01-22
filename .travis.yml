@@ -1,14 +1,20 @@
 language: cpp
 sudo: required
 compiler:
-        - gcc
+        - g++
+        - clang
+
 os:
         - linux
         - osx
 
 addons:
         apt:
-                - libboost1.61-dev
+                sources:
+                        - boost-latest
+                packages:
+                        - libboost1.61-dev
+                        - cmake
 
 script:
         - cd project/
