@@ -20,8 +20,7 @@ std::shared_ptr<AST> Or::expand(std::vector<std::shared_ptr<AST> > &args, Contex
             throw InterpreterException("Hodnota není logická", tokenVal);
         }
         result = result || boost::get<bool>(tokenVal.value);
-        if(!result)
-        {
+        if(result) {
             break;
         }
         list = list.rest();

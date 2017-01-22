@@ -62,7 +62,7 @@ Token ASTFunction::execute(std::vector<std::shared_ptr<AST>>& args, Context& con
                     {
                         auto fn1Ptr = boost::get<std::shared_ptr<IFunction>>(fn1.value);
                         auto fn2Ptr = boost::get<std::shared_ptr<IFunction>>(fn2.value);
-                        if(fn1Ptr->getId() == fn2Ptr->getId())
+                        if(getId() == fn1Ptr->getId())
                         {
                             argsToContext(evaluate->children, copy);
                             it = m_body.begin();

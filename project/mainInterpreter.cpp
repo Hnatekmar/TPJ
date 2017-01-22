@@ -12,6 +12,11 @@ int main()
     {
         std::stringstream ss;
         ss << line;
+        /*Lexer tokenPrinter(ss);
+        while(!tokenPrinter.eof())
+        {
+            std::cout << tokenPrinter.nextToken() << std::endl;
+        }*/
         try
         {
             Lexer lexer(ss);

@@ -70,3 +70,31 @@
 									(interni (zbytek kolekce) fn (pridejDozadu akumulator (prvni kolekce)))
 									(interni (zbytek kolekce) fn akumulator)))))
 									(interni kolekce fn (list))))
+
+(definuj prazdny?
+	(funkce (x)
+		(= (velikost x) 0)))
+		
+(definuj neprazdny?
+	(funkce (x)
+		(neguj (prazdny? x))))
+
+(definuj nty
+	(funkce (kolekce x)
+		(pokud (< x 0)
+			(chyba "x nesmí být záporné")
+			"")
+		(pokud (= x 0)
+			(prvni kolekce)
+			(nty (zbytek kolekce) (- x 1)))))
+
+(definuj posledni
+	(funkce (x)
+		(pokud (prazdny? x)
+			(chyba "List nesmí být prázdný")
+			"")
+		(nty x (- (velikost x) 1))))
+
+(definuj vsechny
+	 (funkce (kolekce predikat)
+		 (redukuj kolekce (funkce (x akumulator) (a akumulator (predikat x))) $n)))

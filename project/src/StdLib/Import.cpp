@@ -18,6 +18,7 @@ Token Import::execute(std::vector<std::shared_ptr<AST> > &args, Context &context
          throw InterpreterException("Token není typu string", path);
      }
      std::string fileName = boost::get<std::string>(path.value);
+     std::cerr << "Nahrávám " << fileName << std::endl;
      std::ifstream module(fileName, std::ifstream::in);
      if(!module.good())
      {

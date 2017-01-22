@@ -11,6 +11,7 @@ Token Define::execute(std::vector<std::shared_ptr<AST> > &args, Context &context
     {
         throw InterpreterException("Definuj potřebuje validní identifikátor", args.front()->evaluate(context));
     }
+    std::cerr << "Definuji " << what << std::endl;
     context[boost::get<std::string>(what.value)] = args.at(2)->evaluate(context);
     return context[boost::get<std::string>(what.value)];
 }

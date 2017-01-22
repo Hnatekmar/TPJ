@@ -9,9 +9,12 @@ Lexer::Lexer(std::istream& input):	m_input(input),
 
 void Lexer::next()
 {
-	m_input >> std::noskipws >> m_char;
-	m_filePos.accept(m_char);
-	m_eof = m_input.eof();
+    if(!m_eof)
+    {
+        m_input >> std::noskipws >> m_char;
+        m_filePos.accept(m_char);
+        m_eof = m_input.eof();
+    }
 }
 
 bool Lexer::eof()
@@ -27,25 +30,26 @@ Token Lexer::nextToken()
 	while(state != State::q_final)
 	{
 		next();
-		if(m_eof)
-		{
-			if(state != State::q_s && state != State::q_af && state != State::q_bf 
-				 && state != State::q_cf && state != State::q_final && state != State::q_f)
-			{
-				std::cerr << "EOF v průběhu lexikální analýzy";
-				std::exit(9001);
-			}
-			else
-			{
-				token.type = TokenType::END_OF_PROGRAM;
-				value = "END_OF_PROGRAM";
+		
+        if(m_eof)
+        {
+            if(state != State::q_s && state != State::q_af && state != State::q_bf
+                 && state != State::q_cf && state != State::q_final && state != State::q_f && state != State::q_gf)
+            {
+                std::cerr << "EOF v průběhu lexikální analýzy";
+                std::exit(9001);
+            }
+            else if(state == State::q_s)
+            {
+                token.type = TokenType::END_OF_PROGRAM;
+                value = "END_OF_PROGRAM";
                 token.value = value;
                 token.filePos = m_filePos;
-				return token;
-			}
-		}
-		
-		if(state == State::q_s) // Startovní stav
+                return token;
+            }
+        }
+
+        if(state == State::q_s) // Startovní stav
 		{
             if(m_char == '#')
             {
@@ -124,13 +128,14 @@ Token Lexer::nextToken()
 
         if(state == State::q_gf)
         {
-            if(!std::isspace(m_char))
+            if(!m_eof && (isalpha(m_char) || isdigit(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char) && m_char != '"')
             {
                 value += m_char;
                 continue;
             }
             else
             {
+                m_input.putback(m_char);
                 token.value = value;
                 break;
             }
@@ -155,7 +160,7 @@ Token Lexer::nextToken()
 		 */
 		if(state == State::q_bf)
 		{
-			if(isdigit(m_char))
+            if(isdigit(m_char) && !m_eof)
 			{
 				value += m_char;
 				continue;
@@ -186,7 +191,7 @@ Token Lexer::nextToken()
 
 		if(state == State::q_cf)
 		{
-			if(isdigit(m_char))
+            if(isdigit(m_char) && !m_eof)
 			{
 				value += m_char;
 				continue;
@@ -201,7 +206,7 @@ Token Lexer::nextToken()
 
 		if(state == State::q_af)
 		{
-			if((isalpha(m_char) || isdigit(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char) && m_char != '"')
+            if(!m_eof && (isalpha(m_char) || isdigit(m_char) || isprint(m_char)) && m_char != ';' && m_char != ')' && m_char != '(' && !isspace(m_char) && m_char != '"')
 			{
 				value += m_char;
 				continue;
@@ -249,7 +254,8 @@ Token Lexer::nextToken()
 			continue;
 		}
 
-		std::cerr << '<' << m_filePos.line << ":" << m_filePos.pos << "> Neočekávaný znak " << m_char << std::endl;
+
+        std::cerr << '<' << m_filePos.line << ":" << m_filePos.pos << "> Neočekávaný znak " << m_char << std::endl;
         std::exit(1);
 		//throw std::runtime_error("Neočekávaný znak " + m_char);
 	}

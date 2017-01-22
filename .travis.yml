@@ -1,0 +1,18 @@
+language: cpp
+sudo: required
+compiler:
+        - gcc
+        - clang
+os:
+        - linux
+        - osx
+
+addons:
+        apt:
+                - libboost1.61-dev
+                - cmake
+
+script:
+        - cd project/
+        - cmake project/CMakeLists.txt
+        - make
