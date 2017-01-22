@@ -2,7 +2,6 @@ language: cpp
 sudo: required
 compiler:
         - gcc
-        - clang
 os:
         - linux
         - osx
@@ -10,9 +9,8 @@ os:
 addons:
         apt:
                 - libboost1.61-dev
-                - cmake
 
 script:
         - cd project/
-        - cmake project/CMakeLists.txt
+        - cmake CMakeLists.txt
         - make

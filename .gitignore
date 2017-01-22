@@ -18,3 +18,7 @@ build-*
 *.cbp
 *.cmake
 project/Makefile
+project/mirageC
+project/mirageI
+project/CMakeCache.txt
+project/CMakeFiles/

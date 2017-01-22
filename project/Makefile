@@ -56,20 +56,9 @@ CMAKE_BINARY_DIR = /home/martin/Documents/C++/TPJ/project
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@echo "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
-	@echo "Running CMake to regenerate build system..."
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
 	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	/usr/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -110,14 +110,1719 @@ depend:
 	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+#=============================================================================
+# Target rules for targets named mirageI
+
+# Build rule for target.
+mirageI: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mirageI
+.PHONY : mirageI
+
+# fast build rule for target.
+mirageI/fast:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/build
+.PHONY : mirageI/fast
+
+#=============================================================================
+# Target rules for targets named mirageC
+
+# Build rule for target.
+mirageC: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mirageC
+.PHONY : mirageC
+
+# fast build rule for target.
+mirageC/fast:
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/build
+.PHONY : mirageC/fast
+
+main.o: main.cpp.o
+
+.PHONY : main.o
+
+# target to build an object file
+main.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/main.cpp.o
+.PHONY : main.cpp.o
+
+main.i: main.cpp.i
+
+.PHONY : main.i
+
+# target to preprocess a source file
+main.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/main.cpp.i
+.PHONY : main.cpp.i
+
+main.s: main.cpp.s
+
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/main.cpp.s
+.PHONY : main.cpp.s
+
+mainInterpreter.o: mainInterpreter.cpp.o
+
+.PHONY : mainInterpreter.o
+
+# target to build an object file
+mainInterpreter.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/mainInterpreter.cpp.o
+.PHONY : mainInterpreter.cpp.o
+
+mainInterpreter.i: mainInterpreter.cpp.i
+
+.PHONY : mainInterpreter.i
+
+# target to preprocess a source file
+mainInterpreter.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/mainInterpreter.cpp.i
+.PHONY : mainInterpreter.cpp.i
+
+mainInterpreter.s: mainInterpreter.cpp.s
+
+.PHONY : mainInterpreter.s
+
+# target to generate assembly for a file
+mainInterpreter.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/mainInterpreter.cpp.s
+.PHONY : mainInterpreter.cpp.s
+
+src/AST.o: src/AST.cpp.o
+
+.PHONY : src/AST.o
+
+# target to build an object file
+src/AST.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/AST.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/AST.cpp.o
+.PHONY : src/AST.cpp.o
+
+src/AST.i: src/AST.cpp.i
+
+.PHONY : src/AST.i
+
+# target to preprocess a source file
+src/AST.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/AST.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/AST.cpp.i
+.PHONY : src/AST.cpp.i
+
+src/AST.s: src/AST.cpp.s
+
+.PHONY : src/AST.s
+
+# target to generate assembly for a file
+src/AST.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/AST.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/AST.cpp.s
+.PHONY : src/AST.cpp.s
+
+src/ASTFunction.o: src/ASTFunction.cpp.o
+
+.PHONY : src/ASTFunction.o
+
+# target to build an object file
+src/ASTFunction.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/ASTFunction.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/ASTFunction.cpp.o
+.PHONY : src/ASTFunction.cpp.o
+
+src/ASTFunction.i: src/ASTFunction.cpp.i
+
+.PHONY : src/ASTFunction.i
+
+# target to preprocess a source file
+src/ASTFunction.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/ASTFunction.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/ASTFunction.cpp.i
+.PHONY : src/ASTFunction.cpp.i
+
+src/ASTFunction.s: src/ASTFunction.cpp.s
+
+.PHONY : src/ASTFunction.s
+
+# target to generate assembly for a file
+src/ASTFunction.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/ASTFunction.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/ASTFunction.cpp.s
+.PHONY : src/ASTFunction.cpp.s
+
+src/CompilerException.o: src/CompilerException.cpp.o
+
+.PHONY : src/CompilerException.o
+
+# target to build an object file
+src/CompilerException.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/CompilerException.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/CompilerException.cpp.o
+.PHONY : src/CompilerException.cpp.o
+
+src/CompilerException.i: src/CompilerException.cpp.i
+
+.PHONY : src/CompilerException.i
+
+# target to preprocess a source file
+src/CompilerException.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/CompilerException.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/CompilerException.cpp.i
+.PHONY : src/CompilerException.cpp.i
+
+src/CompilerException.s: src/CompilerException.cpp.s
+
+.PHONY : src/CompilerException.s
+
+# target to generate assembly for a file
+src/CompilerException.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/CompilerException.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/CompilerException.cpp.s
+.PHONY : src/CompilerException.cpp.s
+
+src/Graphics.o: src/Graphics.cpp.o
+
+.PHONY : src/Graphics.o
+
+# target to build an object file
+src/Graphics.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Graphics.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Graphics.cpp.o
+.PHONY : src/Graphics.cpp.o
+
+src/Graphics.i: src/Graphics.cpp.i
+
+.PHONY : src/Graphics.i
+
+# target to preprocess a source file
+src/Graphics.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Graphics.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Graphics.cpp.i
+.PHONY : src/Graphics.cpp.i
+
+src/Graphics.s: src/Graphics.cpp.s
+
+.PHONY : src/Graphics.s
+
+# target to generate assembly for a file
+src/Graphics.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Graphics.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Graphics.cpp.s
+.PHONY : src/Graphics.cpp.s
+
+src/GraphicsObject.o: src/GraphicsObject.cpp.o
+
+.PHONY : src/GraphicsObject.o
+
+# target to build an object file
+src/GraphicsObject.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/GraphicsObject.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/GraphicsObject.cpp.o
+.PHONY : src/GraphicsObject.cpp.o
+
+src/GraphicsObject.i: src/GraphicsObject.cpp.i
+
+.PHONY : src/GraphicsObject.i
+
+# target to preprocess a source file
+src/GraphicsObject.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/GraphicsObject.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/GraphicsObject.cpp.i
+.PHONY : src/GraphicsObject.cpp.i
+
+src/GraphicsObject.s: src/GraphicsObject.cpp.s
+
+.PHONY : src/GraphicsObject.s
+
+# target to generate assembly for a file
+src/GraphicsObject.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/GraphicsObject.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/GraphicsObject.cpp.s
+.PHONY : src/GraphicsObject.cpp.s
+
+src/IFunction.o: src/IFunction.cpp.o
+
+.PHONY : src/IFunction.o
+
+# target to build an object file
+src/IFunction.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/IFunction.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/IFunction.cpp.o
+.PHONY : src/IFunction.cpp.o
+
+src/IFunction.i: src/IFunction.cpp.i
+
+.PHONY : src/IFunction.i
+
+# target to preprocess a source file
+src/IFunction.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/IFunction.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/IFunction.cpp.i
+.PHONY : src/IFunction.cpp.i
+
+src/IFunction.s: src/IFunction.cpp.s
+
+.PHONY : src/IFunction.s
+
+# target to generate assembly for a file
+src/IFunction.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/IFunction.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/IFunction.cpp.s
+.PHONY : src/IFunction.cpp.s
+
+src/Lexer.o: src/Lexer.cpp.o
+
+.PHONY : src/Lexer.o
+
+# target to build an object file
+src/Lexer.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Lexer.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Lexer.cpp.o
+.PHONY : src/Lexer.cpp.o
+
+src/Lexer.i: src/Lexer.cpp.i
+
+.PHONY : src/Lexer.i
+
+# target to preprocess a source file
+src/Lexer.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Lexer.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Lexer.cpp.i
+.PHONY : src/Lexer.cpp.i
+
+src/Lexer.s: src/Lexer.cpp.s
+
+.PHONY : src/Lexer.s
+
+# target to generate assembly for a file
+src/Lexer.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Lexer.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Lexer.cpp.s
+.PHONY : src/Lexer.cpp.s
+
+src/List.o: src/List.cpp.o
+
+.PHONY : src/List.o
+
+# target to build an object file
+src/List.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/List.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/List.cpp.o
+.PHONY : src/List.cpp.o
+
+src/List.i: src/List.cpp.i
+
+.PHONY : src/List.i
+
+# target to preprocess a source file
+src/List.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/List.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/List.cpp.i
+.PHONY : src/List.cpp.i
+
+src/List.s: src/List.cpp.s
+
+.PHONY : src/List.s
+
+# target to generate assembly for a file
+src/List.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/List.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/List.cpp.s
+.PHONY : src/List.cpp.s
+
+src/Parser.o: src/Parser.cpp.o
+
+.PHONY : src/Parser.o
+
+# target to build an object file
+src/Parser.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Parser.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Parser.cpp.o
+.PHONY : src/Parser.cpp.o
+
+src/Parser.i: src/Parser.cpp.i
+
+.PHONY : src/Parser.i
+
+# target to preprocess a source file
+src/Parser.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Parser.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Parser.cpp.i
+.PHONY : src/Parser.cpp.i
+
+src/Parser.s: src/Parser.cpp.s
+
+.PHONY : src/Parser.s
+
+# target to generate assembly for a file
+src/Parser.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Parser.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Parser.cpp.s
+.PHONY : src/Parser.cpp.s
+
+src/StdLib/AddBack.o: src/StdLib/AddBack.cpp.o
+
+.PHONY : src/StdLib/AddBack.o
+
+# target to build an object file
+src/StdLib/AddBack.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/AddBack.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/AddBack.cpp.o
+.PHONY : src/StdLib/AddBack.cpp.o
+
+src/StdLib/AddBack.i: src/StdLib/AddBack.cpp.i
+
+.PHONY : src/StdLib/AddBack.i
+
+# target to preprocess a source file
+src/StdLib/AddBack.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/AddBack.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/AddBack.cpp.i
+.PHONY : src/StdLib/AddBack.cpp.i
+
+src/StdLib/AddBack.s: src/StdLib/AddBack.cpp.s
+
+.PHONY : src/StdLib/AddBack.s
+
+# target to generate assembly for a file
+src/StdLib/AddBack.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/AddBack.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/AddBack.cpp.s
+.PHONY : src/StdLib/AddBack.cpp.s
+
+src/StdLib/AddFront.o: src/StdLib/AddFront.cpp.o
+
+.PHONY : src/StdLib/AddFront.o
+
+# target to build an object file
+src/StdLib/AddFront.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/AddFront.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/AddFront.cpp.o
+.PHONY : src/StdLib/AddFront.cpp.o
+
+src/StdLib/AddFront.i: src/StdLib/AddFront.cpp.i
+
+.PHONY : src/StdLib/AddFront.i
+
+# target to preprocess a source file
+src/StdLib/AddFront.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/AddFront.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/AddFront.cpp.i
+.PHONY : src/StdLib/AddFront.cpp.i
+
+src/StdLib/AddFront.s: src/StdLib/AddFront.cpp.s
+
+.PHONY : src/StdLib/AddFront.s
+
+# target to generate assembly for a file
+src/StdLib/AddFront.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/AddFront.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/AddFront.cpp.s
+.PHONY : src/StdLib/AddFront.cpp.s
+
+src/StdLib/And.o: src/StdLib/And.cpp.o
+
+.PHONY : src/StdLib/And.o
+
+# target to build an object file
+src/StdLib/And.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/And.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/And.cpp.o
+.PHONY : src/StdLib/And.cpp.o
+
+src/StdLib/And.i: src/StdLib/And.cpp.i
+
+.PHONY : src/StdLib/And.i
+
+# target to preprocess a source file
+src/StdLib/And.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/And.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/And.cpp.i
+.PHONY : src/StdLib/And.cpp.i
+
+src/StdLib/And.s: src/StdLib/And.cpp.s
+
+.PHONY : src/StdLib/And.s
+
+# target to generate assembly for a file
+src/StdLib/And.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/And.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/And.cpp.s
+.PHONY : src/StdLib/And.cpp.s
+
+src/StdLib/BiggerOrEqual.o: src/StdLib/BiggerOrEqual.cpp.o
+
+.PHONY : src/StdLib/BiggerOrEqual.o
+
+# target to build an object file
+src/StdLib/BiggerOrEqual.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/BiggerOrEqual.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/BiggerOrEqual.cpp.o
+.PHONY : src/StdLib/BiggerOrEqual.cpp.o
+
+src/StdLib/BiggerOrEqual.i: src/StdLib/BiggerOrEqual.cpp.i
+
+.PHONY : src/StdLib/BiggerOrEqual.i
+
+# target to preprocess a source file
+src/StdLib/BiggerOrEqual.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/BiggerOrEqual.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/BiggerOrEqual.cpp.i
+.PHONY : src/StdLib/BiggerOrEqual.cpp.i
+
+src/StdLib/BiggerOrEqual.s: src/StdLib/BiggerOrEqual.cpp.s
+
+.PHONY : src/StdLib/BiggerOrEqual.s
+
+# target to generate assembly for a file
+src/StdLib/BiggerOrEqual.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/BiggerOrEqual.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/BiggerOrEqual.cpp.s
+.PHONY : src/StdLib/BiggerOrEqual.cpp.s
+
+src/StdLib/BiggerThan.o: src/StdLib/BiggerThan.cpp.o
+
+.PHONY : src/StdLib/BiggerThan.o
+
+# target to build an object file
+src/StdLib/BiggerThan.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/BiggerThan.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/BiggerThan.cpp.o
+.PHONY : src/StdLib/BiggerThan.cpp.o
+
+src/StdLib/BiggerThan.i: src/StdLib/BiggerThan.cpp.i
+
+.PHONY : src/StdLib/BiggerThan.i
+
+# target to preprocess a source file
+src/StdLib/BiggerThan.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/BiggerThan.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/BiggerThan.cpp.i
+.PHONY : src/StdLib/BiggerThan.cpp.i
+
+src/StdLib/BiggerThan.s: src/StdLib/BiggerThan.cpp.s
+
+.PHONY : src/StdLib/BiggerThan.s
+
+# target to generate assembly for a file
+src/StdLib/BiggerThan.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/BiggerThan.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/BiggerThan.cpp.s
+.PHONY : src/StdLib/BiggerThan.cpp.s
+
+src/StdLib/Cosinus.o: src/StdLib/Cosinus.cpp.o
+
+.PHONY : src/StdLib/Cosinus.o
+
+# target to build an object file
+src/StdLib/Cosinus.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Cosinus.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Cosinus.cpp.o
+.PHONY : src/StdLib/Cosinus.cpp.o
+
+src/StdLib/Cosinus.i: src/StdLib/Cosinus.cpp.i
+
+.PHONY : src/StdLib/Cosinus.i
+
+# target to preprocess a source file
+src/StdLib/Cosinus.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Cosinus.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Cosinus.cpp.i
+.PHONY : src/StdLib/Cosinus.cpp.i
+
+src/StdLib/Cosinus.s: src/StdLib/Cosinus.cpp.s
+
+.PHONY : src/StdLib/Cosinus.s
+
+# target to generate assembly for a file
+src/StdLib/Cosinus.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Cosinus.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Cosinus.cpp.s
+.PHONY : src/StdLib/Cosinus.cpp.s
+
+src/StdLib/CreateFunction.o: src/StdLib/CreateFunction.cpp.o
+
+.PHONY : src/StdLib/CreateFunction.o
+
+# target to build an object file
+src/StdLib/CreateFunction.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/CreateFunction.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/CreateFunction.cpp.o
+.PHONY : src/StdLib/CreateFunction.cpp.o
+
+src/StdLib/CreateFunction.i: src/StdLib/CreateFunction.cpp.i
+
+.PHONY : src/StdLib/CreateFunction.i
+
+# target to preprocess a source file
+src/StdLib/CreateFunction.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/CreateFunction.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/CreateFunction.cpp.i
+.PHONY : src/StdLib/CreateFunction.cpp.i
+
+src/StdLib/CreateFunction.s: src/StdLib/CreateFunction.cpp.s
+
+.PHONY : src/StdLib/CreateFunction.s
+
+# target to generate assembly for a file
+src/StdLib/CreateFunction.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/CreateFunction.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/CreateFunction.cpp.s
+.PHONY : src/StdLib/CreateFunction.cpp.s
+
+src/StdLib/CreateGraphicsElement.o: src/StdLib/CreateGraphicsElement.cpp.o
+
+.PHONY : src/StdLib/CreateGraphicsElement.o
+
+# target to build an object file
+src/StdLib/CreateGraphicsElement.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/CreateGraphicsElement.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/CreateGraphicsElement.cpp.o
+.PHONY : src/StdLib/CreateGraphicsElement.cpp.o
+
+src/StdLib/CreateGraphicsElement.i: src/StdLib/CreateGraphicsElement.cpp.i
+
+.PHONY : src/StdLib/CreateGraphicsElement.i
+
+# target to preprocess a source file
+src/StdLib/CreateGraphicsElement.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/CreateGraphicsElement.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/CreateGraphicsElement.cpp.i
+.PHONY : src/StdLib/CreateGraphicsElement.cpp.i
+
+src/StdLib/CreateGraphicsElement.s: src/StdLib/CreateGraphicsElement.cpp.s
+
+.PHONY : src/StdLib/CreateGraphicsElement.s
+
+# target to generate assembly for a file
+src/StdLib/CreateGraphicsElement.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/CreateGraphicsElement.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/CreateGraphicsElement.cpp.s
+.PHONY : src/StdLib/CreateGraphicsElement.cpp.s
+
+src/StdLib/Debug.o: src/StdLib/Debug.cpp.o
+
+.PHONY : src/StdLib/Debug.o
+
+# target to build an object file
+src/StdLib/Debug.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Debug.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Debug.cpp.o
+.PHONY : src/StdLib/Debug.cpp.o
+
+src/StdLib/Debug.i: src/StdLib/Debug.cpp.i
+
+.PHONY : src/StdLib/Debug.i
+
+# target to preprocess a source file
+src/StdLib/Debug.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Debug.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Debug.cpp.i
+.PHONY : src/StdLib/Debug.cpp.i
+
+src/StdLib/Debug.s: src/StdLib/Debug.cpp.s
+
+.PHONY : src/StdLib/Debug.s
+
+# target to generate assembly for a file
+src/StdLib/Debug.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Debug.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Debug.cpp.s
+.PHONY : src/StdLib/Debug.cpp.s
+
+src/StdLib/Define.o: src/StdLib/Define.cpp.o
+
+.PHONY : src/StdLib/Define.o
+
+# target to build an object file
+src/StdLib/Define.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Define.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Define.cpp.o
+.PHONY : src/StdLib/Define.cpp.o
+
+src/StdLib/Define.i: src/StdLib/Define.cpp.i
+
+.PHONY : src/StdLib/Define.i
+
+# target to preprocess a source file
+src/StdLib/Define.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Define.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Define.cpp.i
+.PHONY : src/StdLib/Define.cpp.i
+
+src/StdLib/Define.s: src/StdLib/Define.cpp.s
+
+.PHONY : src/StdLib/Define.s
+
+# target to generate assembly for a file
+src/StdLib/Define.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Define.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Define.cpp.s
+.PHONY : src/StdLib/Define.cpp.s
+
+src/StdLib/Divide.o: src/StdLib/Divide.cpp.o
+
+.PHONY : src/StdLib/Divide.o
+
+# target to build an object file
+src/StdLib/Divide.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Divide.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Divide.cpp.o
+.PHONY : src/StdLib/Divide.cpp.o
+
+src/StdLib/Divide.i: src/StdLib/Divide.cpp.i
+
+.PHONY : src/StdLib/Divide.i
+
+# target to preprocess a source file
+src/StdLib/Divide.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Divide.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Divide.cpp.i
+.PHONY : src/StdLib/Divide.cpp.i
+
+src/StdLib/Divide.s: src/StdLib/Divide.cpp.s
+
+.PHONY : src/StdLib/Divide.s
+
+# target to generate assembly for a file
+src/StdLib/Divide.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Divide.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Divide.cpp.s
+.PHONY : src/StdLib/Divide.cpp.s
+
+src/StdLib/Equals.o: src/StdLib/Equals.cpp.o
+
+.PHONY : src/StdLib/Equals.o
+
+# target to build an object file
+src/StdLib/Equals.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Equals.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Equals.cpp.o
+.PHONY : src/StdLib/Equals.cpp.o
+
+src/StdLib/Equals.i: src/StdLib/Equals.cpp.i
+
+.PHONY : src/StdLib/Equals.i
+
+# target to preprocess a source file
+src/StdLib/Equals.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Equals.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Equals.cpp.i
+.PHONY : src/StdLib/Equals.cpp.i
+
+src/StdLib/Equals.s: src/StdLib/Equals.cpp.s
+
+.PHONY : src/StdLib/Equals.s
+
+# target to generate assembly for a file
+src/StdLib/Equals.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Equals.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Equals.cpp.s
+.PHONY : src/StdLib/Equals.cpp.s
+
+src/StdLib/Error.o: src/StdLib/Error.cpp.o
+
+.PHONY : src/StdLib/Error.o
+
+# target to build an object file
+src/StdLib/Error.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Error.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Error.cpp.o
+.PHONY : src/StdLib/Error.cpp.o
+
+src/StdLib/Error.i: src/StdLib/Error.cpp.i
+
+.PHONY : src/StdLib/Error.i
+
+# target to preprocess a source file
+src/StdLib/Error.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Error.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Error.cpp.i
+.PHONY : src/StdLib/Error.cpp.i
+
+src/StdLib/Error.s: src/StdLib/Error.cpp.s
+
+.PHONY : src/StdLib/Error.s
+
+# target to generate assembly for a file
+src/StdLib/Error.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Error.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Error.cpp.s
+.PHONY : src/StdLib/Error.cpp.s
+
+src/StdLib/Eval.o: src/StdLib/Eval.cpp.o
+
+.PHONY : src/StdLib/Eval.o
+
+# target to build an object file
+src/StdLib/Eval.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Eval.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Eval.cpp.o
+.PHONY : src/StdLib/Eval.cpp.o
+
+src/StdLib/Eval.i: src/StdLib/Eval.cpp.i
+
+.PHONY : src/StdLib/Eval.i
+
+# target to preprocess a source file
+src/StdLib/Eval.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Eval.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Eval.cpp.i
+.PHONY : src/StdLib/Eval.cpp.i
+
+src/StdLib/Eval.s: src/StdLib/Eval.cpp.s
+
+.PHONY : src/StdLib/Eval.s
+
+# target to generate assembly for a file
+src/StdLib/Eval.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Eval.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Eval.cpp.s
+.PHONY : src/StdLib/Eval.cpp.s
+
+src/StdLib/ExpandMacro.o: src/StdLib/ExpandMacro.cpp.o
+
+.PHONY : src/StdLib/ExpandMacro.o
+
+# target to build an object file
+src/StdLib/ExpandMacro.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/ExpandMacro.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/ExpandMacro.cpp.o
+.PHONY : src/StdLib/ExpandMacro.cpp.o
+
+src/StdLib/ExpandMacro.i: src/StdLib/ExpandMacro.cpp.i
+
+.PHONY : src/StdLib/ExpandMacro.i
+
+# target to preprocess a source file
+src/StdLib/ExpandMacro.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/ExpandMacro.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/ExpandMacro.cpp.i
+.PHONY : src/StdLib/ExpandMacro.cpp.i
+
+src/StdLib/ExpandMacro.s: src/StdLib/ExpandMacro.cpp.s
+
+.PHONY : src/StdLib/ExpandMacro.s
+
+# target to generate assembly for a file
+src/StdLib/ExpandMacro.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/ExpandMacro.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/ExpandMacro.cpp.s
+.PHONY : src/StdLib/ExpandMacro.cpp.s
+
+src/StdLib/First.o: src/StdLib/First.cpp.o
+
+.PHONY : src/StdLib/First.o
+
+# target to build an object file
+src/StdLib/First.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/First.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/First.cpp.o
+.PHONY : src/StdLib/First.cpp.o
+
+src/StdLib/First.i: src/StdLib/First.cpp.i
+
+.PHONY : src/StdLib/First.i
+
+# target to preprocess a source file
+src/StdLib/First.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/First.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/First.cpp.i
+.PHONY : src/StdLib/First.cpp.i
+
+src/StdLib/First.s: src/StdLib/First.cpp.s
+
+.PHONY : src/StdLib/First.s
+
+# target to generate assembly for a file
+src/StdLib/First.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/First.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/First.cpp.s
+.PHONY : src/StdLib/First.cpp.s
+
+src/StdLib/GetArguments.o: src/StdLib/GetArguments.cpp.o
+
+.PHONY : src/StdLib/GetArguments.o
+
+# target to build an object file
+src/StdLib/GetArguments.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/GetArguments.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/GetArguments.cpp.o
+.PHONY : src/StdLib/GetArguments.cpp.o
+
+src/StdLib/GetArguments.i: src/StdLib/GetArguments.cpp.i
+
+.PHONY : src/StdLib/GetArguments.i
+
+# target to preprocess a source file
+src/StdLib/GetArguments.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/GetArguments.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/GetArguments.cpp.i
+.PHONY : src/StdLib/GetArguments.cpp.i
+
+src/StdLib/GetArguments.s: src/StdLib/GetArguments.cpp.s
+
+.PHONY : src/StdLib/GetArguments.s
+
+# target to generate assembly for a file
+src/StdLib/GetArguments.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/GetArguments.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/GetArguments.cpp.s
+.PHONY : src/StdLib/GetArguments.cpp.s
+
+src/StdLib/GetType.o: src/StdLib/GetType.cpp.o
+
+.PHONY : src/StdLib/GetType.o
+
+# target to build an object file
+src/StdLib/GetType.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/GetType.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/GetType.cpp.o
+.PHONY : src/StdLib/GetType.cpp.o
+
+src/StdLib/GetType.i: src/StdLib/GetType.cpp.i
+
+.PHONY : src/StdLib/GetType.i
+
+# target to preprocess a source file
+src/StdLib/GetType.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/GetType.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/GetType.cpp.i
+.PHONY : src/StdLib/GetType.cpp.i
+
+src/StdLib/GetType.s: src/StdLib/GetType.cpp.s
+
+.PHONY : src/StdLib/GetType.s
+
+# target to generate assembly for a file
+src/StdLib/GetType.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/GetType.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/GetType.cpp.s
+.PHONY : src/StdLib/GetType.cpp.s
+
+src/StdLib/If.o: src/StdLib/If.cpp.o
+
+.PHONY : src/StdLib/If.o
+
+# target to build an object file
+src/StdLib/If.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/If.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/If.cpp.o
+.PHONY : src/StdLib/If.cpp.o
+
+src/StdLib/If.i: src/StdLib/If.cpp.i
+
+.PHONY : src/StdLib/If.i
+
+# target to preprocess a source file
+src/StdLib/If.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/If.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/If.cpp.i
+.PHONY : src/StdLib/If.cpp.i
+
+src/StdLib/If.s: src/StdLib/If.cpp.s
+
+.PHONY : src/StdLib/If.s
+
+# target to generate assembly for a file
+src/StdLib/If.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/If.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/If.cpp.s
+.PHONY : src/StdLib/If.cpp.s
+
+src/StdLib/Import.o: src/StdLib/Import.cpp.o
+
+.PHONY : src/StdLib/Import.o
+
+# target to build an object file
+src/StdLib/Import.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Import.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Import.cpp.o
+.PHONY : src/StdLib/Import.cpp.o
+
+src/StdLib/Import.i: src/StdLib/Import.cpp.i
+
+.PHONY : src/StdLib/Import.i
+
+# target to preprocess a source file
+src/StdLib/Import.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Import.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Import.cpp.i
+.PHONY : src/StdLib/Import.cpp.i
+
+src/StdLib/Import.s: src/StdLib/Import.cpp.s
+
+.PHONY : src/StdLib/Import.s
+
+# target to generate assembly for a file
+src/StdLib/Import.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Import.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Import.cpp.s
+.PHONY : src/StdLib/Import.cpp.s
+
+src/StdLib/LessOrEqual.o: src/StdLib/LessOrEqual.cpp.o
+
+.PHONY : src/StdLib/LessOrEqual.o
+
+# target to build an object file
+src/StdLib/LessOrEqual.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/LessOrEqual.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/LessOrEqual.cpp.o
+.PHONY : src/StdLib/LessOrEqual.cpp.o
+
+src/StdLib/LessOrEqual.i: src/StdLib/LessOrEqual.cpp.i
+
+.PHONY : src/StdLib/LessOrEqual.i
+
+# target to preprocess a source file
+src/StdLib/LessOrEqual.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/LessOrEqual.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/LessOrEqual.cpp.i
+.PHONY : src/StdLib/LessOrEqual.cpp.i
+
+src/StdLib/LessOrEqual.s: src/StdLib/LessOrEqual.cpp.s
+
+.PHONY : src/StdLib/LessOrEqual.s
+
+# target to generate assembly for a file
+src/StdLib/LessOrEqual.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/LessOrEqual.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/LessOrEqual.cpp.s
+.PHONY : src/StdLib/LessOrEqual.cpp.s
+
+src/StdLib/LessThan.o: src/StdLib/LessThan.cpp.o
+
+.PHONY : src/StdLib/LessThan.o
+
+# target to build an object file
+src/StdLib/LessThan.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/LessThan.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/LessThan.cpp.o
+.PHONY : src/StdLib/LessThan.cpp.o
+
+src/StdLib/LessThan.i: src/StdLib/LessThan.cpp.i
+
+.PHONY : src/StdLib/LessThan.i
+
+# target to preprocess a source file
+src/StdLib/LessThan.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/LessThan.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/LessThan.cpp.i
+.PHONY : src/StdLib/LessThan.cpp.i
+
+src/StdLib/LessThan.s: src/StdLib/LessThan.cpp.s
+
+.PHONY : src/StdLib/LessThan.s
+
+# target to generate assembly for a file
+src/StdLib/LessThan.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/LessThan.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/LessThan.cpp.s
+.PHONY : src/StdLib/LessThan.cpp.s
+
+src/StdLib/List.o: src/StdLib/List.cpp.o
+
+.PHONY : src/StdLib/List.o
+
+# target to build an object file
+src/StdLib/List.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/List.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/List.cpp.o
+.PHONY : src/StdLib/List.cpp.o
+
+src/StdLib/List.i: src/StdLib/List.cpp.i
+
+.PHONY : src/StdLib/List.i
+
+# target to preprocess a source file
+src/StdLib/List.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/List.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/List.cpp.i
+.PHONY : src/StdLib/List.cpp.i
+
+src/StdLib/List.s: src/StdLib/List.cpp.s
+
+.PHONY : src/StdLib/List.s
+
+# target to generate assembly for a file
+src/StdLib/List.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/List.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/List.cpp.s
+.PHONY : src/StdLib/List.cpp.s
+
+src/StdLib/Macro.o: src/StdLib/Macro.cpp.o
+
+.PHONY : src/StdLib/Macro.o
+
+# target to build an object file
+src/StdLib/Macro.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Macro.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Macro.cpp.o
+.PHONY : src/StdLib/Macro.cpp.o
+
+src/StdLib/Macro.i: src/StdLib/Macro.cpp.i
+
+.PHONY : src/StdLib/Macro.i
+
+# target to preprocess a source file
+src/StdLib/Macro.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Macro.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Macro.cpp.i
+.PHONY : src/StdLib/Macro.cpp.i
+
+src/StdLib/Macro.s: src/StdLib/Macro.cpp.s
+
+.PHONY : src/StdLib/Macro.s
+
+# target to generate assembly for a file
+src/StdLib/Macro.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Macro.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Macro.cpp.s
+.PHONY : src/StdLib/Macro.cpp.s
+
+src/StdLib/Minus.o: src/StdLib/Minus.cpp.o
+
+.PHONY : src/StdLib/Minus.o
+
+# target to build an object file
+src/StdLib/Minus.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Minus.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Minus.cpp.o
+.PHONY : src/StdLib/Minus.cpp.o
+
+src/StdLib/Minus.i: src/StdLib/Minus.cpp.i
+
+.PHONY : src/StdLib/Minus.i
+
+# target to preprocess a source file
+src/StdLib/Minus.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Minus.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Minus.cpp.i
+.PHONY : src/StdLib/Minus.cpp.i
+
+src/StdLib/Minus.s: src/StdLib/Minus.cpp.s
+
+.PHONY : src/StdLib/Minus.s
+
+# target to generate assembly for a file
+src/StdLib/Minus.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Minus.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Minus.cpp.s
+.PHONY : src/StdLib/Minus.cpp.s
+
+src/StdLib/Not.o: src/StdLib/Not.cpp.o
+
+.PHONY : src/StdLib/Not.o
+
+# target to build an object file
+src/StdLib/Not.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Not.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Not.cpp.o
+.PHONY : src/StdLib/Not.cpp.o
+
+src/StdLib/Not.i: src/StdLib/Not.cpp.i
+
+.PHONY : src/StdLib/Not.i
+
+# target to preprocess a source file
+src/StdLib/Not.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Not.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Not.cpp.i
+.PHONY : src/StdLib/Not.cpp.i
+
+src/StdLib/Not.s: src/StdLib/Not.cpp.s
+
+.PHONY : src/StdLib/Not.s
+
+# target to generate assembly for a file
+src/StdLib/Not.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Not.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Not.cpp.s
+.PHONY : src/StdLib/Not.cpp.s
+
+src/StdLib/Or.o: src/StdLib/Or.cpp.o
+
+.PHONY : src/StdLib/Or.o
+
+# target to build an object file
+src/StdLib/Or.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Or.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Or.cpp.o
+.PHONY : src/StdLib/Or.cpp.o
+
+src/StdLib/Or.i: src/StdLib/Or.cpp.i
+
+.PHONY : src/StdLib/Or.i
+
+# target to preprocess a source file
+src/StdLib/Or.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Or.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Or.cpp.i
+.PHONY : src/StdLib/Or.cpp.i
+
+src/StdLib/Or.s: src/StdLib/Or.cpp.s
+
+.PHONY : src/StdLib/Or.s
+
+# target to generate assembly for a file
+src/StdLib/Or.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Or.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Or.cpp.s
+.PHONY : src/StdLib/Or.cpp.s
+
+src/StdLib/Plus.o: src/StdLib/Plus.cpp.o
+
+.PHONY : src/StdLib/Plus.o
+
+# target to build an object file
+src/StdLib/Plus.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Plus.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Plus.cpp.o
+.PHONY : src/StdLib/Plus.cpp.o
+
+src/StdLib/Plus.i: src/StdLib/Plus.cpp.i
+
+.PHONY : src/StdLib/Plus.i
+
+# target to preprocess a source file
+src/StdLib/Plus.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Plus.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Plus.cpp.i
+.PHONY : src/StdLib/Plus.cpp.i
+
+src/StdLib/Plus.s: src/StdLib/Plus.cpp.s
+
+.PHONY : src/StdLib/Plus.s
+
+# target to generate assembly for a file
+src/StdLib/Plus.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Plus.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Plus.cpp.s
+.PHONY : src/StdLib/Plus.cpp.s
+
+src/StdLib/Quote.o: src/StdLib/Quote.cpp.o
+
+.PHONY : src/StdLib/Quote.o
+
+# target to build an object file
+src/StdLib/Quote.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Quote.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Quote.cpp.o
+.PHONY : src/StdLib/Quote.cpp.o
+
+src/StdLib/Quote.i: src/StdLib/Quote.cpp.i
+
+.PHONY : src/StdLib/Quote.i
+
+# target to preprocess a source file
+src/StdLib/Quote.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Quote.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Quote.cpp.i
+.PHONY : src/StdLib/Quote.cpp.i
+
+src/StdLib/Quote.s: src/StdLib/Quote.cpp.s
+
+.PHONY : src/StdLib/Quote.s
+
+# target to generate assembly for a file
+src/StdLib/Quote.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Quote.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Quote.cpp.s
+.PHONY : src/StdLib/Quote.cpp.s
+
+src/StdLib/RegisterExpansion.o: src/StdLib/RegisterExpansion.cpp.o
+
+.PHONY : src/StdLib/RegisterExpansion.o
+
+# target to build an object file
+src/StdLib/RegisterExpansion.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/RegisterExpansion.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/RegisterExpansion.cpp.o
+.PHONY : src/StdLib/RegisterExpansion.cpp.o
+
+src/StdLib/RegisterExpansion.i: src/StdLib/RegisterExpansion.cpp.i
+
+.PHONY : src/StdLib/RegisterExpansion.i
+
+# target to preprocess a source file
+src/StdLib/RegisterExpansion.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/RegisterExpansion.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/RegisterExpansion.cpp.i
+.PHONY : src/StdLib/RegisterExpansion.cpp.i
+
+src/StdLib/RegisterExpansion.s: src/StdLib/RegisterExpansion.cpp.s
+
+.PHONY : src/StdLib/RegisterExpansion.s
+
+# target to generate assembly for a file
+src/StdLib/RegisterExpansion.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/RegisterExpansion.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/RegisterExpansion.cpp.s
+.PHONY : src/StdLib/RegisterExpansion.cpp.s
+
+src/StdLib/Rest.o: src/StdLib/Rest.cpp.o
+
+.PHONY : src/StdLib/Rest.o
+
+# target to build an object file
+src/StdLib/Rest.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Rest.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Rest.cpp.o
+.PHONY : src/StdLib/Rest.cpp.o
+
+src/StdLib/Rest.i: src/StdLib/Rest.cpp.i
+
+.PHONY : src/StdLib/Rest.i
+
+# target to preprocess a source file
+src/StdLib/Rest.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Rest.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Rest.cpp.i
+.PHONY : src/StdLib/Rest.cpp.i
+
+src/StdLib/Rest.s: src/StdLib/Rest.cpp.s
+
+.PHONY : src/StdLib/Rest.s
+
+# target to generate assembly for a file
+src/StdLib/Rest.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Rest.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Rest.cpp.s
+.PHONY : src/StdLib/Rest.cpp.s
+
+src/StdLib/Sinus.o: src/StdLib/Sinus.cpp.o
+
+.PHONY : src/StdLib/Sinus.o
+
+# target to build an object file
+src/StdLib/Sinus.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Sinus.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Sinus.cpp.o
+.PHONY : src/StdLib/Sinus.cpp.o
+
+src/StdLib/Sinus.i: src/StdLib/Sinus.cpp.i
+
+.PHONY : src/StdLib/Sinus.i
+
+# target to preprocess a source file
+src/StdLib/Sinus.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Sinus.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Sinus.cpp.i
+.PHONY : src/StdLib/Sinus.cpp.i
+
+src/StdLib/Sinus.s: src/StdLib/Sinus.cpp.s
+
+.PHONY : src/StdLib/Sinus.s
+
+# target to generate assembly for a file
+src/StdLib/Sinus.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Sinus.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Sinus.cpp.s
+.PHONY : src/StdLib/Sinus.cpp.s
+
+src/StdLib/Size.o: src/StdLib/Size.cpp.o
+
+.PHONY : src/StdLib/Size.o
+
+# target to build an object file
+src/StdLib/Size.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Size.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Size.cpp.o
+.PHONY : src/StdLib/Size.cpp.o
+
+src/StdLib/Size.i: src/StdLib/Size.cpp.i
+
+.PHONY : src/StdLib/Size.i
+
+# target to preprocess a source file
+src/StdLib/Size.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Size.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Size.cpp.i
+.PHONY : src/StdLib/Size.cpp.i
+
+src/StdLib/Size.s: src/StdLib/Size.cpp.s
+
+.PHONY : src/StdLib/Size.s
+
+# target to generate assembly for a file
+src/StdLib/Size.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Size.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Size.cpp.s
+.PHONY : src/StdLib/Size.cpp.s
+
+src/StdLib/Sqrt.o: src/StdLib/Sqrt.cpp.o
+
+.PHONY : src/StdLib/Sqrt.o
+
+# target to build an object file
+src/StdLib/Sqrt.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Sqrt.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Sqrt.cpp.o
+.PHONY : src/StdLib/Sqrt.cpp.o
+
+src/StdLib/Sqrt.i: src/StdLib/Sqrt.cpp.i
+
+.PHONY : src/StdLib/Sqrt.i
+
+# target to preprocess a source file
+src/StdLib/Sqrt.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Sqrt.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Sqrt.cpp.i
+.PHONY : src/StdLib/Sqrt.cpp.i
+
+src/StdLib/Sqrt.s: src/StdLib/Sqrt.cpp.s
+
+.PHONY : src/StdLib/Sqrt.s
+
+# target to generate assembly for a file
+src/StdLib/Sqrt.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Sqrt.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Sqrt.cpp.s
+.PHONY : src/StdLib/Sqrt.cpp.s
+
+src/StdLib/StringToIdentifier.o: src/StdLib/StringToIdentifier.cpp.o
+
+.PHONY : src/StdLib/StringToIdentifier.o
+
+# target to build an object file
+src/StdLib/StringToIdentifier.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/StringToIdentifier.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/StringToIdentifier.cpp.o
+.PHONY : src/StdLib/StringToIdentifier.cpp.o
+
+src/StdLib/StringToIdentifier.i: src/StdLib/StringToIdentifier.cpp.i
+
+.PHONY : src/StdLib/StringToIdentifier.i
+
+# target to preprocess a source file
+src/StdLib/StringToIdentifier.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/StringToIdentifier.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/StringToIdentifier.cpp.i
+.PHONY : src/StdLib/StringToIdentifier.cpp.i
+
+src/StdLib/StringToIdentifier.s: src/StdLib/StringToIdentifier.cpp.s
+
+.PHONY : src/StdLib/StringToIdentifier.s
+
+# target to generate assembly for a file
+src/StdLib/StringToIdentifier.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/StringToIdentifier.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/StringToIdentifier.cpp.s
+.PHONY : src/StdLib/StringToIdentifier.cpp.s
+
+src/StdLib/Times.o: src/StdLib/Times.cpp.o
+
+.PHONY : src/StdLib/Times.o
+
+# target to build an object file
+src/StdLib/Times.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Times.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Times.cpp.o
+.PHONY : src/StdLib/Times.cpp.o
+
+src/StdLib/Times.i: src/StdLib/Times.cpp.i
+
+.PHONY : src/StdLib/Times.i
+
+# target to preprocess a source file
+src/StdLib/Times.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Times.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Times.cpp.i
+.PHONY : src/StdLib/Times.cpp.i
+
+src/StdLib/Times.s: src/StdLib/Times.cpp.s
+
+.PHONY : src/StdLib/Times.s
+
+# target to generate assembly for a file
+src/StdLib/Times.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/Times.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/Times.cpp.s
+.PHONY : src/StdLib/Times.cpp.s
+
+src/StdLib/ToString.o: src/StdLib/ToString.cpp.o
+
+.PHONY : src/StdLib/ToString.o
+
+# target to build an object file
+src/StdLib/ToString.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/ToString.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/ToString.cpp.o
+.PHONY : src/StdLib/ToString.cpp.o
+
+src/StdLib/ToString.i: src/StdLib/ToString.cpp.i
+
+.PHONY : src/StdLib/ToString.i
+
+# target to preprocess a source file
+src/StdLib/ToString.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/ToString.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/ToString.cpp.i
+.PHONY : src/StdLib/ToString.cpp.i
+
+src/StdLib/ToString.s: src/StdLib/ToString.cpp.s
+
+.PHONY : src/StdLib/ToString.s
+
+# target to generate assembly for a file
+src/StdLib/ToString.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/StdLib/ToString.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/StdLib/ToString.cpp.s
+.PHONY : src/StdLib/ToString.cpp.s
+
+src/Token.o: src/Token.cpp.o
+
+.PHONY : src/Token.o
+
+# target to build an object file
+src/Token.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Token.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Token.cpp.o
+.PHONY : src/Token.cpp.o
+
+src/Token.i: src/Token.cpp.i
+
+.PHONY : src/Token.i
+
+# target to preprocess a source file
+src/Token.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Token.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Token.cpp.i
+.PHONY : src/Token.cpp.i
+
+src/Token.s: src/Token.cpp.s
+
+.PHONY : src/Token.s
+
+# target to generate assembly for a file
+src/Token.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Token.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Token.cpp.s
+.PHONY : src/Token.cpp.s
+
+src/Type.o: src/Type.cpp.o
+
+.PHONY : src/Type.o
+
+# target to build an object file
+src/Type.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Type.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Type.cpp.o
+.PHONY : src/Type.cpp.o
+
+src/Type.i: src/Type.cpp.i
+
+.PHONY : src/Type.i
+
+# target to preprocess a source file
+src/Type.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Type.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Type.cpp.i
+.PHONY : src/Type.cpp.i
+
+src/Type.s: src/Type.cpp.s
+
+.PHONY : src/Type.s
+
+# target to generate assembly for a file
+src/Type.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Type.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Type.cpp.s
+.PHONY : src/Type.cpp.s
+
+src/Vector.o: src/Vector.cpp.o
+
+.PHONY : src/Vector.o
+
+# target to build an object file
+src/Vector.cpp.o:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Vector.cpp.o
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Vector.cpp.o
+.PHONY : src/Vector.cpp.o
+
+src/Vector.i: src/Vector.cpp.i
+
+.PHONY : src/Vector.i
+
+# target to preprocess a source file
+src/Vector.cpp.i:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Vector.cpp.i
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Vector.cpp.i
+.PHONY : src/Vector.cpp.i
+
+src/Vector.s: src/Vector.cpp.s
+
+.PHONY : src/Vector.s
+
+# target to generate assembly for a file
+src/Vector.cpp.s:
+	$(MAKE) -f CMakeFiles/mirageI.dir/build.make CMakeFiles/mirageI.dir/src/Vector.cpp.s
+	$(MAKE) -f CMakeFiles/mirageC.dir/build.make CMakeFiles/mirageC.dir/src/Vector.cpp.s
+.PHONY : src/Vector.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... edit_cache"
+	@echo "... mirageI"
+	@echo "... mirageC"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
+	@echo "... mainInterpreter.o"
+	@echo "... mainInterpreter.i"
+	@echo "... mainInterpreter.s"
+	@echo "... src/AST.o"
+	@echo "... src/AST.i"
+	@echo "... src/AST.s"
+	@echo "... src/ASTFunction.o"
+	@echo "... src/ASTFunction.i"
+	@echo "... src/ASTFunction.s"
+	@echo "... src/CompilerException.o"
+	@echo "... src/CompilerException.i"
+	@echo "... src/CompilerException.s"
+	@echo "... src/Graphics.o"
+	@echo "... src/Graphics.i"
+	@echo "... src/Graphics.s"
+	@echo "... src/GraphicsObject.o"
+	@echo "... src/GraphicsObject.i"
+	@echo "... src/GraphicsObject.s"
+	@echo "... src/IFunction.o"
+	@echo "... src/IFunction.i"
+	@echo "... src/IFunction.s"
+	@echo "... src/Lexer.o"
+	@echo "... src/Lexer.i"
+	@echo "... src/Lexer.s"
+	@echo "... src/List.o"
+	@echo "... src/List.i"
+	@echo "... src/List.s"
+	@echo "... src/Parser.o"
+	@echo "... src/Parser.i"
+	@echo "... src/Parser.s"
+	@echo "... src/StdLib/AddBack.o"
+	@echo "... src/StdLib/AddBack.i"
+	@echo "... src/StdLib/AddBack.s"
+	@echo "... src/StdLib/AddFront.o"
+	@echo "... src/StdLib/AddFront.i"
+	@echo "... src/StdLib/AddFront.s"
+	@echo "... src/StdLib/And.o"
+	@echo "... src/StdLib/And.i"
+	@echo "... src/StdLib/And.s"
+	@echo "... src/StdLib/BiggerOrEqual.o"
+	@echo "... src/StdLib/BiggerOrEqual.i"
+	@echo "... src/StdLib/BiggerOrEqual.s"
+	@echo "... src/StdLib/BiggerThan.o"
+	@echo "... src/StdLib/BiggerThan.i"
+	@echo "... src/StdLib/BiggerThan.s"
+	@echo "... src/StdLib/Cosinus.o"
+	@echo "... src/StdLib/Cosinus.i"
+	@echo "... src/StdLib/Cosinus.s"
+	@echo "... src/StdLib/CreateFunction.o"
+	@echo "... src/StdLib/CreateFunction.i"
+	@echo "... src/StdLib/CreateFunction.s"
+	@echo "... src/StdLib/CreateGraphicsElement.o"
+	@echo "... src/StdLib/CreateGraphicsElement.i"
+	@echo "... src/StdLib/CreateGraphicsElement.s"
+	@echo "... src/StdLib/Debug.o"
+	@echo "... src/StdLib/Debug.i"
+	@echo "... src/StdLib/Debug.s"
+	@echo "... src/StdLib/Define.o"
+	@echo "... src/StdLib/Define.i"
+	@echo "... src/StdLib/Define.s"
+	@echo "... src/StdLib/Divide.o"
+	@echo "... src/StdLib/Divide.i"
+	@echo "... src/StdLib/Divide.s"
+	@echo "... src/StdLib/Equals.o"
+	@echo "... src/StdLib/Equals.i"
+	@echo "... src/StdLib/Equals.s"
+	@echo "... src/StdLib/Error.o"
+	@echo "... src/StdLib/Error.i"
+	@echo "... src/StdLib/Error.s"
+	@echo "... src/StdLib/Eval.o"
+	@echo "... src/StdLib/Eval.i"
+	@echo "... src/StdLib/Eval.s"
+	@echo "... src/StdLib/ExpandMacro.o"
+	@echo "... src/StdLib/ExpandMacro.i"
+	@echo "... src/StdLib/ExpandMacro.s"
+	@echo "... src/StdLib/First.o"
+	@echo "... src/StdLib/First.i"
+	@echo "... src/StdLib/First.s"
+	@echo "... src/StdLib/GetArguments.o"
+	@echo "... src/StdLib/GetArguments.i"
+	@echo "... src/StdLib/GetArguments.s"
+	@echo "... src/StdLib/GetType.o"
+	@echo "... src/StdLib/GetType.i"
+	@echo "... src/StdLib/GetType.s"
+	@echo "... src/StdLib/If.o"
+	@echo "... src/StdLib/If.i"
+	@echo "... src/StdLib/If.s"
+	@echo "... src/StdLib/Import.o"
+	@echo "... src/StdLib/Import.i"
+	@echo "... src/StdLib/Import.s"
+	@echo "... src/StdLib/LessOrEqual.o"
+	@echo "... src/StdLib/LessOrEqual.i"
+	@echo "... src/StdLib/LessOrEqual.s"
+	@echo "... src/StdLib/LessThan.o"
+	@echo "... src/StdLib/LessThan.i"
+	@echo "... src/StdLib/LessThan.s"
+	@echo "... src/StdLib/List.o"
+	@echo "... src/StdLib/List.i"
+	@echo "... src/StdLib/List.s"
+	@echo "... src/StdLib/Macro.o"
+	@echo "... src/StdLib/Macro.i"
+	@echo "... src/StdLib/Macro.s"
+	@echo "... src/StdLib/Minus.o"
+	@echo "... src/StdLib/Minus.i"
+	@echo "... src/StdLib/Minus.s"
+	@echo "... src/StdLib/Not.o"
+	@echo "... src/StdLib/Not.i"
+	@echo "... src/StdLib/Not.s"
+	@echo "... src/StdLib/Or.o"
+	@echo "... src/StdLib/Or.i"
+	@echo "... src/StdLib/Or.s"
+	@echo "... src/StdLib/Plus.o"
+	@echo "... src/StdLib/Plus.i"
+	@echo "... src/StdLib/Plus.s"
+	@echo "... src/StdLib/Quote.o"
+	@echo "... src/StdLib/Quote.i"
+	@echo "... src/StdLib/Quote.s"
+	@echo "... src/StdLib/RegisterExpansion.o"
+	@echo "... src/StdLib/RegisterExpansion.i"
+	@echo "... src/StdLib/RegisterExpansion.s"
+	@echo "... src/StdLib/Rest.o"
+	@echo "... src/StdLib/Rest.i"
+	@echo "... src/StdLib/Rest.s"
+	@echo "... src/StdLib/Sinus.o"
+	@echo "... src/StdLib/Sinus.i"
+	@echo "... src/StdLib/Sinus.s"
+	@echo "... src/StdLib/Size.o"
+	@echo "... src/StdLib/Size.i"
+	@echo "... src/StdLib/Size.s"
+	@echo "... src/StdLib/Sqrt.o"
+	@echo "... src/StdLib/Sqrt.i"
+	@echo "... src/StdLib/Sqrt.s"
+	@echo "... src/StdLib/StringToIdentifier.o"
+	@echo "... src/StdLib/StringToIdentifier.i"
+	@echo "... src/StdLib/StringToIdentifier.s"
+	@echo "... src/StdLib/Times.o"
+	@echo "... src/StdLib/Times.i"
+	@echo "... src/StdLib/Times.s"
+	@echo "... src/StdLib/ToString.o"
+	@echo "... src/StdLib/ToString.i"
+	@echo "... src/StdLib/ToString.s"
+	@echo "... src/Token.o"
+	@echo "... src/Token.i"
+	@echo "... src/Token.s"
+	@echo "... src/Type.o"
+	@echo "... src/Type.i"
+	@echo "... src/Type.s"
+	@echo "... src/Vector.o"
+	@echo "... src/Vector.i"
+	@echo "... src/Vector.s"
 .PHONY : help
 
 
