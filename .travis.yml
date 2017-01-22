@@ -1,5 +1,7 @@
 language: cpp
+
 sudo: required
+
 compiler:
         - g++
         - clang
@@ -10,11 +12,8 @@ os:
 
 addons:
         apt:
-                sources:
-                        - boost-latest
                 packages:
-                        - libboost1.61-dev
-                        - cmake
+                        - libboost-all-dev
 
 script:
         - cd project/
