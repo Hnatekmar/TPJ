@@ -10,15 +10,6 @@
 #include <deque>
 #include <map>
 
-
-/**
- * S -> Expression SCall S
- * S -> epsilon
- * Expression -> ( EArgs )
- * EArgs -> atom EArgs
- * EArgs -> Expression EArgs
- * EArgs -> epsilon
- */
 class Parser
 {
 	enum class Rule
@@ -61,8 +52,11 @@ class Parser
         { Rule::S_CALL, "Volání/aplikace (výraz ve tvaru (...))" },
         { Rule::END_OF_PROGRAM, "konec programu" }
     };
+
+    // Kontext celého programu
 	Context m_constants;
 
+    // Parsovací tabulka dle které se parser řídí
     std::map<Rule, std::map<TokenType, std::list<Rule> > > m_parsingTable =
     {
             {
@@ -223,9 +217,6 @@ class Parser
 	Token evaluate(std::shared_ptr<AST>& ast, Context& context);
 
 	Token getValue(Token token, Context& context);
-
-	// Pokusí se zavolat funkci
-	Token sCall(std::shared_ptr<AST>& ast, Context& context);
 
 	bool isTerminal(const Rule& rule)
 	{

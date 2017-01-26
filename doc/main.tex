@@ -12,12 +12,15 @@
 \usepackage[]{algorithm2e}
 \usepackage{hyperref}
 \usepackage{tikz}
+\usepackage[czech]{babel}
 \usepackage{rotating}
 \usepackage{placeins}
+\usepackage{listings}
+\usepackage{dipp8}
 \usetikzlibrary{arrows,automata,positioning}
 
 \author{Martin Hnátek}
-\title{Programovací jazyk Mirage}
+\title{Dokumentace k samostatnému projektu do TPJ\\Programovací jazyk Mirage}
 
 \date{}
 
@@ -29,12 +32,168 @@
 \tableofcontents
 
 \newpage
-\section{Gramatiky}
+
+\section{Zadání}
+Cílem projektu bylo vytvořit programovací jazyk jehož programy popisují obrázek ve vektorovém formátu svg. Toto umožňuje tvorbu obrázků jejichž parametry lze volně měnit, což je užitečné například pro tvorbu fraktálních obrazců.
+
+\section{Popis jazyka}
+Mirage je inspirován rodinou programovacích jazyků typu lisp. Z tohoto plyne jak dosti specifická syntaxe, tak i pokročilejší možnosti, jako je například metaprogramování s pomocí maker. Následující sekce slouží jako přehled pro vlastnosti Mirage.
+
+\subsection{Datové typy}
+Mirage má následující datové typy:
+\begin{enumerate}
+	\item číslo - Implementuje číslo v rozsahu doporučeném standardem svg. Tedy float
+	\item řetězec - Řetězec začíná a končí " je možné uvnitř něj escapovat jakýkoliv znak
+	\item logická hodnota - Logický datový typ má 2 možné hodnoty pravda - \$p nebo nepravda \$n
+	\item funkce
+	\item makro
+	\item list
+	\item SVG element - Tisknutelný popis svg elementu
+\end{enumerate}
+
+\subsection{Funkce}
+Každá funkce v Mirage má seznam argumentů a tělo obsahující alespoň jeden výraz. Poslední výraz v těle je návratová hodnota. Když se v seznamu argumentů objeví identifikátor ... je funkce variadická a do tohoto identifikátoru je vložen list 0 až nekonečno hodnot v závislosti na počtu argumentů. Argument ... musí být v seznamu argumentů poslední.
+
+\begin{lstlisting}[language=lisp]
+; Ukazka funkce
+((funkce (x) x) 5) ; Vrati 5
+((funkce (...) (prvni ...)) 1 2 3) ; Vrati 1
+\end{lstlisting}
+
+Poslední věcí, která je potřeba zmínit je rekurze. Rekurzivní volání bývá v klasických jazycích problematické, protože rychle dochází k přetečení stacku. Mirage a ostatní lispy tento problém řeší s pomocí optimalizace, která se nazývá tail call eleminace. Tato optimalizace říká, že pokud máme funkci, která vrací volání sama sebe lze jí optimalizovat tak, že se vrátíme na začátek funkce a jen zaměníme její argumenty za voláné hodnoty. Příklad tohoto chování je níže:
+
+\begin{lstlisting}[language=lisp]
+(definuj faktorial (funkce (x akumulator)
+	(pokud (= x 0)
+		akumulator
+		(faktorial (- x 1) (* x akumulator)))))
+\end{lstlisting}
+
+Pokaždé, když program dojde na volání faktorialu, tak se promění argument x za (- x 1) a akumulator za (* x akumulator) a funkce se vyhodnocuje znovu s novými hodnotami. Tato optimalizace ovšem funguje pouze, když je volání funkce na posledním místě. Například níže uvedený kód spustí klasickou rekurzi
+
+\begin{lstlisting}[language=lisp]
+(definuj faktorial (funkce (x)
+	(pokud (= x 0)
+		1
+		(* x (faktorial (- x 1))))))
+\end{lstlisting}
+
+\subsection{Makra}
+Makra jsou funkce, které nevyhodnocují své argumenty a jejíchž návratová hodnota je list, který se evaluuje jako normální kód v Mirage. K makrům se váží 2 funkce nevyhodnocuj a vyhodnot.
+
+Funkce nevyhodnocuj bere jakoukoliv validní hodnotu a vrací její nevyhodnocenou podobu. Pokud je to identifikátor vrátí nevyhodnocený identifikátor, pokud je to hodnotový datový typ (řetězec, číslo, ...), tak jej vrátí nezměněný. Pokud se jedná o výraz, tak jej převede na list nevyhodnocených hodnot. Příklad:
+
+\begin{lstlisting}[language=lisp]
+; Ukazka funkce
+(nevyhodnot (+ 5 6)) ; Vrati (list (nevyhodnot +) 5 6)
+(nevyhodnot +) ; Vrati identifikator +
+\end{lstlisting}
+
+Funkce vyhodnot je inverzní funkcí k funkci nevyhodnocuj. Například
+
+\begin{lstlisting}[language=lisp]
+; Ukazka funkce
+(vyhodnot (list + 5 6)) ; Vrati 11
+(vyhodnot (nevyhodnocuj +)) ; Vrati funkci +
+\end{lstlisting}
+
+Makro si můžeme představit jako funkci, která na každý svůj argument zavolá nevyhodnocuj a pak na svůj výstup zavolá vyhodnoť. Příkladem užitečného makra je makro aplikuj, které se nachází ve standardní knihovně jazyka Mirage. Aplikuj bere funkci a list hodnot a vygeneruje kód, který volá funkci s hodnotami v listu. Její implementace je zde
+
+\begin{lstlisting}[language=lisp]
+(definuj aplikuj ; definice
+	(makro (fn argumenty)
+		(spoj (list fn) argumenty)))
+		
+; Prelozi se do (+ 5 6), coz se vyhodnoti do 11
+(aplikuj + (list 5 6)) 
+\end{lstlisting}
+
+Makra se rozbalují a vyhodnocuje ve scopu toho, kdo je volá, což umožňuje například tail call eliminace. Například makro pokud (ukázka výše u funkce faktorial) vyhodnotí svůj první argument a pak se rozbalí do prvního nebo druhého argumentu na základě toho, jestli je pravda nebo nepravda.
+
+\begin{lstlisting}[language=lisp]
+; V tomto pripade se makro rozbali do (+ 1 2)
+; a volani chyby se vubec nevyhodnoti
+(pokud $p
+	(+ 1 2)
+	(chyba "Kriticka chyba!"))
+\end{lstlisting}
+
+\subsection{Expanze}
+Expanze jsou syntaktický cukr pro volání funkcí, který vychází ze skutečnosti, že pokud má funkce pouze jeden vstupní argument, tak jí není třeba obalovat do závorek. Například výše uvedená funkce nevyhodnocuj přebírá pouze jeden argument, takže jí lze s pomocí expanzí zapsat následujícím způsobem:
+\begin{lstlisting}[language=lisp]
+; Vrati (list (nevyhodnocuj +) 1 2)
+; Je ekvivalentni k (#nevyhodnocuj (+ 1 2))
+#nevyhodnocuj (+ 1 2) 
+\end{lstlisting}
+Jelikož parser očekává za názvem expanze nějáký platný výraz není možné jí vytvořit s pomocí funkce definuj. Proto existuje funkce definujExpanzi, která se chová úplně stejně jako definuj s tím rozdílem, že před identifikátor přidá \#. Ve standardní knihovně se nachází makro funkce->expanze, které přebírá jakoukoliv funkci nebo makro a vygeneruje expanzi, která přebírá libovolný počet argumentů její použití je následujíci.
+\begin{lstlisting}[language=lisp]
+#importuj "mirage/mirage.mir"
+(funkce->expanze + plus)
+#plus (1 2 3) ; Vrati 6
+\end{lstlisting}
+
+\subsection{Standardní knihovna}
+Mirage obsahuje malou standardní knihovnu, která zahrnuje spoustu užitečných definic včetně funkcí, které generují samotné SVG elementy. Pro její použití je nutné jí naimportovat a mít správně nastavenou proměnnou prostředí MIRAGE\_PATH (více v sekci spuštění). Jako jeden příklad za všechny si dovolím uvést použití makra defn, které zjednodušuje definici funkcí.
+
+\begin{lstlisting}[language=lisp]
+(importuj "mirage/mirage.mir")
+
+(defn faktorial (x)
+	(pokud (= x 0)
+		1
+		(* x (faktorial (- x 1)))))
+\end{lstlisting}
+
+
+\subsection{Kreslení}
+Jak již bylo řečeno, jazyk Mirage je jazyk pro generování obrázku ve formátu svg. Samotné kreslení je založeno na dvou funkcích element a vykresli. Funkce element reprezentuje svg element. Funkce přebírá název elemntu jeho argumenty (list řetězců) a jeho následníky (list potomků).
+
+Příkladem použití funkce element může být funkce obdelnik, ktera vraci reprezentaci obdelniku.
+
+\begin{lstlisting}[language=lisp]
+(definuj obdelnik (funkce (vyska sirka)
+	 (element "rect" 
+	 	(list "width" (hodnota->retezec sirka) 
+	 	      "height" (hodnota->retezec vyska)) 
+	 	(list))))
+\end{lstlisting}
+Funkce vykresli přebírá seznam elementů, výšku a šířku výsledného svg obrázku. Při jejím zavolání se celý obrázek vypíše na stdout a program je následně ukončen. Příklad vykreslení obdelníku:
+
+\begin{lstlisting}[language=lisp]
+(importuj "mirage/mirage.mir")
+
+(vykresli (list (obdelnik 100 100)) 100 100)
+\end{lstlisting}
+\definecolor{maroon}{rgb}{0.5,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\lstdefinelanguage{XML}
+{
+  basicstyle=\ttfamily,
+  morestring=[s]{"}{"},
+  morecomment=[s]{?}{?},
+  morecomment=[s]{!--}{--},
+  commentstyle=\color{darkgreen},
+  moredelim=[s][\color{black}]{>}{<},
+  moredelim=[s][\color{red}]{\ }{=},
+  stringstyle=\color{blue},
+  identifierstyle=\color{maroon}
+}
+Vypíše 
+\begin{lstlisting}[language=XML]
+<svg width="100"
+     height="100"
+     xmlns="http://www.w3.org/2000/svg">     
+	<rect height="100"
+	      width="100"></rect>
+</svg>
+\end{lstlisting}
+
+\section{Lexikální analýza}
 V této sekci se nachází popis jednotlivých gramatik, které jsou zpracovány lexikálním analyzátorem.
 
 \subsection{Identifikátory}
 Identifikátor začíná na kterýkoliv znak z množiny $z = \{a..z, A..Z, +, -, /, *, <\}$
-a pokračuje v libovonlném znaku z množiny $m = z \bigcup \{0..9\}$ 
+a pokračuje v libovolném znaku z množiny $m = z \bigcup \{0..9\}$ 
 \linebreak
 
 $G_{identifikatory}$(\{S, A, B\}, \{z, m\}, P, S)
@@ -120,8 +279,6 @@ $$F \rightarrow \Square F | \dlsh S$$
 $$G \rightarrow \boxplus G | \boxplus$$
 $$H \rightarrow n | p$$
 
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
 \begin{sidewaystable}[]
 %\centering
 	\begin{tabular}{@{}lcccccccccccccccccc@{}}
@@ -162,6 +319,16 @@ Každý program se skládá z 0 až $\infty$ výrazů.
     \label{fig:Syntaktický diagram pro program}
 \end{figure}
 
+\subsection{Vyraz}
+Výraz může být buď tzv. s-expression, což je ozávorkovaný list argumentů.
+
+\begin{figure}[!h]
+	%\FloatBarrier
+    \centering
+    \includegraphics[width=0.5\textwidth]{obrazky/Vyraz.png}
+    \caption{Syntaktický diagram pro Atom}
+    \label{fig:Syntaktický diagram pro Atom}
+\end{figure}
 \subsection{Atom}
 Atom představuje základní element jazyka Mirage. Může to být buď řetězec, číslo nebo identifikátor.
 \begin{figure}[!h]
@@ -173,19 +340,13 @@ Atom představuje základní element jazyka Mirage. Může to být buď řetěze
 \end{figure}
 
 \newpage
-\subsection{Vyraz}
-\begin{figure}[!h]
-	%\FloatBarrier
-    \centering
-    \includegraphics[width=0.5\textwidth]{obrazky/Vyraz.png}
-    \caption{Syntaktický diagram pro Atom}
-    \label{fig:Syntaktický diagram pro Atom}
-\end{figure}
+
 \subsection{Argument}
+Je element, který se nachází buď v s-expressionu nebo v expanzi.
 \begin{figure}[!h]
 	%\FloatBarrier
     \centering
-    \includegraphics[width=0.5\textwidth]{obrazky/Argument.png}
+    \includegraphics[width=0.3\textwidth]{obrazky/Argument.png}
     \caption{Syntaktický diagram pro Atom}
     \label{fig:Syntaktický diagram pro Atom}
 \end{figure}
@@ -194,12 +355,20 @@ Atom představuje základní element jazyka Mirage. Může to být buď řetěze
 \begin{figure}[!h]
 	%\FloatBarrier
     \centering
-    \includegraphics[width=0.5\textwidth]{obrazky/Expanze.png}
+    \includegraphics[width=0.65\textwidth]{obrazky/Expanze.png}
     \caption{Syntaktický diagram pro Atom}
     \label{fig:Syntaktický diagram pro Atom}
 \end{figure}
 
+\subsection{Parsovací algoritmus}
+Pro samotné parsování je použit algoritmus přepisu rozkladové tabulky. Výše uvedená gramatika je obohacena o sémantické akce, které jí říkají, kdy má sestavit sémantický strom a kdy ho má vyhodnotit.
+
 \section{Gramatika pro parsování}
+Z výše uvedených syntaktických diagramů vychází následující gramatika pro syntaktický analyzátor.
+$$G_syntaktickyAnalyzator({Program, Vyraz, Vyraz2, Argument, Expanze, Atom},$$
+$${(, ), nazev, cislo, identifikator, retezec, logickaHodnota},
+P,
+Program)$$
 $$Program \rightarrow Vyraz\:Program\:|\:\epsilon$$
 $$Vyraz \rightarrow\:(\:Vyraz2\:|\:Expanze$$
 $$Vyraz2 \rightarrow\:Argument\:Vyraz2\:|\:)$$
@@ -207,15 +376,86 @@ $$Argument \rightarrow Atom\:|\:Vyraz$$
 $$Expanze \rightarrow nazev\:Argument$$
 $$Atom \rightarrow cislo | identifikator | retezec | logickaHodnota$$
 
-\subsection{Množina FF a parsovací tabulka}
-Pro tvorbu parsovací tabulky je třeba spočítat množinu FF, která vychází z popsané gramatiky.
+\section{Gramatika obohacená o sémantické akce}
+Následující gramatika byla doplněna o dvě sémantické akce Volani, které vyhodnotí aktualní strom a SestavStrom, která "uzavře" sémantický strom a přesune ho o úroveň nahoru.
+$$G_syntaktickyAnalyzator({Program, Vyraz, Vyraz2, Argument, Expanze, Atom},$$
+$${(, ), nazev, cislo, identifikator, retezec, logickaHodnota},
+P,
+Program)$$
+$$Program \rightarrow Vyraz\:Program\:Volani\:|\:\epsilon$$
+$$Vyraz \rightarrow\:(\:Vyraz2\:|\:Expanze$$
+$$Vyraz2 \rightarrow\:Argument\:Vyraz2\:|\:)\:SestavStrom$$
+$$Argument \rightarrow Atom\:|\:Vyraz$$
+$$Expanze \rightarrow nazev\:Argument\:SestavStrom$$
+$$Atom \rightarrow cislo | identifikator | retezec | logickaHodnota$$
 
-$$First(Program) = \{ \epsilon \} \bigcup First(Vyraz) = \{\epsilon, (, nazev\}$$
-$$First(Vyraz) = \{ ( \} \bigcup First(Expanze) = \{(, nazev\}$$
+\subsection{Množiny first a follow a parsovací tabulka}
+Pro tvorbu parsovací tabulky je třeba spočítat množiny first a follow, které vychází z popsané gramatiky.
+
+$$First(Program) = \{\$, (, nazev\}$$
+$$First(Vyraz) =  \{(,nazev\}$$
+$$First(Vyraz2) = \{),(,cislo,identifikator,rtezec,logickaHodnota,nazev\}$$
 $$First(Expanze) = \{ nazev \}$$
-$$First(Argument) = First(Atom) \bigcup First(vyraz) = $$
-$$\{cislo, identifikator,retezec, logickaHodnota, (, nazev\}$$
+$$First(Argument) = \{(,cislo,identifikator,rtezec,logickaHodnota,nazev\}$$
 $$First(Atom) = \{cislo, identifikator, retezec, logickaHodnota\}$$
 
-$$Follow(Program) = \{\$\}$$
+$$Follow(Program) = \{\$, Volani\}$$
+$$Follow(Vyraz) = \{\$,(,nazev,Volani,),cislo,identifikator,retezec,logickaHodnota,SestavStrom\}$$
+$$Follow(Vyraz2) = \{\$,(,nazev,Volani,),cislo,identifikator,retezec,logickaHodnota,SestavStrom\}$$
+$$Follow(Expanze) = \{\$,(,nazev,Volani,),cislo,identifikator,retezec,logickaHodnota,SestavStrom\}$$
+$$Follow(Argument) = \{),(,cislo,identifikator,rtezec,logickaHodnota,nazev,SestavStrom\}$$
+
+Z toho lze vyvodit následující tabulku:
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{sidewaystable}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llllllllll@{}}
+\toprule
+ & Volani & ( & ) & nazev & cislo & identifikator & rtezec & logickaHodnota & \$ \\ \midrule
+Program &   $\epsilon$ &   Vyraz Program Volani &  &   Vyraz Program Volani &  &  &  &  &   '' \\
+Vyraz &  &   ( Vyraz2 &  &   Expanze &  &  &  &  &  \\
+Vyraz2 &  &   Argument Vyraz2 &   ) SestavStrom &   Argument Vyraz2 &   Argument Vyraz2 &   Argument Vyraz2 &   Argument Vyraz2 &   Argument Vyraz2 &  \\
+Argument &  & Vyraz &  & Vyraz & Atom & Atom & Atom &   Atom &  \\
+Expanze &  &  &  & nazev Argument SestavStrom &  &  &  &  &  \\
+Atom &  &  &  &  & cislo & identifikator & retezec & logickaHodnota &  \\ \bottomrule
+\end{tabular}
+}
+\caption{My caption}
+\label{my-label}
+\end{sidewaystable}
+
+\newpage{}
+
+\section{Sémantická analýza}
+Jak jíž bylo řečeno částí programu se přeloží do stromu, který se následně vyhodnoti do nějáké hodnoty interně reprezentované s pomocí struktůry token. Vyhodnocení probíhá na základě metody evaluate, která přebírá aktualni kontext v podobě tabulky, která mapuje symbol na hodnotu. Například při vyhodnocení následujícího výrazu dochází nejprve k překladu symbolu + na asociovanou funkci a poté aplikaci všech argumentů na tuto funkci.
+\begin{lstlisting}[language=lisp]
+(+ 1 2) 
+\end{lstlisting}
+Celý překlad ilustruje následující obrázek
+
+\begin{figure}[!h]
+	\FloatBarrier
+    \centering
+    \includegraphics[width=0.4\textwidth]{obrazky/preklad.png}
+    \caption{Vyhodnocení výrazu}
+    \label{fig:Popis překladu}
+\end{figure}
+\newpage{}
+\section{Spuštění a překlad}
+Pro překlad je potřeba splnit následující závislosti:
+\begin{enumerate}
+\item Kompilátor s podporou c++ 14 (testováno na g++ 6.3.1, clang 3.8.1)
+\item Nejnovější knihovnu boost \url{http://www.boost.org}
+\item CMake 3.6 nebo vyšší
+\end{enumerate}
+Pro samotné sestavení je potřeba nejprve vygenerovat makefile (nebo Vámi zvolený target) s pomocí programu cmake a poté jej sestavit. Pro klasický makefile je posloupnost příkazů následující. Předpokládá se, že se nacházíte v kořenovém adresáři projektu.
+\begin{lstlisting}[language=bash]
+$ cmake -G "UnixMakefiles" CMakeLists.txt
+$ make
+\end{lstlisting}
+Výsledkem kompilace jsou dva spustitelné soubory mirageI a mirageC. Soubor mirageI je interpreter, který načte řádek ze stdin, vyhodnotí ho a vytiskne výsledek na stdout. Soubor mirageC slouží k překladu samotných programů do svg. Může být buď zavolán s argumentem, který představuje název souboru, který se má načíst nebo bez argumentů, pak bude načítat ze stdin.
+
+Pro správnou funkčnost všech příkladů je potřeba nastavit proměnnou prostředí MIRAGE\_PATH na cestu, která vede ke složce ve které se nachází standardní knihovna. Bez tohoto opatření by nebylo možné jí najít a tedy načíst. Alternativně je tu možnost hodit knihovnu k příkladům.
 \end{document}

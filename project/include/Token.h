@@ -4,7 +4,9 @@
 #include "Type.h"
 #include "FilePos.h"
 #include <iostream>
-
+/**
+ * @brief Označuje typ, který se v tokenu nachází
+ */
 enum class TokenType
 {
 	L_PAREN, // (
