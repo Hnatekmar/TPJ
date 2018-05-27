@@ -115,8 +115,11 @@ Makra jsou funkce, která nevyhodnocují svoje argumenty ale vyhodnocují svůj 
   (spoj (list funkce argumenty) ...))))
 ```
 Makro defn nahrazuje dosud používané spojení 
+
 ```clojure
-(definuj nazev (funkce () telo)) ``` za
+(definuj nazev (funkce () telo))
+```  
+za
 ```clojure
 (defn nazev () telo)
 ```
