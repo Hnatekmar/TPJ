@@ -1,5 +1,5 @@
 # Programovací jazyk Mirage
-Mirage je čistě funkcionální jazyk, který slouží k popisu a tvorbě vektorových obrázků napsaný jako semestralní projekt do předmětu TPJ.
+Mirage je čistě funkcionální jazyk, který slouží k popisu a tvorbě vektorových obrázků. Jazyk byl vytvořen jako semestralní projekt do předmětu TPJ (PEF Mendelu).
 
 # Základy jazyka
 ## Výrazy
@@ -13,7 +13,7 @@ Například
 ```clojure
 (+ 1 2)
 ```
-Se vyhodnotí jako 3, protože se za symbolem + nachází funkce, pro sčítání čísel
+Se vyhodnotí jako 3, protože se za symbolem + nachází funkce pro sčítání čísel
 
 ### Atomy
 * čísla (například ```100.5```)
@@ -73,7 +73,7 @@ Funkce list vrací list položek například:
 (list (+ 1 3) 5 "ahoj") ; (4 5 "ahoj")
 ```
 Nad listy lze dělat několik základních operací:
-Získat první prvek (v případě, že je list prázdný program spadne)
+Získat první prvek (v případě, že je list vyhodíce se )
 ```clojure
 (definuj cisla (list 1 2 3))
 (prvni cisla) ; 1
@@ -91,7 +91,7 @@ Získat počet prvků v listu
 Všechny tyto operace lze provádět i nad řetězcem (s tím rozdílem, že vrací řetězec)
 
 #### Nevyhodnocuj/Vyhodnot
-Jelikož je Mirage homoikonický lze jakýkoliv jeho výraz konvertovat na reprezentaci přímo v jazyce. Tohoto lze dosáhnout s pomocí makra nevyhodnocuj, které přebírá libovolný výraz a vrací jeho reprezentaci v miragi.
+Jelikož je Mirage homoikonický lze jakýkoliv jeho výraz konvertovat na reprezentaci přímo v jazyce. Tohoto lze dosáhnout s pomocí makra nevyhodnocuj, které přebírá libovolný výraz a vrací jeho reprezentaci v Miragi.
 Zde je několik příkladů
 ```clojure
 (nevyhodnocuj 5) ; vrátí číslo 5
@@ -99,7 +99,7 @@ Zde je několik příkladů
 (nevyhodnocuj (+ 1 2)) ; vrátí list se symbolem + 1 a 2 ekvivalent (list (nevyhodnocuj +) 1 2)
 (nevyhodnocuj (1 2 4 (5 6))) ; ekvivalent (list 1 2 5 (list 5 6))
 ```
-Opakem makra nevyhodnocuj je funkce vyhodnoť, která na základě dané reprezentace vrátí hodnotu.
+Opakem makra ```nevyhodnocuj``` je funkce vyhodnoť, která na základě dané reprezentace vrátí hodnotu.
 ```clojure
 (vyhodnot 5) ; číslo 5
 (definuj PI 3.14)
@@ -108,13 +108,13 @@ Opakem makra nevyhodnocuj je funkce vyhodnoť, která na základě dané repreze
 ```
 
 #### Makra
-Makra jsou funkce, která nevyhodnocují svoje argumenty ale vyhodnocují svůj výstup. Makra jsou velmi mocná a je na ní založená část [standardní knihovny](https://github.com/Hnatekmar/TPJ/blob/master/project/mirage/makra/makra.mir) Mirage Dobrým příkladem užitečnosti maker je makro defn:
+Makra jsou funkce, která nevyhodnocují svoje argumenty ale vyhodnocují svůj výstup. Makra jsou velmi mocná a je na ní založená část [standardní knihovny](https://github.com/Hnatekmar/TPJ/blob/master/project/mirage/makra/makra.mir) Mirage Dobrým příkladem užitečnosti maker je makro ```defn```:
 ```clojure
 (definuj defn (makro (nazev argumenty ...)
 	(list definuj nazev
   (spoj (list funkce argumenty) ...))))
 ```
-Makro defn nahrazuje dosud používané spojení 
+Makro ```defn``` nahrazuje dosud používané spojení 
 
 ```clojure
 (definuj nazev (funkce () telo))
@@ -124,3 +124,15 @@ za
 (defn nazev () telo)
 ```
 což je čitelnější.
+
+#### Element (svg)
+Funkce element reprezentuje svg element. Příklady
+```clojure
+(element "nazev" (list "argument" "hodnota") (list (element "dite" (list) (list)))) ; <nazev argument="hodnota"> <dite></dite> </nazev>
+```
+
+## Vykreslování
+Probíhá s pomocí funkce vykresli. Funkce vyžaduje několik argumentů první je list elementů a další dva reprezentují výšku a šířku obrázku. 
+
+# Standardní knihovna
+Jak jíž bylo zmíněno, jazyk obsahuje vlastní standardní knihovna ve které se nachází spousta užitečných funkcí / maker pro manipulaci s obrázky, listy atd...
