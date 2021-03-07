@@ -9,6 +9,7 @@ steps:
   - name: docker
     image: plugins/docker
     settings:
-      repo: foo/bar
+      repo: registry.hnatekmar.xyz/tpj
+      autotag: true
       tags:
-        - latest
+        - base

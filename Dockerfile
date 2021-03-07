@@ -12,5 +12,5 @@ RUN cd project && \
     cd build && \
     cmake .. && \
     make -j $(nproc) && \
-    mv ./projekt/build/mirage* /usr/bin && \
+    mv /code/project/build/mirage* /usr/bin && \
     rm -rf /code/*
