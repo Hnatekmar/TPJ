@@ -9,7 +9,7 @@ steps:
   - name: docker
     image: plugins/docker
     settings:
-      repo: registry.hnatekmar.xyz/tpj
+      repo: public-registry.hnatekmar.xyz/mirage
       autotag: true
       tags:
         - base
