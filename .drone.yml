@@ -6,9 +6,9 @@ platform:
   arch: amd64
 
 steps:
-  - name: test
-    image: gcc
-    commands:
-      - ./configure
-      - make
-      - make test
+  - name: docker
+    image: plugins/docker
+    settings:
+      repo: foo/bar
+      tags:
+        - latest
