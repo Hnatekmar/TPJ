@@ -1,13 +1,13 @@
 kind: pipeline
-name: default
+name: test-on-amd64
+
+platform:
+  arch: amd64
 
 steps:
   - name: test
-    image: ubuntu:20.04
+    image: gcc
     commands:
-      - apt-get update && apt-get install -y gcc g++ libboost-all-dev cmake
-      - cd project
-      - mkdir build
-      - cd build
-      - cmake ..
-      - make -j $(nproc)
+      - ./configure
+      - make
+      - make test
