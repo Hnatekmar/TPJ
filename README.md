@@ -1,3 +1,5 @@
+[![Build Status](http://drone.hnatekmar.xyz/api/badges/Hnatekmar/TPJ/status.svg)](http://drone.hnatekmar.xyz/Hnatekmar/TPJ)
+
 # Programovací jazyk Mirage
 Mirage je čistě funkcionální jazyk, který slouží k popisu a tvorbě vektorových obrázků. Jazyk byl vytvořen jako semestralní projekt do předmětu TPJ (PEF Mendelu).
 
