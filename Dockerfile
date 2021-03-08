@@ -15,6 +15,6 @@ RUN cd project && \
     
 FROM ubuntu:18.04 
 
-COPY --from=build  mv /code/project/build/mirageI /usr/bin/
-COPY --from=build  mv /code/project/build/mirageC /usr/bin/
+COPY --from=build /code/project/build/mirageI /usr/bin/
+COPY --from=build /code/project/build/mirageC /usr/bin/
 ENTRYPOINT ["/usr/bin/mirageC"]
