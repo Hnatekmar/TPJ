@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.04 AS build
 
 RUN apt-get update && \
     apt-get install -y gcc g++ libboost-all-dev cmake
@@ -11,6 +11,10 @@ RUN cd project && \
     mkdir build && \
     cd build && \
     cmake .. && \
-    make -j $(nproc) && \
-    mv /code/project/build/mirage* /usr/bin && \
-    rm -rf /code/*
+    make -j $(nproc) 
+    
+FROM ubuntu:18.04 
+
+COPY --from=build  mv /code/project/build/mirageI /usr/bin/
+COPY --from=build  mv /code/project/build/mirageC /usr/bin/
+ENTRYPOINT ["/usr/bin/mirageC"]
