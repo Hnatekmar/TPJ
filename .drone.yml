@@ -9,7 +9,11 @@ steps:
   - name: docker
     image: plugins/docker
     settings:
-      repo: public-registry.hnatekmar.xyz/mirage
+      repo: harbor.hnatekmar.xyz/library/mirage
       autotag: true
       tags:
         - base
+      settings:
+        username: drone
+        password: 
+          from_secret: registry_login
