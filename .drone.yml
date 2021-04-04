@@ -16,4 +16,3 @@ steps:
       username: drone
       password:
         from_secret: registry_password
-      custom_dns: [172.16.100.1]
