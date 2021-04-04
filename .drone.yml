@@ -15,4 +15,4 @@ steps:
         - base
       username: drone
       password:
-        from_secret: registry_login
+        from_secret: registry_password
