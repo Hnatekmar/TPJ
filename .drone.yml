@@ -7,9 +7,12 @@ platform:
 
 steps:
   - name: docker
-    image: docker
+    image: docker:dind
     secrets: [registry_username,registry_password]
     commands:
       - docker login --username=$REGISTRY_USERNAME --password=$REGISTRY_PASSWORD harbor.hnatekmar.xyz
       - docker build -t harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT} .
       - docker push harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT}
+    volumes:
+      - name: dockersock
+        path: /var/run
