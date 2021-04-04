@@ -19,4 +19,4 @@ steps:
       - docker push harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT}
     volumes:
       - name: dockersock
-        path: /var/run
+        path: /var/run/docker.sock
