@@ -7,27 +7,11 @@ platform:
 
 steps:
   - name: docker
-    image: docker:dind
-    environment:
-      USERNAME:
+    image: plugins/docker
+    settings:
+      registry: harbor.hnatekmar.xyz
+      repo: harbor.hnatekmar.xyz/public/mirage
+      username:
         from_secret: registry_username
-      PASSWORD:
+      password:
         from_secret: registry_password
-    commands:
-      - echo $PASSWORD | docker login --username=$USERNAME --password-stdin harbor.hnatekmar.xyz
-      - docker build -t harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT} .
-      - docker push harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT}
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-services:
-- name: docker
-  image: docker:dind
-  privileged: true
-  volumes:
-  - name: dockersock
-    path: /var/run
-
-volumes:
-- name: dockersock
-  temp: {}
