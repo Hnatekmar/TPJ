@@ -10,7 +10,7 @@ steps:
     image: plugins/docker
     settings:
       registry: harbor.hnatekmar.xyz
-      repo: harbor.hnatekmar.xyz/public/mirage
+      repo: harbor.hnatekmar.xyz/library/mirage
       username:
         from_secret: registry_username
       password:
