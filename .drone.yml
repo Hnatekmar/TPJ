@@ -20,3 +20,14 @@ steps:
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
+services:
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
+
+volumes:
+- name: dockersock
+  temp: {}
