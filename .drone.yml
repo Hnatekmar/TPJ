@@ -8,13 +8,10 @@ platform:
 steps:
   - name: docker
     image: plugins/docker
-    environment:
-      TOKEN:
-        from_secret: registry_token
     settings:
       repo: harbor.hnatekmar.xyz/library/mirage
       autotag: true
-      tags:
-        - base
-      build_args_from_env:
-        - TOKEN
+      username:
+        from_secret: registry_username
+      password:
+        from_secret: registry_password
