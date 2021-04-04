@@ -13,7 +13,6 @@ steps:
       autotag: true
       tags:
         - base
-      settings:
-        username: drone
-        password: 
-          from_secret: registry_login
+      username: drone
+      password:
+        from_secret: registry_login
