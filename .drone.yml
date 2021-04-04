@@ -10,7 +10,7 @@ steps:
     image: docker:dind
     secrets: [registry_username,registry_password]
     commands:
-      - docker login --username=$REGISTRY_USERNAME --password=$REGISTRY_PASSWORD harbor.hnatekmar.xyz
+      - echo $REGISTRY_PASSWORD | docker login --username=$REGISTRY_USERNAME --password-stdin harbor.hnatekmar.xyz
       - docker build -t harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT} .
       - docker push harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT}
     volumes:
