@@ -7,12 +7,11 @@ platform:
 
 steps:
   - name: docker
-    image: plugins/docker
-    settings:
-      repo: harbor.hnatekmar.xyz/library/mirage
-      autotag: true
-      username:
-        from_secret: registry_username
-      password:
-        from_secret: registry_password
-
+    image: docker
+    secrets: [registry_username,registry_password]
+    commands:
+      - docker login --username=$REGISTRY_USERNAME --password=$REGISTRY_PASSWORD harbor.hnatekmar.xyz
+      - docker build -t harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT} .
+      - docker push harbor.hnatekmar.xyz/public/mirage:${DRONE_COMMIT}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
