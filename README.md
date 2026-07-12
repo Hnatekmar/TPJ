@@ -1,140 +1,228 @@
 [![Build Status](http://drone.hnatekmar.xyz/api/badges/Hnatekmar/TPJ/status.svg)](http://drone.hnatekmar.xyz/Hnatekmar/TPJ)
 
-# Programovací jazyk Mirage
-Mirage je čistě funkcionální jazyk, který slouží k popisu a tvorbě vektorových obrázků. Jazyk byl vytvořen jako semestralní projekt do předmětu TPJ (PEF Mendelu).
+# Mirage Programming Language
 
-# Základy jazyka
-## Výrazy
+Mirage is a purely functional programming language designed for describing and creating vector images (SVG). It was created as a semester project for the TPJ course (Faculty of Economics, Mendel University).
 
-### Aplikace (volání funkcí/maker)
+## Language Basics
+
+### Expressions
+
+#### Application (calling functions/macros)
+
 ```clojure
-(<funkce nebo makro> <vyrazy (argumenty)>)
+(<function or macro> <expressions (arguments)>)
 ```
-Například 
+
+For example:
 
 ```clojure
 (+ 1 2)
 ```
-Se vyhodnotí jako 3, protože se za symbolem + nachází funkce pro sčítání čísel
 
-### Atomy
-* čísla (například ```100.5```)
-* řetězce (například ```"mirage"```)
-* boolean (```$p``` nebo ```$n```)
-* symboly (například ```+```)
+evaluates to 3, because the symbol `+` is bound to the addition function.
 
-### Expanze
-Expanze je syntaktický cukr pro volání funkce s jedním parametrem. Například:
+### Atoms
+
+- **Numbers** (e.g., `100.5`)
+- **Strings** (e.g., `"mirage"`)
+- **Booleans** (`$p` for true or `$n` for false)
+- **Symbols** (e.g., `+`)
+
+### Expansion
+
+Expansion is syntactic sugar for calling a function with a single argument. For example:
 
 ```clojure
-(importuj "mirage/mirage.mir")
+(import "mirage/mirage.mir")
 ```
-lze s pomocí expanze zapsat jako
+
+can be written using expansion as:
+
 ```clojure
-#importuj "mirage/mirage.mir"
+#import "mirage/mirage.mir"
 ```
-### Užitečné funkce/makra/formy
-#### definuj
-Přiřadí k danému symbolu hodnutu.
-Například:
+
+### Useful Functions / Macros / Forms
+
+#### `definuj` (define)
+
+Binds a value to a symbol.
+
 ```clojure
 (definuj PI 3.14)
 ```
-#### funkce
-Vytvoří funkci. Přebírá list argumentů a tělo funkce. List argumentů se může skládat pouze ze symbolů 
-Například:
-```clojure
-; Funkce, která vrátí to, co přebrala
-(definuj identita (funkce (x) x))
-(identita (+ 5 6)) ; 11
-```
-V listu lze použít speciální symbol ```...```, který označuje, že se jedná o variadickou funkci. Všechny argumenty jsou přeloženy do listu. Příklad:
-```clojure
-(definuj prvniArgument (funkce (...) (prvni ...)))
-(prvniArgument 1 2 3) ; 1
-```
-Symbol ```...``` musí být vždy na konci seznamu argumentů.
 
-Každá funkce má svůj vlastní scope a při její tvorbě si pamatuje celý scope v době jejího vytvoření. Lze tedy například vytvořit list jen s pomocí funkcí:
+#### `funkce` (function)
+
+Creates a function. Takes a list of arguments and a function body. The argument list can only contain symbols.
 
 ```clojure
-(definuj mujList (funkce (hlava telo)
-                         (funkce (f)
-                                 (f hlava telo))))
-(definuj prvni (funkce (hlava telo) hlava))
-(definuj zbytek (funkce (hlava telo) telo))
-(definuj konecListu -1)
-(definuj cisla (mujList 0 (mujList 2 (mujList 3 konecListu))))
+; Function that returns what it receives
+(definuj identity (funkce (x) x))
+(identity (+ 5 6)) ; 11
+```
 
-(prvni cisla) ; 1
-(prvni (zbytek cisla)) ; 2
-```
-#### Listy
-Funkce list vrací list položek například:
-```clojure
-(list (+ 1 3) 5 "ahoj") ; (4 5 "ahoj")
-```
-Nad listy lze dělat několik základních operací:
-Získat první prvek (v případě, že je list vyhodíce se )
-```clojure
-(definuj cisla (list 1 2 3))
-(prvni cisla) ; 1
-```
-Získat zbytek listu (bez prvního prvku)
-```clojure
-(definuj cisla (list 1 2 3))
-(zbytek cisla) ; (2 3)
-```
-Získat počet prvků v listu
-```clojure
-(definuj cisla (list 1 2 3))
-(velikost cisla) ; 3
-```
-Všechny tyto operace lze provádět i nad řetězcem (s tím rozdílem, že vrací řetězec)
+A special symbol `...` in the argument list denotes a variadic function — all extra arguments are collected into a list.
 
-#### Nevyhodnocuj/Vyhodnot
-Jelikož je Mirage homoikonický lze jakýkoliv jeho výraz konvertovat na reprezentaci přímo v jazyce. Tohoto lze dosáhnout s pomocí makra nevyhodnocuj, které přebírá libovolný výraz a vrací jeho reprezentaci v Miragi.
-Zde je několik příkladů
 ```clojure
-(nevyhodnocuj 5) ; vrátí číslo 5
-(nevyhodnocuj mirage) ; vrátí symbol mirage (ne jeho hodnotu)
-(nevyhodnocuj (+ 1 2)) ; vrátí list se symbolem + 1 a 2 ekvivalent (list (nevyhodnocuj +) 1 2)
-(nevyhodnocuj (1 2 4 (5 6))) ; ekvivalent (list 1 2 5 (list 5 6))
+(definuj firstArg (funkce (...) (prvni ...)))
+(firstArg 1 2 3) ; 1
 ```
-Opakem makra ```nevyhodnocuj``` je funkce vyhodnoť, která na základě dané reprezentace vrátí hodnotu.
+
+The `...` symbol must always be at the end of the argument list.
+
+Each function has its own scope and captures the entire enclosing scope at creation time. For example, you can implement lists using only functions:
+
 ```clojure
-(vyhodnot 5) ; číslo 5
+(definuj myList (funkce (head tail)
+                       (funkce (f)
+                               (f head tail))))
+(definuj first (funkce (head tail) head))
+(definuj rest (funkce (head tail) tail))
+(definuj endOfList -1)
+(definuj numbers (myList 0 (myList 2 (myList 3 endOfList))))
+
+(first numbers)      ; 0
+(first (rest numbers)) ; 2
+```
+
+#### Lists
+
+The `list` function returns a list of items:
+
+```clojure
+(list (+ 1 3) 5 "hello") ; (4 5 "hello")
+```
+
+Basic list operations:
+
+- Get the first element:
+
+```clojure
+(definuj numbers (list 1 2 3))
+(prvni numbers) ; 1
+```
+
+- Get the rest (all but the first element):
+
+```clojure
+(definuj numbers (list 1 2 3))
+(zbytek numbers) ; (2 3)
+```
+
+- Get the number of elements:
+
+```clojure
+(definuj numbers (list 1 2 3))
+(velikost numbers) ; 3
+```
+
+All of these operations also work on strings (returning a string instead of a list).
+
+#### `nevyhodnocuj` (quote) / `vyhodnot` (eval)
+
+Since Mirage is homoiconic, any expression can be converted to its language-level representation. This is done using the `nevyhodnocuj` macro, which takes any expression and returns its Mirage representation.
+
+```clojure
+(nevyhodnocuj 5)               ; returns the number 5
+(nevyhodnocuj mirage)          ; returns the symbol mirage (not its value)
+(nevyhodnocuj (+ 1 2))         ; returns a list with the symbol +, 1, and 2
+(nevyhodnocuj (1 2 4 (5 6)))   ; equivalent to (list 1 2 5 (list 5 6))
+```
+
+The inverse of `nevyhodnocuj` is `vyhodnot` (eval), which evaluates a representation back to a value:
+
+```clojure
+(vyhodnot 5)                           ; number 5
 (definuj PI 3.14)
-(vyhodnot (nevyhodnocuj PI)) ; 3.14
-(vyhodnot (list + 1 2)) ; 3
+(vyhodnot (nevyhodnocuj PI))           ; 3.14
+(vyhodnot (list + 1 2))                ; 3
 ```
 
-#### Makra
-Makra jsou funkce, která nevyhodnocují svoje argumenty ale vyhodnocují svůj výstup. Makra jsou velmi mocná a je na ní založená část [standardní knihovny](https://github.com/Hnatekmar/TPJ/blob/master/project/mirage/makra/makra.mir) Mirage Dobrým příkladem užitečnosti maker je makro ```defn```:
-```clojure
-(definuj defn (makro (nazev argumenty ...)
-	(list definuj nazev
-  (spoj (list funkce argumenty) ...))))
-```
-Makro ```defn``` nahrazuje dosud používané spojení 
+#### Macros
+
+Macros are functions that do not evaluate their arguments but instead evaluate their output. Macros are very powerful and form the basis of parts of the [Mirage standard library](https://github.com/Hnatekmar/TPJ/blob/master/project/mirage/makra/makra.mir).
+
+A good example of a macro's usefulness is `defn`:
 
 ```clojure
-(definuj nazev (funkce () telo))
-```  
-za
-```clojure
-(defn nazev () telo)
-```
-což je čitelnější.
-
-#### Element (svg)
-Funkce element reprezentuje svg element. Příklady
-```clojure
-(element "nazev" (list "argument" "hodnota") (list (element "dite" (list) (list)))) ; <nazev argument="hodnota"> <dite></dite> </nazev>
+(definuj defn (makro (name args ...)
+        (list definuj name
+    (spoj (list funkce args) ...))))
 ```
 
-## Vykreslování
-Probíhá s pomocí funkce vykresli. Funkce vyžaduje několik argumentů první je list elementů a další dva reprezentují výšku a šířku obrázku. 
+The `defn` macro replaces the verbose pattern:
 
-# Standardní knihovna
-Jak jíž bylo zmíněno, jazyk obsahuje vlastní standardní knihovna ve které se nachází spousta užitečných funkcí / maker pro manipulaci s obrázky, listy atd...
+```clojure
+(definuj name (funkce () body))
+```
+
+with a more concise form:
+
+```clojure
+(defn name () body)
+```
+
+#### SVG Elements
+
+The `element` function represents an SVG element:
+
+```clojure
+(element "name" (list "attribute" "value") (list (element "child" (list) (list))))
+; <name attribute="value"> <child></child> </name>
+```
+
+### Rendering
+
+Rendering is done using the `vykresli` (render) function. It requires a list of elements, followed by the width and height of the output image:
+
+```clojure
+(import "mirage/mirage.mir")
+(vykresli (list (rectangle 100 100)) 100 100)
+```
+
+### Standard Library
+
+As mentioned above, the language includes its own standard library with many useful functions and macros for manipulating images, lists, and more.
+
+## Building & Running
+
+### Dependencies
+
+- A C++14-compatible compiler (tested with g++ 6.3.1, clang 3.8.1)
+- [Boost](http://www.boost.org) library
+- CMake 3.6 or higher
+
+### Build Instructions
+
+From the project root directory:
+
+```bash
+cmake -G "Unix Makefiles" CMakeLists.txt
+make
+```
+
+The build produces two executables:
+
+- **mirageI** — An interactive interpreter that reads a line from stdin, evaluates it, and prints the result to stdout.
+- **mirageC** — Compiles Mirage programs to SVG. Can be called with a filename argument or without arguments (reads from stdin).
+
+### Environment Setup
+
+Set the `MIRAGE_PATH` environment variable to point to the directory containing the standard library. Without this, the library cannot be found and loaded.
+
+```bash
+export MIRAGE_PATH=/path/to/project/mirage
+```
+
+## Project Structure
+
+- `project/` — Source code (C++), headers, and standard library (`.mir` files)
+- `doc/` — Documentation (LaTeX source, grammar definitions, diagrams)
+- `tests/` — Unit tests using the [Catch testing library](https://github.com/philsquared/Catch)
+- `examples/` — Example Mirage programs
+
+## License
+
+This project was created as a semester project at Mendel University (PEF Mendelu).
