@@ -1,61 +1,82 @@
 [![Build Status](http://drone.hnatekmar.xyz/api/badges/Hnatekmar/TPJ/status.svg)](http://drone.hnatekmar.xyz/Hnatekmar/TPJ)
 
-# Programovací jazyk Mirage
-Mirage je čistě funkcionální jazyk, který slouží k popisu a tvorbě vektorových obrázků. Jazyk byl vytvořen jako semestralní projekt do předmětu TPJ (PEF Mendelu).
+# Mirage Programming Language
 
-# Základy jazyka
-## Výrazy
+Mirage is a purely functional language designed for describing and creating vector graphics. It was created as a semester project for the TPJ course (PEF, Mendel University).
 
-### Aplikace (volání funkcí/maker)
+## Language Basics
+
+### Expressions
+
+#### Application (Function/Macro Calls)
+
 ```clojure
-(<funkce nebo makro> <vyrazy (argumenty)>)
+(<function or macro> <expressions (arguments)>)
 ```
-Například 
+
+For example:
 
 ```clojure
 (+ 1 2)
 ```
-Se vyhodnotí jako 3, protože se za symbolem + nachází funkce pro sčítání čísel
 
-### Atomy
-* čísla (například ```100.5```)
-* řetězce (například ```"mirage"```)
-* boolean (```$p``` nebo ```$n```)
-* symboly (například ```+```)
+Evaluates to `3`, because `+` is the addition function.
 
-### Expanze
-Expanze je syntaktický cukr pro volání funkce s jedním parametrem. Například:
+#### Atoms
+
+- Numbers (e.g., `100.5`)
+- Strings (e.g., `"mirage"`)
+- Booleans (`$p` for true, `$n` for false)
+- Symbols (e.g., `+`)
+
+#### Expansion
+
+Expansion is syntactic sugar for calling a function with a single argument. For example:
 
 ```clojure
 (importuj "mirage/mirage.mir")
 ```
-lze s pomocí expanze zapsat jako
+
+Can be written using expansion as:
+
 ```clojure
 #importuj "mirage/mirage.mir"
 ```
-### Užitečné funkce/makra/formy
-#### definuj
-Přiřadí k danému symbolu hodnutu.
-Například:
+
+### Useful Functions, Macros, and Special Forms
+
+#### `definuj` (define)
+
+Assigns a value to a symbol.
+
+Example:
+
 ```clojure
 (definuj PI 3.14)
 ```
-#### funkce
-Vytvoří funkci. Přebírá list argumentů a tělo funkce. List argumentů se může skládat pouze ze symbolů 
-Například:
+
+#### `funkce` (function)
+
+Creates a function. Takes a list of arguments and a function body. Arguments must be symbols only.
+
+Example:
+
 ```clojure
-; Funkce, která vrátí to, co přebrala
+; Function that returns what it received
 (definuj identita (funkce (x) x))
 (identita (+ 5 6)) ; 11
 ```
-V listu lze použít speciální symbol ```...```, který označuje, že se jedná o variadickou funkci. Všechny argumenty jsou přeloženy do listu. Příklad:
+
+The argument list can use the special symbol `...` to indicate a variadic function. All arguments are collected into a list. Example:
+
 ```clojure
 (definuj prvniArgument (funkce (...) (prvni ...)))
 (prvniArgument 1 2 3) ; 1
 ```
-Symbol ```...``` musí být vždy na konci seznamu argumentů.
 
-Každá funkce má svůj vlastní scope a při její tvorbě si pamatuje celý scope v době jejího vytvoření. Lze tedy například vytvořit list jen s pomocí funkcí:
+The `...` symbol must always be at the end of the argument list.
+
+Every function has its own scope and captures the entire scope at the time of its creation. You can create lists using only functions:
 
 ```clojure
 (definuj mujList (funkce (hlava telo)
@@ -69,72 +90,96 @@ Každá funkce má svůj vlastní scope a při její tvorbě si pamatuje celý s
 (prvni cisla) ; 1
 (prvni (zbytek cisla)) ; 2
 ```
-#### Listy
-Funkce list vrací list položek například:
+
+#### Lists
+
+The `list` function returns a list of items:
+
 ```clojure
 (list (+ 1 3) 5 "ahoj") ; (4 5 "ahoj")
 ```
-Nad listy lze dělat několik základních operací:
-Získat první prvek (v případě, že je list vyhodíce se )
+
+Basic operations on lists:
+
+Get the first element (throws an error if the list is empty):
+
 ```clojure
 (definuj cisla (list 1 2 3))
 (prvni cisla) ; 1
 ```
-Získat zbytek listu (bez prvního prvku)
+
+Get the rest of the list (without the first element):
+
 ```clojure
 (definuj cisla (list 1 2 3))
 (zbytek cisla) ; (2 3)
 ```
-Získat počet prvků v listu
+
+Get the number of elements in a list:
+
 ```clojure
 (definuj cisla (list 1 2 3))
 (velikost cisla) ; 3
 ```
-Všechny tyto operace lze provádět i nad řetězcem (s tím rozdílem, že vrací řetězec)
 
-#### Nevyhodnocuj/Vyhodnot
-Jelikož je Mirage homoikonický lze jakýkoliv jeho výraz konvertovat na reprezentaci přímo v jazyce. Tohoto lze dosáhnout s pomocí makra nevyhodnocuj, které přebírá libovolný výraz a vrací jeho reprezentaci v Miragi.
-Zde je několik příkladů
+All of these operations also work on strings (returning a string).
+
+#### Quote/Evaluate
+
+Since Mirage is homoiconic, any expression can be converted to its representation directly in the language. This is achieved with the `nevyhodnocuj` (quote) macro, which takes any expression and returns its Mirage representation.
+
+Examples:
+
 ```clojure
-(nevyhodnocuj 5) ; vrátí číslo 5
-(nevyhodnocuj mirage) ; vrátí symbol mirage (ne jeho hodnotu)
-(nevyhodnocuj (+ 1 2)) ; vrátí list se symbolem + 1 a 2 ekvivalent (list (nevyhodnocuj +) 1 2)
-(nevyhodnocuj (1 2 4 (5 6))) ; ekvivalent (list 1 2 5 (list 5 6))
+(nevyhodnocuj 5)       ; returns the number 5
+(nevyhodnocuj mirage)  ; returns the symbol mirage (not its value)
+(nevyhodnocuj (+ 1 2)) ; returns a list with +, 1, and 2 — equivalent to (list (nevyhodnocuj +) 1 2)
+(nevyhodnocuj (1 2 4 (5 6))) ; equivalent to (list 1 2 4 (list 5 6))
 ```
-Opakem makra ```nevyhodnocuj``` je funkce vyhodnoť, která na základě dané reprezentace vrátí hodnotu.
+
+The opposite of `nevyhodnocuj` is the `vyhodnoť` (eval) function, which evaluates a given representation back to a value:
+
 ```clojure
-(vyhodnot 5) ; číslo 5
+(vyhodnot 5)           ; 5
 (definuj PI 3.14)
 (vyhodnot (nevyhodnocuj PI)) ; 3.14
-(vyhodnot (list + 1 2)) ; 3
+(vyhodnot (list + 1 2))    ; 3
 ```
 
-#### Makra
-Makra jsou funkce, která nevyhodnocují svoje argumenty ale vyhodnocují svůj výstup. Makra jsou velmi mocná a je na ní založená část [standardní knihovny](https://github.com/Hnatekmar/TPJ/blob/master/project/mirage/makra/makra.mir) Mirage Dobrým příkladem užitečnosti maker je makro ```defn```:
+#### Macros
+
+Macros are functions that do not evaluate their arguments but instead evaluate their output. Macros are very powerful and form part of the [standard library](https://github.com/Hnatekmar/TPJ/blob/master/project/mirage/makra/makra.mir) of Mirage. A good example of macro usefulness is the `defn` macro:
+
 ```clojure
 (definuj defn (makro (nazev argumenty ...)
 	(list definuj nazev
-  (spoj (list funkce argumenty) ...))))
+	  (spoj (list funkce argumenty) ...))))
 ```
-Makro ```defn``` nahrazuje dosud používané spojení 
+
+The `defn` macro replaces the previously used combination:
 
 ```clojure
 (definuj nazev (funkce () telo))
-```  
-za
+```
+
+with the more readable:
+
 ```clojure
 (defn nazev () telo)
 ```
-což je čitelnější.
 
-#### Element (svg)
-Funkce element reprezentuje svg element. Příklady
+#### Element (SVG)
+
+The `element` function represents an SVG element. Examples:
+
 ```clojure
-(element "nazev" (list "argument" "hodnota") (list (element "dite" (list) (list)))) ; <nazev argument="hodnota"> <dite></dite> </nazev>
+(element "name" (list "arg" "value") (list (element "child" (list) (list)))) ; <name arg="value"><child></child></name>
 ```
 
-## Vykreslování
-Probíhá s pomocí funkce vykresli. Funkce vyžaduje několik argumentů první je list elementů a další dva reprezentují výšku a šířku obrázku. 
+### Rendering
 
-# Standardní knihovna
-Jak jíž bylo zmíněno, jazyk obsahuje vlastní standardní knihovna ve které se nachází spousta užitečných funkcí / maker pro manipulaci s obrázky, listy atd...
+Rendering is done using the `vykresli` function. It requires several arguments: the first is a list of elements, and the next two represent the height and width of the image.
+
+## Standard Library
+
+As mentioned, the language includes its own standard library containing many useful functions and macros for manipulating images, lists, and more.
